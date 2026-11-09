@@ -26,7 +26,8 @@ TypeScript, Vite, React, CSS et Motion, Howler.js, Zod, Vitest, Playwright, pnpm
 
 ## Visuel : priorité de premier plan
 - Le jeu doit être **éclatant** : beau, coloré, expressif, hors de l'ordinaire (SPEC.md, section 8). Une interface fonctionnelle mais terne ne compte pas comme terminée.
-- Pas d'interface avant une maquette validée par Marc (R-34). Thème centralisé (R-35).
+- **Référence visuelle validée : [design/maquette-v1.html](design/maquette-v1.html)** (R-34). Reprends ses variables de thème (`:root`), sa palette, ses formes et ses animations. L'interface doit lui rester fidèle, en mieux. Pour la voir : `python3 -m http.server 8765 --directory design`, puis ouvrir `http://localhost:8765/maquette-v1.html`.
+- Thème centralisé dans un seul fichier (R-35).
 - On s'inspire des qualités des jeux sociaux colorés, sans copier l'apparence d'un jeu ou d'un produit précis.
 
 ## Ton et contenu

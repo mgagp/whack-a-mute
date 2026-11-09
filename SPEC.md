@@ -1,6 +1,6 @@
 # Whack-a-Mute — Spécification (PRD)
 
-> **Version** 0.3 (brouillon) · **Date** 2026-11-09 · **Auteur** Marc
+> **Version** 0.4 (brouillon) · **Date** 2026-11-09 · **Auteur** Marc
 > Source d'origine : [VERBATIM.md](VERBATIM.md). En cas de doute sur l'intention, c'est le verbatim qui fait foi.
 > Les sections marquées **⚠️ Hypothèse** sont des propositions à valider. Elles sont reprises dans la section 13, « Questions ouvertes ».
 
@@ -32,13 +32,14 @@ Chaque nouvelle idée doit respecter ces quatre piliers.
 ## 2. Parcours du joueur
 
 ```
-Accueil / Intro  →  Choix du niveau de café  →  Réunion (partie)  →  Écran de fin  →  Rejouer / Partager
+Accueil (intro + choix du café)  →  Réunion (partie)  →  Écran de fin  →  Rejouer / Partager
 ```
 
-1. **Accueil.** Titre, une phrase d'accroche, l'anecdote de Marc en 2 ou 3 lignes, puis le bouton « Rejoindre la réunion ».
-2. **Choix du niveau de café.** Trois boutons, voir la section 6.
-3. **Réunion.** La partie de 90 secondes.
-4. **Fin.** Harmonie finale, titre humoristique, statistiques, boutons « Rejouer » et « Partager ».
+1. **Accueil.** Titre, une phrase d'accroche, l'anecdote de Marc racontée comme un message de collègue, le **choix du niveau de café** (trois boutons, voir la section 6) et le bouton « Rejoindre la réunion ». Il n'y a qu'un seul écran avant de jouer.
+2. **Réunion.** La partie de 90 secondes.
+3. **Fin.** Harmonie finale, titre humoristique, statistiques, boutons « Rejouer », « Partager » et « Changer de café ».
+
+La référence visuelle de ces trois écrans est la maquette validée [design/maquette-v1.html](design/maquette-v1.html).
 
 ---
 
@@ -93,7 +94,7 @@ Chaque participant prend la parole tour à tour. Avant qu'il parle, le joueur **
 - Ils **rejoignent la réunion au fil de la partie**, avec la notification « Ginette a rejoint la réunion ».
 - Chaque participant a un prénom, un avatar illustré et une petite étiquette de rôle, pour le clin d'œil. Ce sont des **personnages fictifs**.
 
-Distribution ⚠️ Hypothèse :
+Distribution (adoptée avec la maquette v1) :
 - **Ginette**, de la compta
 - **Kevin**, le stagiaire
 - **Josée**, la scrum master
@@ -170,11 +171,12 @@ Au moins 40 phrases correctes et 25 phrases déplacées pour la première versio
 - On vise la qualité des jeux sociaux et des party games colorés qu'on connaît : couleurs franches, personnalité forte, retours exagérés. On s'en inspire pour ces **qualités**, sans copier l'apparence d'un jeu précis.
 
 ### 8.2 La visio parodique
-- C'est une application de visio **inventée**, avec un nom fictif (⚠️ Hypothèse : « SynergiQ »). Teams et Slack ont servi de **point d'appui au raisonnement** (la grille de tuiles, les micros, les bulles), pas de modèle à recopier.
+- C'est une application de visio **inventée**, avec un nom fictif : « SynergiQ ». Teams et Slack ont servi de **point d'appui au raisonnement** (la grille de tuiles, les micros, les bulles), pas de modèle à recopier.
 - **Aucun logo, couleur signature, icône ou nom** de Microsoft Teams, Slack, Zoom ou d'un autre produit réel.
 - La parodie est **plus colorée et plus joyeuse** qu'une vraie application de visio. C'est le contraste avec la grisaille des vraies réunions qui fait sourire.
 
-### 8.3 Direction artistique ⚠️ Hypothèse : « Bureau pop arcade »
+### 8.3 Direction artistique : « Bureau pop arcade » ✅ validée (maquette v1)
+La référence est [design/maquette-v1.html](design/maquette-v1.html) : sa palette, ses variables de thème, ses formes et ses animations sont le point de départ de l'interface. Les avatars de la maquette sont des ébauches, et les illustrations finales pourront aller plus loin dans le même esprit.
 - **Palette** : saturée et contrastée, avec un fond profond (par exemple un violet indigo) sur lequel les couleurs éclatent.
   - Chaque participant a sa **couleur signature** vive : corail, turquoise, jaune soleil, vert lime.
   - Les états ont un code couleur constant : micro ouvert = vert néon qui pulse, mute = rose ou rouge vif, compte à rebours qui passe au jaune puis au rouge en fin de course.
@@ -211,7 +213,7 @@ Chaque exigence [M] doit être couverte par au moins un test automatisé (voir l
 
 ### Accueil et parcours
 - **R-01 [M]** L'accueil affiche le titre, l'anecdote d'origine (3 lignes max.) et un bouton pour commencer.
-- **R-02 [M]** Le joueur choisit un niveau de café parmi trois avant de lancer la partie.
+- **R-02 [M]** Le joueur choisit un niveau de café parmi trois, directement sur l'accueil, avant de lancer la partie.
 - **R-03 [M]** À la fin, le joueur peut rejouer en un seul clic, au même niveau ou en changeant de niveau.
 
 ### Boucle de jeu
@@ -243,7 +245,7 @@ Chaque exigence [M] doit être couverte par au moins un test automatisé (voir l
 - **R-33 [S]** Un léger tremblement d'écran signale un malaise. Il est désactivé si le système demande de réduire les animations.
 
 ### Direction visuelle
-- **R-34 [M]** Une maquette visuelle des trois écrans clés (accueil, partie à 4, fin) est validée par Marc avant l'implémentation de l'interface.
+- **R-34 [M]** Une maquette visuelle des trois écrans clés (accueil, partie à 4, fin) est validée par Marc avant l'implémentation de l'interface. ✅ Fait : `design/maquette-v1.html`, validée le 2026-11-09. L'interface implémentée doit lui rester fidèle.
 - **R-35 [M]** Les couleurs, polices, rayons et ombres sont définis comme variables de thème dans un seul fichier.
 - **R-36 [M]** Chaque participant a une couleur signature et un avatar illustré avec au moins trois expressions (neutre, va parler, gêné).
 - **R-37 [M]** Le texte des bulles a un contraste d'au moins 4,5:1 (norme WCAG AA) : éclatant, mais toujours lisible. Vérifié automatiquement dans les tests de bout en bout.
@@ -332,8 +334,8 @@ public/sounds/
 | ~~Q-1~~ | La boucle « ils enlèvent eux-mêmes le mute, le joueur le remet » convient-elle ? | ✅ **Décidé (v0.2)** : oui, telle que décrite en section 3, avec le piège R-08 |
 | ~~Q-2~~ | Français seulement, ou français et anglais dès la première version ? | ✅ **Décidé (v0.2)** : français d'abord, code prêt pour la traduction (R-20 inclut la langue). L'anglais reste R-60 |
 | Q-3 | Ajoute-t-on la mécanique inverse « Tu es sur mute ! » ? | Non pour la première version, voir R-61 |
-| Q-4 | Nom de l'application de visio fictive ? | « SynergiQ » |
-| Q-5 | Prénoms et rôles des personnages ? | Ginette, Kevin, Josée, Le boss |
+| ~~Q-4~~ | Nom de l'application de visio fictive ? | ✅ **Adopté avec la maquette v1** : « SynergiQ » |
+| ~~Q-5~~ | Prénoms et rôles des personnages ? | ✅ **Adopté avec la maquette v1** : Ginette (compta), Kevin (stagiaire), Josée (scrum master), Le boss (gestion) |
 | Q-6 | D'où viendront les bruitages (générés, banque libre de droits, enregistrés par Marc) ? | Générés ou libres de droits |
 | Q-7 | Hébergement et adresse web finale ? Le dépôt GitHub sera **privé** au départ, et GitHub Pages ne publie depuis un dépôt privé qu'avec un abonnement payant (GitHub Pro). | À trancher à la mise en ligne : rendre le dépôt public, prendre GitHub Pro, ou héberger sur Netlify, Vercel ou Cloudflare Pages (gratuits depuis un dépôt privé) |
 | ~~Q-8~~ | Français québécois assumé dans les répliques ? | ✅ **Décidé (v0.2)** : québécois léger, voir section 7 |
@@ -347,3 +349,4 @@ public/sounds/
 | 0.1 | 2026-11-09 | Premier brouillon, tiré du verbatim et de la discussion sur la stack |
 | 0.2 | 2026-11-09 | Décisions : boucle de jeu confirmée (Q-1), français d'abord (Q-2), québécois léger (Q-8). Contrainte d'hébergement avec un dépôt privé ajoutée à Q-7 |
 | 0.3 | 2026-11-09 | Le visuel « éclatant » devient une exigence de premier plan : pilier 3 renforcé, section 8 détaillée, exigences R-34 à R-39 |
+| 0.4 | 2026-11-09 | Maquette v1 validée (R-34) : direction « Bureau pop arcade » adoptée, choix du café fusionné avec l'accueil, SynergiQ et les personnages adoptés (Q-4, Q-5) |
