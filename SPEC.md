@@ -276,7 +276,7 @@ Chaque exigence [M] doit être couverte par au moins un test automatisé (voir l
 - **R-61 [L]** Mécanique inverse : un collègue sur mute dit quelque chose d'utile (« Tu es sur mute ! »), et il faut lui ouvrir le micro (voir Q-3).
 - **R-62 [L]** Classement mondial (nécessiterait un serveur).
 - **R-63 [L]** Phrases ambiguës comme troisième axe de difficulté.
-- **R-64 [L]** D'autres répliques-réactions avec un déclencheur, sur le modèle de la réplique signature (par exemple des réactions sarcastiques à une annonce du boss).
+- **R-64 [L]** Les **annonces corporatives** et leurs réactions, une généralisation de la réplique signature. Voir la section 12.1.
 
 ---
 
@@ -333,6 +333,18 @@ public/sounds/
 - Plus de 4 participants.
 - Monétisation et publicité.
 - Statistiques de visite (à reconsidérer après la mise en ligne, avec un outil respectueux de la vie privée).
+
+### 12.1 Idée future : les annonces corporatives (R-64)
+Cette idée généralise le duo « annonce du boss → réplique signature ». Il s'agit d'un **moment spécial** pendant la réunion : une annonce officielle tombe, avec une bannière « 📢 Annonce », et les participants s'apprêtent à y réagir. Le joueur voit venir le sarcasme, et c'est justement ce qui est drôle.
+
+- **Ton** : la satire du bureau typique, celle des bandes dessinées sur la vie de bureau qu'on connaît tous. On s'inspire des situations, sans reprendre de personnages ni de répliques existantes.
+- **Peu d'angles**, pour ne pas alourdir le jeu. Trois ou quatre au maximum, par exemple :
+  - **Annonce du boss** : « On garde le cap », « Je suis très fier de l'équipe ». C'est le modèle actuel.
+  - **Annonce des RH** : un nouveau sondage d'engagement, « On est une grande famille », une politique de retour au bureau.
+  - **Réorganisation** : une nouvelle structure, un nouvel organigramme, « ça ne changera rien pour vous ».
+  - **Changement de priorités** : « Petit changement de cap, rien de majeur. »
+- **Mécanique** : chaque annonce a quelques réactions déplacées associées, avec un déclencheur comme pour `fr-d-00`. Les annonces peuvent rythmer la partie, par exemple une ou deux par réunion, comme de petits pics de tension.
+- **À valider** quand la première version sera jouable : est-ce que ça ajoute du plaisir sans compliquer le jeu (pilier 4) ?
 
 ---
 
