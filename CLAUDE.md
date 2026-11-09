@@ -24,6 +24,11 @@ TypeScript, Vite, React, CSS et Motion, Howler.js, Zod, Vitest, Playwright, pnpm
 - Les tests de bout en bout utilisent `?seed=` et `?vitesse=` pour être déterministes.
 - Avant de dire qu'une tâche est terminée, lance les tests et le typecheck.
 
+## Visuel : priorité de premier plan
+- Le jeu doit être **éclatant** : beau, coloré, expressif, hors de l'ordinaire (SPEC.md, section 8). Une interface fonctionnelle mais terne ne compte pas comme terminée.
+- Pas d'interface avant une maquette validée par Marc (R-34). Thème centralisé (R-35).
+- On s'inspire des qualités des jeux sociaux colorés, sans copier l'apparence d'un jeu ou d'un produit précis.
+
 ## Ton et contenu
 - Interface et répliques en **français québécois léger** pour la première version (décisions Q-2 et Q-8). Le code reste prêt pour une traduction.
 - Humour léger. Interdits : viser un groupe, la vulgarité forte, les vraies personnes ou entreprises.

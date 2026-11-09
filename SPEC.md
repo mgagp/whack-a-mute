@@ -1,6 +1,6 @@
 # Whack-a-Mute — Spécification (PRD)
 
-> **Version** 0.2 (brouillon) · **Date** 2026-11-09 · **Auteur** Marc
+> **Version** 0.3 (brouillon) · **Date** 2026-11-09 · **Auteur** Marc
 > Source d'origine : [VERBATIM.md](VERBATIM.md). En cas de doute sur l'intention, c'est le verbatim qui fait foi.
 > Les sections marquées **⚠️ Hypothèse** sont des propositions à valider. Elles sont reprises dans la section 13, « Questions ouvertes ».
 
@@ -20,7 +20,7 @@ Chaque nouvelle idée doit respecter ces quatre piliers.
 
 1. **Compris en 3 secondes.** Une seule action (cliquer ou taper sur un participant) et une seule décision (cette phrase passe-t-elle ou non ?).
 2. **Drôle d'abord.** Le ton est léger, du malaise reconnaissable, jamais de méchanceté.
-3. **Éclatant et réactif.** Chaque clic donne un retour visuel et sonore immédiat et satisfaisant.
+3. **Éclatant, beau et réactif.** Le visuel est une exigence de premier plan, pas une finition. Le jeu doit sortir de l'ordinaire et donner envie d'en faire une capture d'écran. Chaque clic donne un retour visuel et sonore immédiat et exagéré.
 4. **Peu d'éléments, en synergie.** Tout ajout doit renforcer le reste. Dans le doute, on ne l'ajoute pas.
 
 ### Public et contexte
@@ -162,11 +162,45 @@ Au moins 40 phrases correctes et 25 phrases déplacées pour la première versio
 
 ## 8. Direction visuelle et sonore
 
-- **Interface parodique et générique** d'application de visio, avec un nom fictif (⚠️ Hypothèse : « SynergiQ »). **Aucun logo, couleur signature ou nom** de Microsoft Teams, Slack, Zoom ou d'un autre produit réel.
-- **Esthétique arcade** : couleurs vives, contours épais, gros boutons, typographie ronde et lisible.
-- **Curseur** : un gros marteau ou une grosse main « mute » qui frappe à chaque clic, avec un équivalent tactile (flash à l'endroit touché).
-- **Bruitages** : « SCHLAC » pour un mute, « boop » déçu pour un mute à tort, criquets ou toux pour un malaise, carillon de connexion quand quelqu'un rejoint, petite fanfare de fin. Il faut un bouton pour couper le son.
+### 8.1 Ambition
+**Éclatant** est le mot clé (voir le verbatim). Le visuel n'est pas une couche de finition : c'est une des raisons principales pour lesquelles le jeu sera partagé.
+
+- **Le test du fil d'actualité** : une capture d'écran de la partie, vue en petit dans un fil d'actualité, doit arrêter le défilement.
+- **Le test des 3 secondes** : un nouveau joueur comprend qui va parler, qui est sur mute et où cliquer, sans lire d'instructions.
+- On vise la qualité des jeux sociaux et des party games colorés qu'on connaît : couleurs franches, personnalité forte, retours exagérés. On s'en inspire pour ces **qualités**, sans copier l'apparence d'un jeu précis.
+
+### 8.2 La visio parodique
+- C'est une application de visio **inventée**, avec un nom fictif (⚠️ Hypothèse : « SynergiQ »). Teams et Slack ont servi de **point d'appui au raisonnement** (la grille de tuiles, les micros, les bulles), pas de modèle à recopier.
+- **Aucun logo, couleur signature, icône ou nom** de Microsoft Teams, Slack, Zoom ou d'un autre produit réel.
+- La parodie est **plus colorée et plus joyeuse** qu'une vraie application de visio. C'est le contraste avec la grisaille des vraies réunions qui fait sourire.
+
+### 8.3 Direction artistique ⚠️ Hypothèse : « Bureau pop arcade »
+- **Palette** : saturée et contrastée, avec un fond profond (par exemple un violet indigo) sur lequel les couleurs éclatent.
+  - Chaque participant a sa **couleur signature** vive : corail, turquoise, jaune soleil, vert lime.
+  - Les états ont un code couleur constant : micro ouvert = vert néon qui pulse, mute = rose ou rouge vif, compte à rebours qui passe au jaune puis au rouge en fin de course.
+  - La couleur ne doit jamais révéler si une phrase est déplacée : c'est au joueur de lire.
+- **Formes** : coins très arrondis, contours épais foncés façon autocollant ou dessin animé, ombres portées décalées et franches.
+- **Typographie** : une police d'affichage ronde et grasse pour le titre, les scores et les onomatopées, et une police très lisible pour les répliques. Seulement des polices sous licence libre (par exemple Google Fonts, licence OFL).
+- **Personnages** : des avatars illustrés et expressifs (SVG), chacun avec au moins trois expressions : neutre, sur le point de parler (sourire en coin), gêné ou choqué. Quand quelqu'un commet un impair, les autres participants réagissent visiblement.
+- **Arrière-plan** : un motif animé discret qui parodie le bureau (tasses de café, post-it, graphiques en hausse), qui ne gêne jamais la lecture.
+
+### 8.4 Mouvement et « jus »
+Chaque événement doit être **ressenti**, pas seulement affiché.
+- **Mute** : le marteau frappe, un tampon « MUTE ! » s'écrase sur la tuile, des particules jaillissent, puis l'onomatopée « SCHLAC ! » façon bande dessinée.
+- **Malaise** : la phrase apparaît en grand, l'écran tremble légèrement, les visages font 😬, des criquets traversent l'écran.
+- **Coupé à tort** : la tuile se dégonfle avec la bulle « Euh… tu m'as coupé ? ».
+- **Arrivée d'un participant** : la tuile rebondit en entrant dans la grille.
+- **Jauge d'harmonie** : elle réagit visiblement à chaque variation (secousse, changement de couleur, petit visage qui change d'humeur).
+- Les animations ont un effet ressort (rebond, écrasement et étirement), mais restent courtes (moins de 400 ms) pour ne jamais ralentir le jeu.
+
+### 8.5 Son
+- **Bruitages** : « SCHLAC » pour un mute, « boop » déçu pour un mute à tort, criquets ou toux pour un malaise, carillon de connexion quand quelqu'un rejoint, petite fanfare de fin.
+- Il faut un bouton pour couper le son.
 - **Aucun dialogue parlé** : tout est écrit.
+
+### 8.6 Démarche
+1. **Avant de coder l'interface**, on produit une maquette visuelle des trois écrans clés (accueil, partie à 4 participants, écran de fin) et Marc la valide (R-34). On itère tant que le résultat n'est pas éclatant.
+2. Les couleurs, polices, rayons et ombres sont définis comme **variables de thème** dans un seul fichier (R-35), pour pouvoir ajuster toute l'ambiance d'un coup.
 
 ---
 
@@ -207,6 +241,14 @@ Chaque exigence [M] doit être couverte par au moins un test automatisé (voir l
 - **R-31 [M]** Chaque résultat a un bruitage distinct. Un bouton coupe ou rétablit le son, et ce choix est mémorisé.
 - **R-32 [S]** Le curseur prend la forme d'un marteau sur ordinateur, et un flash apparaît à l'endroit touché sur écran tactile.
 - **R-33 [S]** Un léger tremblement d'écran signale un malaise. Il est désactivé si le système demande de réduire les animations.
+
+### Direction visuelle
+- **R-34 [M]** Une maquette visuelle des trois écrans clés (accueil, partie à 4, fin) est validée par Marc avant l'implémentation de l'interface.
+- **R-35 [M]** Les couleurs, polices, rayons et ombres sont définis comme variables de thème dans un seul fichier.
+- **R-36 [M]** Chaque participant a une couleur signature et un avatar illustré avec au moins trois expressions (neutre, va parler, gêné).
+- **R-37 [M]** Le texte des bulles a un contraste d'au moins 4,5:1 (norme WCAG AA) : éclatant, mais toujours lisible. Vérifié automatiquement dans les tests de bout en bout.
+- **R-38 [M]** Les animations restent fluides (60 images par seconde) sur un téléphone de milieu de gamme.
+- **R-39 [S]** Un arrière-plan animé discret et des onomatopées façon bande dessinée accompagnent les événements (section 8.4).
 
 ### Configuration, debug et qualité
 - **R-40 [M]** Toutes les valeurs de jouabilité (durées, pénalités, calendrier d'arrivée, proportions) sont regroupées dans un seul fichier de configuration.
@@ -304,3 +346,4 @@ public/sounds/
 |---|---|---|
 | 0.1 | 2026-11-09 | Premier brouillon, tiré du verbatim et de la discussion sur la stack |
 | 0.2 | 2026-11-09 | Décisions : boucle de jeu confirmée (Q-1), français d'abord (Q-2), québécois léger (Q-8). Contrainte d'hébergement avec un dépôt privé ajoutée à Q-7 |
+| 0.3 | 2026-11-09 | Le visuel « éclatant » devient une exigence de premier plan : pilier 3 renforcé, section 8 détaillée, exigences R-34 à R-39 |
