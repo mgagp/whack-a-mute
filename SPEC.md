@@ -156,6 +156,9 @@ Les répliques sont le cœur de l'humour. Elles sont stockées dans un fichier d
 - « On a déjà essayé ça en 2019. Spoiler : non. »
 - « Est-ce qu'on peut finir à l'heure, pour une fois ? »
 
+### La réplique signature
+**« Ben oui, c'est ça. »** C'est la vraie phrase de Marc, celle qui a déclenché le « Marc, tu n'es pas sur mute ». Comme la phrase d'accroche de l'accueil, elle fait partie de l'identité du jeu. Elle fait obligatoirement partie des répliques déplacées (`fr-d-00`, marquée `"signature": true`).
+
 ### Volume visé
 Au moins 40 phrases correctes et 25 phrases déplacées pour la première version. Il n'y a jamais deux fois la même phrase dans une même partie.
 
@@ -237,6 +240,7 @@ Chaque exigence [M] doit être couverte par au moins un test automatisé (voir l
 - **R-20 [M]** Les répliques sont chargées depuis un fichier de données validé au démarrage. Chacune a un identifiant, un texte, un type (correcte ou déplacée) et une langue.
 - **R-21 [M]** Aucune réplique n'est répétée dans une même partie.
 - **R-22 [M]** Un test vérifie que chaque réplique fait au plus 70 caractères et que le volume minimal (section 7) est atteint.
+- **R-23 [M]** La réplique signature « Ben oui, c'est ça. » est présente dans la banque, comme réplique déplacée marquée `signature`. Un test le vérifie.
 
 ### Retour visuel et sonore
 - **R-30 [M]** Chaque résultat de la table 3.3 a un retour visuel distinct, perceptible en moins de 100 ms après la fin de l'annonce ou le clic.
