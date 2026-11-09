@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Whack-a-Mute — Maquette v1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  /* ===== Variables de thème (préfigure R-35) ===== */
+  :root{
+    --ink:#1B1033;        /* contours et ombres */
+    --deep:#2A1356;       /* fond principal */
+    --deep2:#160832;
+    --cream:#FFF8E7;
+    --coral:#FF6B6B;      /* Ginette */
+    --turq:#22D3C5;       /* Kevin */
+    --sun:#FFD23F;        /* Josée */
+    --lime:#9BE564;       /* Le boss */
+    --mute:#FF3D7F;       /* état : sur mute */
+    --live:#3DFF8B;       /* état : micro ouvert */
+    --violet:#7B4DFF;
+    --display:'Lilita One', system-ui, sans-serif;
+    --text:'Nunito', system-ui, sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#0E0620;color:var(--cream);font-family:var(--text)}
+
+  /* ===== Page de présentation ===== */
+  .page{max-width:1240px;margin:0 auto;padding:32px 16px 0}
+  .page h1{font-family:var(--display);font-weight:400;font-size:clamp(28px,5vw,44px);margin:0;color:var(--sun);text-shadow:3px 3px 0 var(--ink)}
+  .page p{max-width:760px;line-height:1.55;color:#CFC3EE;margin:10px 0 0}
+  .page ul{color:#CFC3EE;line-height:1.6;padding-left:20px;max-width:760px}
+  .page b{color:var(--cream)}
+  .swatches{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 0}
+  .swatches span{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;background:#1D0E3F;border:2px solid #3a2a5e;border-radius:10px;padding:4px 8px 4px 4px}
+  .swatches i{width:22px;height:22px;border-radius:7px;border:2px solid var(--ink);display:inline-block}
+  .screens{display:flex;flex-wrap:wrap;gap:40px;justify-content:center;padding:32px 16px 64px}
+  figure{margin:0;width:360px;max-width:100%}
+  figcaption{margin-top:16px;font-size:14px;line-height:1.5;color:#CFC3EE}
+  figcaption strong{display:block;font-family:var(--display);font-weight:400;font-size:20px;color:var(--sun);margin-bottom:4px;letter-spacing:.3px}
+
+  /* ===== Cadre téléphone ===== */
+  .phone{width:360px;max-width:100%;height:760px;border-radius:42px;border:7px solid #05020c;box-shadow:0 0 0 2px #3a2a5e,0 30px 60px rgba(0,0,0,.55);overflow:hidden;position:relative;
+    background:radial-gradient(circle at 50% -10%,#5A2BC0 0%,var(--deep) 45%,var(--deep2) 100%)}
+  .phone::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.07) 1.5px,transparent 1.6px);background-size:22px 22px;pointer-events:none}
+  .deco{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+  .deco span{position:absolute;font-size:28px;opacity:.14;animation:float 9s ease-in-out infinite}
+  @keyframes float{0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-16px) rotate(8deg)}}
+
+  /* ===== Composants communs ===== */
+  .btn{display:block;width:100%;font-family:var(--display);font-size:23px;letter-spacing:.4px;color:var(--ink);background:var(--sun);border:4px solid var(--ink);border-radius:18px;box-shadow:0 6px 0 var(--ink);padding:13px 16px;cursor:pointer;text-align:center}
+  .btn.turq{background:var(--turq)}
+  .btn:active{transform:translateY(4px);box-shadow:0 2px 0 var(--ink)}
+  .icon-mic{width:16px;height:16px}
+
+  /* ===== Écran 1 : accueil ===== */
+  .home{position:relative;z-index:1;height:100%;padding:46px 22px 22px;display:flex;flex-direction:column}
+  .logo{position:relative;text-align:center;transform:rotate(-4deg);margin-top:6px}
+  .logo .small{font-family:var(--display);font-size:36px;line-height:1;color:var(--cream);-webkit-text-stroke:6px var(--ink);paint-order:stroke fill;text-shadow:4px 4px 0 var(--ink)}
+  .logo .big{font-family:var(--display);font-size:100px;line-height:.92;color:var(--sun);-webkit-text-stroke:8px var(--ink);paint-order:stroke fill;text-shadow:6px 6px 0 var(--ink),11px 11px 0 var(--mute)}
+  .logo .badge{position:absolute;top:-6px;right:12px;width:58px;height:58px;border-radius:50%;background:var(--mute);border:4px solid var(--ink);box-shadow:3px 3px 0 var(--ink);display:grid;place-items:center;animation:wobble 2.2s ease-in-out infinite}
+  .logo .badge svg{width:30px;height:30px}
+  @keyframes wobble{0%,100%{transform:rotate(14deg) scale(1)}50%{transform:rotate(-6deg) scale(1.1)}}
+  .tagline{text-align:center;font-weight:900;font-size:16.5px;line-height:1.35;margin:26px 6px 18px}
+  .tagline em{font-style:normal;color:var(--sun)}
+  .story{background:var(--cream);color:var(--ink);border:4px solid var(--ink);border-radius:20px;box-shadow:6px 6px 0 var(--ink);padding:12px 14px;display:flex;gap:10px;transform:rotate(1.5deg)}
+  .story .av{width:48px;height:48px;flex:none;border-radius:50%;border:3px solid var(--ink);background:var(--coral);overflow:hidden}
+  .story .av svg{width:100%;height:100%}
+  .story .who{font-weight:900;font-size:11.5px;color:#6B5A8E}
+  .story .msg{font-weight:900;font-size:18px;line-height:1.2}
+  .story .meta{font-size:12.5px;font-weight:700;margin-top:6px;line-height:1.35;color:#3d2d5c}
+  .label{font-family:var(--display);font-size:17px;letter-spacing:.4px;margin:24px 0 10px;text-align:center;color:#CFC3EE}
+  .coffee{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .coffee div{background:#3B1D7A;border:3px solid var(--ink);border-radius:16px;padding:10px 4px;text-align:center;box-shadow:0 4px 0 var(--ink);font-size:11.5px;font-weight:800;line-height:1.2}
+  .coffee div b{display:block;font-size:19px;margin-bottom:5px;letter-spacing:-2px}
+  .coffee .on{background:var(--turq);color:var(--ink);transform:translateY(-4px) rotate(-2deg)}
+  .home .btn{margin-top:auto;animation:pulse 1.6s ease-in-out infinite}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+  .fine{text-align:center;font-size:11px;font-weight:700;opacity:.55;margin-top:12px}
+
+  /* ===== Écran 2 : la réunion ===== */
+  .game{position:relative;z-index:1;height:100%;padding:16px 12px 14px;display:flex;flex-direction:column;gap:10px}
+  .topbar{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.08);border:3px solid var(--ink);border-radius:16px;padding:7px 10px}
+  .brand{font-family:var(--display);font-size:20px;display:flex;align-items:center;gap:7px}
+  .brand i{width:24px;height:22px;background:var(--violet);border:3px solid var(--ink);border-radius:9px 9px 9px 2px}
+  .meeting{text-align:right;font-size:10.5px;font-weight:800;line-height:1.2;color:#CFC3EE}
+  .clock{font-family:var(--display);font-size:18px;color:var(--sun)}
+  .harmony{display:flex;align-items:center;gap:8px;animation:hit 4s ease-in-out infinite}
+  .harmony .face{width:42px;height:42px;flex:none;border-radius:50%;background:var(--sun);border:3px solid var(--ink);box-shadow:0 3px 0 var(--ink);display:grid;place-items:center;font-size:23px}
+  .harmony .bar{flex:1;height:28px;background:#1A0B3B;border:3px solid var(--ink);border-radius:14px;overflow:hidden;position:relative}
+  .harmony .fill{position:absolute;top:0;bottom:0;left:0;width:72%;background:linear-gradient(90deg,var(--mute),var(--sun) 55%,var(--live) 100%);border-right:3px solid var(--ink)}
+  .harmony .bar span{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--display);font-size:14px;color:var(--cream);-webkit-text-stroke:3px var(--ink);paint-order:stroke fill;letter-spacing:.3px}
+  @keyframes hit{0%,90%,100%{transform:none}92%{transform:translateX(-3px) rotate(-1deg)}94%{transform:translateX(3px) rotate(1deg)}96%{transform:translateX(-2px)}}
+
+  .grid{flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:12px}
+  .tile{position:relative;border:4px solid var(--ink);border-radius:22px;box-shadow:5px 5px 0 var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:8px}
+  .tile.coral{background:linear-gradient(165deg,#FF9A9A,var(--coral))}
+  .tile.turq{background:linear-gradient(165deg,#7DEBE1,var(--turq))}
+  .tile.sun{background:linear-gradient(165deg,#FFE58A,var(--sun))}
+  .tile.lime{background:linear-gradient(165deg,#C9F59E,var(--lime))}
+  .tile.speaking{animation:speak 1.2s ease-in-out infinite}
+  @keyframes speak{0%,100%{box-shadow:5px 5px 0 var(--ink),0 0 0 0 rgba(61,255,139,.0)}50%{box-shadow:5px 5px 0 var(--ink),0 0 0 6px rgba(61,255,139,.75)}}
+  .tile .avatar{width:96px;height:96px;display:block}
+  .name{align-self:stretch;margin-top:2px;background:var(--ink);color:var(--cream);border-radius:10px;padding:4px 8px;font-weight:900;font-size:12px;display:flex;justify-content:space-between;align-items:baseline}
+  .name em{font-style:normal;font-weight:700;font-size:10px;opacity:.65}
+  .mic{position:absolute;right:8px;bottom:42px;width:32px;height:32px;border-radius:50%;border:3px solid var(--ink);display:grid;place-items:center;box-shadow:0 2px 0 var(--ink)}
+  .mic.idle{background:#E8E1F5}
+  .mic.live{background:var(--live);animation:livepulse 1s ease-out infinite}
+  .mic.muted{background:var(--mute)}
+  @keyframes livepulse{0%{box-shadow:0 0 0 0 rgba(61,255,139,.9)}100%{box-shadow:0 0 0 13px rgba(61,255,139,0)}}
+
+  .bubble{position:absolute;left:6px;right:6px;top:7px;z-index:2;background:#fff;color:var(--ink);border:3px solid var(--ink);border-radius:14px;box-shadow:3px 3px 0 var(--ink);padding:5px 8px 7px;font-weight:800;font-size:12.5px;line-height:1.25}
+  .bubble::after{content:"";position:absolute;left:22px;bottom:-11px;width:14px;height:14px;background:#fff;border-right:3px solid var(--ink);border-bottom:3px solid var(--ink);transform:rotate(45deg)}
+  .bubble .tag{display:flex;align-items:center;gap:6px;font-size:9.5px;font-weight:900;letter-spacing:.7px;text-transform:uppercase;color:#6B5A8E;margin-bottom:2px}
+  .bubble .timer{width:18px;height:18px;transform:rotate(-90deg)}
+  .bubble .timer .prog{fill:none;stroke-width:4;stroke-dasharray:50.27;animation:count 3s linear infinite}
+  @keyframes count{0%{stroke-dashoffset:0;stroke:#22D3C5}55%{stroke:#FFB703}100%{stroke-dashoffset:50.27;stroke:#FF3D7F}}
+  .bubble.hushed{background:#EDE7F6;color:#8E80AB}
+  .bubble.hushed::after{background:#EDE7F6}
+  .bubble.hushed q{text-decoration:line-through;text-decoration-thickness:2px}
+  .bubble.hushed .note{display:block;margin-top:3px;color:var(--ink);font-size:10.5px}
+  .bubble q{quotes:"« " " »"}
+
+  .stamp{position:absolute;top:52%;left:50%;z-index:3;font-family:var(--display);font-size:34px;color:var(--mute);background:rgba(255,255,255,.92);border:4px solid var(--mute);border-radius:12px;padding:0 10px;letter-spacing:1px;animation:slam 2.8s ease-out infinite;white-space:nowrap}
+  @keyframes slam{
+    0%{transform:translate(-50%,-50%) rotate(-14deg) scale(2.6);opacity:0}
+    7%{transform:translate(-50%,-50%) rotate(-14deg) scale(.88);opacity:1}
+    11%{transform:translate(-50%,-50%) rotate(-14deg) scale(1.06)}
+    15%,82%{transform:translate(-50%,-50%) rotate(-14deg) scale(1);opacity:1}
+    100%{transform:translate(-50%,-50%) rotate(-14deg) scale(1);opacity:0}}
+  .boom{position:absolute;bottom:22px;right:-26px;z-index:4;width:112px;height:72px;animation:boom 2.8s ease-out infinite}
+  @keyframes boom{0%,4%{transform:scale(0) rotate(-20deg)}12%{transform:scale(1.15) rotate(-8deg)}18%,80%{transform:scale(1) rotate(-8deg)}100%{transform:scale(1) rotate(-8deg);opacity:0}}
+  .spark{position:absolute;top:52%;left:50%;z-index:2;width:11px;height:11px;border-radius:3px;border:2px solid var(--ink);animation:spark 2.8s ease-out infinite}
+  @keyframes spark{
+    0%,6%{transform:translate(-50%,-50%) scale(0);opacity:1}
+    24%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1) rotate(120deg);opacity:1}
+    42%,100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.5) rotate(200deg);opacity:0}}
+  .mallet{position:absolute;left:-30px;bottom:34px;z-index:6;width:78px;height:78px;transform-origin:85% 85%;animation:swing 1.4s ease-in-out infinite;filter:drop-shadow(3px 3px 0 var(--ink))}
+  @keyframes swing{0%,100%{transform:rotate(22deg)}50%{transform:rotate(-12deg)}}
+
+  .toast{align-self:center;background:var(--cream);color:var(--ink);border:3px solid var(--ink);border-radius:999px;box-shadow:0 3px 0 var(--ink);padding:5px 14px;font-weight:900;font-size:12.5px;animation:toast 2.8s ease-out infinite}
+  @keyframes toast{0%,8%{transform:translateY(8px) scale(.8);opacity:0}16%,80%{transform:none;opacity:1}100%{opacity:0}}
+  .bottombar{display:flex;gap:8px;align-items:center}
+  .chip{background:rgba(255,255,255,.1);border:3px solid var(--ink);border-radius:12px;padding:6px 9px;font-weight:900;font-size:12px;white-space:nowrap}
+  .sound{margin-left:auto;width:38px;height:34px;border-radius:12px;background:var(--violet);border:3px solid var(--ink);box-shadow:0 3px 0 var(--ink);display:grid;place-items:center;font-size:16px}
+
+  /* ===== Écran 3 : fin ===== */
+  .end{position:relative;z-index:1;height:100%;padding:40px 20px 22px;display:flex;flex-direction:column;align-items:center;text-align:center}
+  .end h2{font-family:var(--display);font-weight:400;font-size:36px;line-height:1;margin:0;-webkit-text-stroke:6px var(--ink);paint-order:stroke fill;text-shadow:4px 4px 0 var(--ink);transform:rotate(-3deg)}
+  .end .sub{font-size:13px;font-weight:800;color:#CFC3EE;margin-top:8px}
+  .donut{width:196px;height:196px;border-radius:50%;margin:24px 0 6px;border:5px solid var(--ink);box-shadow:0 8px 0 var(--ink);display:grid;place-items:center;
+    background:conic-gradient(var(--live) 0 306deg,#1A0B3B 306deg 360deg);animation:bob 2.6s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-6px) rotate(2deg)}}
+  .donut div{width:140px;height:140px;border-radius:50%;background:var(--deep);border:5px solid var(--ink);display:grid;place-content:center;font-family:var(--display);font-size:54px;line-height:1;color:var(--sun)}
+  .donut small{display:block;font-family:var(--text);font-size:11px;font-weight:900;letter-spacing:.6px;color:#CFC3EE;margin-top:2px}
+  .ribbon{margin-top:12px;background:var(--mute);color:#fff;font-family:var(--display);font-size:19px;white-space:nowrap;padding:7px 14px;border:4px solid var(--ink);border-radius:12px;box-shadow:4px 4px 0 var(--ink);transform:rotate(-2deg)}
+  .crew{display:flex;justify-content:center;margin-top:18px}
+  .crew span{width:52px;height:52px;border-radius:50%;border:3px solid var(--ink);overflow:hidden;margin:0 -4px;box-shadow:0 3px 0 var(--ink)}
+  .crew span:nth-child(odd){transform:translateY(-4px)}
+  .crew svg{width:100%;height:100%}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%;margin:18px 0 0}
+  .stat{background:var(--cream);color:var(--ink);border:3px solid var(--ink);border-radius:14px;box-shadow:0 4px 0 var(--ink);padding:8px 4px;font-size:10.5px;font-weight:800;line-height:1.2}
+  .stat b{display:block;font-family:var(--display);font-weight:400;font-size:25px;line-height:1.1}
+  .end .actions{margin-top:auto;width:100%;display:grid;gap:12px}
+  .end .link{font-size:13px;font-weight:900;color:#CFC3EE;text-decoration:underline;text-underline-offset:3px}
+  .confetti{position:absolute;top:-20px;width:10px;height:16px;border:2px solid var(--ink);border-radius:3px;animation:fall linear infinite;z-index:0}
+  @keyframes fall{0%{transform:translateY(0) rotate(0)}100%{transform:translateY(800px) rotate(540deg)}}
+
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation:none!important}
+  }
+</style>
+</head>
+<body>
+
+<header class="page">
+  <h1>Whack-a-Mute — maquette v1</h1>
+  <p>Direction artistique proposée : <b>« Bureau pop arcade »</b>. Fond violet profond, une couleur vive par participant, contours épais façon autocollant, ombres franches et animations à ressort. Cette maquette est <b>statique</b> : les animations montrent l'intention, pas le vrai rythme du jeu. Elle sert à valider l'ambiance avant de coder (exigence R-34 de SPEC.md).</p>
+  <div class="swatches">
+    <span><i style="background:var(--deep)"></i>Fond</span>
+    <span><i style="background:var(--coral)"></i>Ginette</span>
+    <span><i style="background:var(--turq)"></i>Kevin</span>
+    <span><i style="background:var(--sun)"></i>Josée</span>
+    <span><i style="background:var(--lime)"></i>Le boss</span>
+    <span><i style="background:var(--live)"></i>Micro ouvert</span>
+    <span><i style="background:var(--mute)"></i>Sur mute</span>
+  </div>
+</header>
+
+<main class="screens">
+
+  <!-- ================= ÉCRAN 1 : ACCUEIL ================= -->
+  <figure>
+    <div class="phone">
+      <div class="deco">
+        <span style="top:9%;left:6%">☕</span><span style="top:30%;right:4%;animation-delay:-3s">📎</span>
+        <span style="top:62%;left:4%;animation-delay:-5s">📈</span><span style="bottom:7%;right:8%;animation-delay:-2s">🗒️</span>
+      </div>
+      <div class="home">
+        <div class="logo">
+          <div class="small">WHACK-A-</div>
+          <div class="big">MUTE</div>
+          <div class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v3"/><path d="M4 4l16 16" stroke="#1B1033" stroke-width="5"/><path d="M4 4l16 16"/></svg></div>
+        </div>
+        <div class="tagline">Sauve la réunion d'équipe…<br><em>un mute à la fois.</em></div>
+        <div class="story">
+          <div class="av" data-av="ginette:shocked"></div>
+          <div>
+            <div class="who">Une collègue, en pleine réunion</div>
+            <div class="msg">« Marc… t'es pas sur mute. » 😬</div>
+            <div class="meta">Inspiré d'une histoire vraie. Ton mandat : lire ce que tes collègues s'apprêtent à dire et les couper juste à temps.</div>
+          </div>
+        </div>
+        <div class="label">Ton niveau de café</div>
+        <div class="coffee">
+          <div><b>☕</b>Lundi 9 h,<br>pas de café</div>
+          <div class="on"><b>☕☕</b>Après le<br>1<sup>er</sup> café</div>
+          <div><b>☕☕☕</b>4<sup>e</sup><br>espresso</div>
+        </div>
+        <div class="btn">Rejoindre la réunion →</div>
+        <div class="fine">Partie de 90 secondes · son conseillé 🔊</div>
+      </div>
+    </div>
+    <figcaption><strong>1 · Accueil</strong>Logo en grosses lettres façon autocollant, l'anecdote racontée comme un message de collègue, et le choix du café directement sur l'accueil : <b>un seul écran avant de jouer</b> (petite simplification par rapport à la spec).</figcaption>
+  </figure>
+
+  <!-- ================= ÉCRAN 2 : LA RÉUNION ================= -->
+  <figure>
+    <div class="phone">
+      <div class="deco">
+        <span style="top:48%;left:46%;animation-delay:-4s">☕</span>
+      </div>
+      <div class="game">
+        <div class="topbar">
+          <div class="brand"><i></i>SynergiQ</div>
+          <div class="meeting">Stand-up quotidien · ☕☕<br><span class="clock">09:07</span> / 09:15</div>
+        </div>
+        <div class="harmony">
+          <div class="face">🙂</div>
+          <div class="bar"><div class="fill"></div><span>Harmonie d'équipe · 72 %</span></div>
+        </div>
+
+        <div class="grid">
+          <!-- Ginette : en attente -->
+          <div class="tile coral">
+            <svg class="avatar" data-av="ginette:neutral"></svg>
+            <div class="mic idle"><svg class="icon-mic" viewBox="0 0 24 24" fill="none" stroke="#1B1033" stroke-width="2.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v3"/></svg></div>
+            <div class="name">Ginette <em>compta</em></div>
+          </div>
+
+          <!-- Kevin : va dire une phrase déplacée, micro ouvert -->
+          <div class="tile turq">
+            <div class="bubble">
+              <div class="tag"><svg class="timer" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="none" stroke="#E5DEF2" stroke-width="4"/><circle class="prog" cx="10" cy="10" r="8"/></svg>Va dire…</div>
+              <q>Encore une réunion qui aurait pu être un courriel.</q>
+            </div>
+            <svg class="avatar" data-av="kevin:smirk"></svg>
+            <div class="mic live"><svg class="icon-mic" viewBox="0 0 24 24" fill="none" stroke="#1B1033" stroke-width="2.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v3"/></svg></div>
+            <div class="name">Kevin <em>stagiaire</em></div>
+            <svg class="mallet" viewBox="0 0 80 80">
+              <rect x="38" y="30" width="10" height="46" rx="4" transform="rotate(-40 43 53)" fill="#C98A4B" stroke="#1B1033" stroke-width="3"/>
+              <rect x="4" y="10" width="46" height="28" rx="8" transform="rotate(-40 27 24)" fill="#FF3D7F" stroke="#1B1033" stroke-width="3.5"/>
+              <g transform="rotate(-40 27 24)"><rect x="22" y="15" width="10" height="18" rx="2" fill="#fff" stroke="#1B1033" stroke-width="2"/></g>
+            </svg>
+          </div>
+
+          <!-- Josée : interceptée ! -->
+          <div class="tile sun">
+            <div class="bubble hushed">
+              <div class="tag">🔇 Coupée à temps</div>
+              <q>Je fais semblant d'écouter depuis dix minutes.</q>
+              <span class="note">…personne n'a rien entendu 🤫</span>
+            </div>
+            <svg class="avatar" data-av="josee:oops"></svg>
+            <div class="mic muted"><svg class="icon-mic" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v3"/><path d="M4 4l16 16" stroke="#1B1033" stroke-width="5"/><path d="M4 4l16 16"/></svg></div>
+            <div class="name">Josée <em>scrum master</em></div>
+            <div class="stamp">MUTE !</div>
+            <span class="spark" style="--dx:-58px;--dy:-30px;background:var(--mute)"></span>
+            <span class="spark" style="--dx:56px;--dy:-38px;background:var(--turq)"></span>
+            <span class="spark" style="--dx:-48px;--dy:34px;background:var(--live)"></span>
+            <span class="spark" style="--dx:60px;--dy:28px;background:#fff"></span>
+            <span class="spark" style="--dx:4px;--dy:-60px;background:var(--violet)"></span>
+          </div>
+
+          <!-- Le boss : parle, phrase correcte -->
+          <div class="tile lime speaking">
+            <div class="bubble">
+              <div class="tag">🎙️ Dit</div>
+              <q>On garde le cap. Bon travail, tout le monde !</q>
+            </div>
+            <svg class="avatar" data-av="boss:talk"></svg>
+            <div class="mic live"><svg class="icon-mic" viewBox="0 0 24 24" fill="none" stroke="#1B1033" stroke-width="2.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v3"/></svg></div>
+            <div class="name">Le boss <em>gestion</em></div>
+          </div>
+        </div>
+
+        <div class="toast">🔇 Interceptée ! +3 harmonie</div>
+        <div class="bottombar">
+          <div class="chip">🔇 4 interceptés</div>
+          <div class="chip">😬 1 malaise</div>
+          <div class="sound">🔊</div>
+        </div>
+      </div>
+      <!-- SCHLAC ! posé sur la tuile de Josée (coin haut gauche de la 3e tuile) -->
+    </div>
+    <figcaption><strong>2 · La réunion (4 participants)</strong>Les quatre états visibles à la fois : <b>Ginette</b> attend, <b>Kevin</b> s'apprête à parler (bulle et compte à rebours, micro vert qui pulse, le marteau arrive), <b>Josée</b> vient d'être coupée (tampon « MUTE ! », étincelles, « SCHLAC ! ») et <b>le boss</b> parle (contour lumineux).</figcaption>
+  </figure>
+
+  <!-- ================= ÉCRAN 3 : FIN ================= -->
+  <figure>
+    <div class="phone">
+      <div class="deco" id="confetti"></div>
+      <div class="end">
+        <h2>Réunion terminée !</h2>
+        <div class="sub">Stand-up quotidien · après le 1<sup>er</sup> café ☕☕</div>
+        <div class="donut"><div>85 %<small>HARMONIE</small></div></div>
+        <div class="ribbon">Collègue modèle (ou presque)</div>
+        <div class="crew">
+          <span style="background:var(--coral)" data-av="ginette:happy"></span>
+          <span style="background:var(--turq)" data-av="kevin:smirk"></span>
+          <span style="background:var(--sun)" data-av="josee:happy"></span>
+          <span style="background:var(--lime)" data-av="boss:happy"></span>
+        </div>
+        <div class="stats">
+          <div class="stat"><b>7/9</b>commentaires interceptés</div>
+          <div class="stat"><b>1</b>collègue coupé à tort</div>
+          <div class="stat"><b>1</b>malaise général</div>
+        </div>
+        <div class="actions">
+          <div class="btn">Rejouer ↻</div>
+          <div class="btn turq">Partager mon score</div>
+          <div class="link">Changer de café ☕</div>
+        </div>
+      </div>
+    </div>
+    <figcaption><strong>3 · Fin de partie</strong>Le score en grand dans un anneau, le titre humoristique sur un ruban, l'équipe qui réagit, trois statistiques et le bouton <b>Partager</b>, mis en avant pour la viralité.</figcaption>
+  </figure>
+
+</main>
+
+<script>
+/* ===== Avatars SVG générés (personnages fictifs) ===== */
+const INK = '#1B1033';
+const people = {
+  ginette:{skin:'#F1C9A5', shirt:'#6A4C93'},
+  kevin:  {skin:'#C68B59', shirt:'#FFD23F'},
+  josee:  {skin:'#8D5524', shirt:'#FF6B6B'},
+  boss:   {skin:'#FFD9B8', shirt:'#2F3E66'}
+};
+function eyes(mood){
+  switch(mood){
+    case 'smirk':   return `<circle cx="41" cy="49" r="3.6" fill="${INK}"/><path d="M55 49 Q59 46 63 49" stroke="${INK}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+    case 'shocked':
+    case 'oops':    return `<circle cx="41" cy="48" r="6" fill="#fff" stroke="${INK}" stroke-width="2.5"/><circle cx="59" cy="48" r="6" fill="#fff" stroke="${INK}" stroke-width="2.5"/><circle cx="41" cy="49" r="2.6" fill="${INK}"/><circle cx="59" cy="49" r="2.6" fill="${INK}"/>`;
+    case 'happy':   return `<path d="M37 50 Q41 45 45 50 M55 50 Q59 45 63 50" stroke="${INK}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+    default:        return `<circle cx="41" cy="49" r="3.6" fill="${INK}"/><circle cx="59" cy="49" r="3.6" fill="${INK}"/>`;
+  }
+}
+function mouth(mood){
+  switch(mood){
+    case 'smirk':   return `<path d="M41 62 Q52 68 61 57" stroke="${INK}" stroke-width="3.2" fill="none" stroke-linecap="round"/>`;
+    case 'shocked': return `<path d="M42 65 Q46 61 50 65 Q54 69 58 65" stroke="${INK}" stroke-width="3" fill="none" stroke-linecap="round"/><ellipse cx="34" cy="58" rx="4.5" ry="2.6" fill="#FF7FA8" opacity=".75"/><ellipse cx="66" cy="58" rx="4.5" ry="2.6" fill="#FF7FA8" opacity=".75"/>`;
+    case 'oops':    return `<ellipse cx="50" cy="65" rx="4.5" ry="5.5" fill="${INK}"/><ellipse cx="34" cy="58" rx="4.5" ry="2.6" fill="#FF7FA8" opacity=".8"/><ellipse cx="66" cy="58" rx="4.5" ry="2.6" fill="#FF7FA8" opacity=".8"/>`;
+    case 'happy':   return `<path d="M40 59 Q50 73 60 59 Z" fill="${INK}"/>`;
+    case 'talk':    return `<path d="M41 59 Q50 75 59 59 Z" fill="#7A1F3D" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>`;
+    default:        return `<path d="M43 63 L57 63" stroke="${INK}" stroke-width="3.2" stroke-linecap="round"/>`;
+  }
+}
+function avatar(who, mood){
+  const p = people[who];
+  let behind = '', front = '', body = `<path d="M12 106 Q50 70 88 106 Z" fill="${p.shirt}" stroke="${INK}" stroke-width="4"/>`;
+  if(who==='ginette'){
+    behind = [[28,38],[38,26],[52,22],[66,27],[75,40],[24,52],[77,54]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="12" fill="#B39DDB" stroke="${INK}" stroke-width="3.5"/>`).join('');
+    front = `<circle cx="41" cy="49" r="8.5" fill="rgba(255,255,255,.25)" stroke="${INK}" stroke-width="3"/><circle cx="59" cy="49" r="8.5" fill="rgba(255,255,255,.25)" stroke="${INK}" stroke-width="3"/><path d="M49.5 49 h1" stroke="${INK}" stroke-width="3"/>`;
+  }
+  if(who==='kevin'){
+    front = `<path d="M23 46 L26 22 L35 31 L41 14 L50 28 L58 13 L64 30 L73 20 L77 46 Q50 33 23 46 Z" fill="#2B1B12" stroke="${INK}" stroke-width="3.5" stroke-linejoin="round"/>`;
+  }
+  if(who==='josee'){
+    behind = `<circle cx="50" cy="19" r="11" fill="#3A1A10" stroke="${INK}" stroke-width="3.5"/>`;
+    front = `<path d="M23 52 Q21 22 50 22 Q79 22 77 52 Q71 34 50 33 Q30 34 23 52 Z" fill="#3A1A10" stroke="${INK}" stroke-width="3.5" stroke-linejoin="round"/>`;
+  }
+  if(who==='boss'){
+    body += `<path d="M40 80 L50 90 L60 80 L56 76 L44 76 Z" fill="#fff" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/><path d="M47 86 L53 86 L56 104 L50 108 L44 104 Z" fill="#FF3D7F" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>`;
+    front = `<path d="M24 50 Q22 38 30 36 M76 50 Q78 38 70 36" stroke="#8C8C9E" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M35 40 L46 42 M54 42 L65 40" stroke="${INK}" stroke-width="3.5" stroke-linecap="round"/><path d="M40 58 Q50 54 60 58" stroke="#6B5A4E" stroke-width="5" fill="none" stroke-linecap="round"/>`;
+  }
+  return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">${behind}${body}<circle cx="50" cy="50" r="27" fill="${p.skin}" stroke="${INK}" stroke-width="4"/>${eyes(mood)}${mouth(mood)}${front}</svg>`;
+}
+document.querySelectorAll('[data-av]').forEach(el=>{
+  const [who,mood] = el.dataset.av.split(':');
+  const svg = avatar(who,mood);
+  if(el.tagName.toLowerCase()==='svg'){ el.outerHTML = svg.replace('<svg ', `<svg class="${el.getAttribute('class')||''}" `); }
+  else { el.innerHTML = svg; }
+});
+
+/* ===== « SCHLAC ! » façon BD sur la tuile de Josée ===== */
+const joseeTile = document.querySelector('.tile.sun');
+joseeTile.insertAdjacentHTML('beforeend', `
+  <svg class="boom" viewBox="0 0 124 80">
+    <polygon points="62,2 72,20 92,6 90,28 120,24 100,42 122,58 94,58 100,78 76,64 62,80 52,62 26,76 30,56 2,58 22,42 4,24 32,28 30,6 52,20"
+      fill="#fff" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/>
+    <text x="62" y="49" text-anchor="middle" font-family="Lilita One, sans-serif" font-size="21" fill="#FF3D7F" stroke="${INK}" stroke-width="1.2" paint-order="stroke">SCHLAC !</text>
+  </svg>`);
+
+/* ===== Confettis de fin ===== */
+const colors = ['#FFD23F','#22D3C5','#FF6B6B','#9BE564','#FF3D7F','#7B4DFF'];
+const box = document.getElementById('confetti');
+for(let i=0;i<22;i++){
+  const c = document.createElement('span');
+  c.className = 'confetti';
+  c.style.left = (Math.random()*100)+'%';
+  c.style.background = colors[i%colors.length];
+  c.style.animationDuration = (4+Math.random()*4)+'s';
+  c.style.animationDelay = (-Math.random()*8)+'s';
+  box.appendChild(c);
+}
+</script>
+</body>
+</html>
