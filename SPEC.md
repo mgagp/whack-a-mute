@@ -1,6 +1,6 @@
 # Whack-a-Mute — Spécification (PRD)
 
-> **Version** 0.4 (brouillon) · **Date** 2026-11-09 · **Auteur** Marc
+> **Version** 0.5 (brouillon) · **Date** 2026-11-09 · **Auteur** Marc
 > Source d'origine : [VERBATIM.md](VERBATIM.md). En cas de doute sur l'intention, c'est le verbatim qui fait foi.
 > Les sections marquées **⚠️ Hypothèse** sont des propositions à valider. Elles sont reprises dans la section 13, « Questions ouvertes ».
 
@@ -159,6 +159,8 @@ Les répliques sont le cœur de l'humour. Elles sont stockées dans un fichier d
 ### La réplique signature
 **« Ben oui, c'est ça. »** C'est la vraie phrase de Marc, celle qui a déclenché le « Marc, tu n'es pas sur mute ». Comme la phrase d'accroche de l'accueil, elle fait partie de l'identité du jeu. Elle fait obligatoirement partie des répliques déplacées (`fr-d-00`, marquée `"signature": true`).
 
+**Une réplique qui réagit au boss.** Hors contexte, « Ben oui, c'est ça. » n'a pas l'air déplacée : c'est le ton sarcastique en réaction au boss qui la rend gênante. Elle porte donc `"declencheur": "boss"` et n'est annoncée que **juste après une prise de parole du boss**, par un autre participant. Le joueur averti la voit venir, et c'est justement ce qui la rend drôle : le boss parle, quelqu'un s'apprête à répondre « Ben oui, c'est ça. »… vite, le mute !
+
 ### Volume visé
 Au moins 40 phrases correctes et 25 phrases déplacées pour la première version. Il n'y a jamais deux fois la même phrase dans une même partie.
 
@@ -241,6 +243,8 @@ Chaque exigence [M] doit être couverte par au moins un test automatisé (voir l
 - **R-21 [M]** Aucune réplique n'est répétée dans une même partie.
 - **R-22 [M]** Un test vérifie que chaque réplique fait au plus 70 caractères et que le volume minimal (section 7) est atteint.
 - **R-23 [M]** La réplique signature « Ben oui, c'est ça. » est présente dans la banque, comme réplique déplacée marquée `signature`. Un test le vérifie.
+- **R-24 [M]** Une réplique avec `"declencheur": "boss"` n'est annoncée que juste après la fin d'une prise de parole du boss, et par un autre participant que le boss.
+- **R-25 [S]** Si le boss est présent dans la réunion, la réplique signature est annoncée au moins une fois par partie.
 
 ### Retour visuel et sonore
 - **R-30 [M]** Chaque résultat de la table 3.3 a un retour visuel distinct, perceptible en moins de 100 ms après la fin de l'annonce ou le clic.
@@ -272,6 +276,7 @@ Chaque exigence [M] doit être couverte par au moins un test automatisé (voir l
 - **R-61 [L]** Mécanique inverse : un collègue sur mute dit quelque chose d'utile (« Tu es sur mute ! »), et il faut lui ouvrir le micro (voir Q-3).
 - **R-62 [L]** Classement mondial (nécessiterait un serveur).
 - **R-63 [L]** Phrases ambiguës comme troisième axe de difficulté.
+- **R-64 [L]** D'autres répliques-réactions avec un déclencheur, sur le modèle de la réplique signature (par exemple des réactions sarcastiques à une annonce du boss).
 
 ---
 
@@ -354,3 +359,4 @@ public/sounds/
 | 0.2 | 2026-11-09 | Décisions : boucle de jeu confirmée (Q-1), français d'abord (Q-2), québécois léger (Q-8). Contrainte d'hébergement avec un dépôt privé ajoutée à Q-7 |
 | 0.3 | 2026-11-09 | Le visuel « éclatant » devient une exigence de premier plan : pilier 3 renforcé, section 8 détaillée, exigences R-34 à R-39 |
 | 0.4 | 2026-11-09 | Maquette v1 validée (R-34) : direction « Bureau pop arcade » adoptée, choix du café fusionné avec l'accueil, SynergiQ et les personnages adoptés (Q-4, Q-5) |
+| 0.5 | 2026-11-09 | Réplique signature « Ben oui, c'est ça. » en réaction au boss (R-23 à R-25, R-64). Premier tri des répliques par Marc |
