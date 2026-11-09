@@ -1,0 +1,17 @@
+# Notes personnelles — pas encore décidé si elles seront publiées
+VERBATIM.md
+
+# Dépendances et builds
+node_modules/
+dist/
+coverage/
+
+# Tests Playwright
+test-results/
+playwright-report/
+
+# Divers
+.DS_Store
+*.log
+.env
+.env.*
