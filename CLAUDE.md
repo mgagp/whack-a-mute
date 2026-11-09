@@ -25,7 +25,7 @@ TypeScript, Vite, React, CSS et Motion, Howler.js, Zod, Vitest, Playwright, pnpm
 - Avant de dire qu'une tâche est terminée, lance les tests et le typecheck.
 
 ## Ton et contenu
-- Interface et répliques en français (la langue de la première version est à confirmer, voir Q-2).
+- Interface et répliques en **français québécois léger** pour la première version (décisions Q-2 et Q-8). Le code reste prêt pour une traduction.
 - Humour léger. Interdits : viser un groupe, la vulgarité forte, les vraies personnes ou entreprises.
 - Interface de visio **parodique et générique** : aucun nom, logo ou couleur signature de Teams, Slack, Zoom, etc.
 

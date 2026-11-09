@@ -1,6 +1,6 @@
 # Whack-a-Mute — Spécification (PRD)
 
-> **Version** 0.1 (brouillon) · **Date** 2026-11-09 · **Auteur** Marc
+> **Version** 0.2 (brouillon) · **Date** 2026-11-09 · **Auteur** Marc
 > Source d'origine : [VERBATIM.md](VERBATIM.md). En cas de doute sur l'intention, c'est le verbatim qui fait foi.
 > Les sections marquées **⚠️ Hypothèse** sont des propositions à valider. Elles sont reprises dans la section 13, « Questions ouvertes ».
 
@@ -138,6 +138,7 @@ Les répliques sont le cœur de l'humour. Elles sont stockées dans un fichier d
 - **Interdit** : viser un groupe (origine, genre, religion, orientation, âge, handicap), la vulgarité forte, le harcèlement, les vraies entreprises ou les vraies personnes.
 - Une phrase déplacée doit être reconnaissable comme telle **en moins de 2 secondes de lecture**.
 - Longueur maximale : environ 70 caractères, pour rester lisible sur téléphone.
+- **Langue : français québécois léger.** On utilise des expressions d'ici avec parcimonie (« ben voyons », « courriel », « on se reparle », « c'est correct »), mais tout doit rester compréhensible partout dans la francophonie. Pas de sacres ni de joual appuyé.
 
 ### Exemples de ton
 **Correctes**
@@ -286,14 +287,14 @@ public/sounds/
 
 | # | Question | Hypothèse actuelle |
 |---|---|---|
-| Q-1 | La boucle « ils enlèvent eux-mêmes le mute, le joueur le remet » convient-elle ? | Oui (section 3) |
-| Q-2 | Français seulement, ou français et anglais dès la première version ? | Français d'abord, code prêt pour la traduction (R-20 inclut la langue) |
+| ~~Q-1~~ | La boucle « ils enlèvent eux-mêmes le mute, le joueur le remet » convient-elle ? | ✅ **Décidé (v0.2)** : oui, telle que décrite en section 3, avec le piège R-08 |
+| ~~Q-2~~ | Français seulement, ou français et anglais dès la première version ? | ✅ **Décidé (v0.2)** : français d'abord, code prêt pour la traduction (R-20 inclut la langue). L'anglais reste R-60 |
 | Q-3 | Ajoute-t-on la mécanique inverse « Tu es sur mute ! » ? | Non pour la première version, voir R-61 |
 | Q-4 | Nom de l'application de visio fictive ? | « SynergiQ » |
 | Q-5 | Prénoms et rôles des personnages ? | Ginette, Kevin, Josée, Le boss |
 | Q-6 | D'où viendront les bruitages (générés, banque libre de droits, enregistrés par Marc) ? | Générés ou libres de droits |
-| Q-7 | Adresse web finale (sous-domaine GitHub Pages ou nom de domaine à acheter) ? | GitHub Pages pour commencer |
-| Q-8 | Français québécois assumé dans les répliques ? | À décider avec Marc |
+| Q-7 | Hébergement et adresse web finale ? Le dépôt GitHub sera **privé** au départ, et GitHub Pages ne publie depuis un dépôt privé qu'avec un abonnement payant (GitHub Pro). | À trancher à la mise en ligne : rendre le dépôt public, prendre GitHub Pro, ou héberger sur Netlify, Vercel ou Cloudflare Pages (gratuits depuis un dépôt privé) |
+| ~~Q-8~~ | Français québécois assumé dans les répliques ? | ✅ **Décidé (v0.2)** : québécois léger, voir section 7 |
 
 ---
 
@@ -302,3 +303,4 @@ public/sounds/
 | Version | Date | Changement |
 |---|---|---|
 | 0.1 | 2026-11-09 | Premier brouillon, tiré du verbatim et de la discussion sur la stack |
+| 0.2 | 2026-11-09 | Décisions : boucle de jeu confirmée (Q-1), français d'abord (Q-2), québécois léger (Q-8). Contrainte d'hébergement avec un dépôt privé ajoutée à Q-7 |
