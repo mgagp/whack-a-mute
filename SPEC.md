@@ -161,6 +161,8 @@ Les répliques sont le cœur de l'humour. Elles sont stockées dans un fichier d
 
 **Une réplique qui réagit au boss.** Hors contexte, « Ben oui, c'est ça. » n'a pas l'air déplacée : c'est le ton sarcastique en réaction au boss qui la rend gênante. Elle porte donc `"declencheur": "boss"` et n'est annoncée que **juste après une prise de parole du boss**, par un autre participant. Le joueur averti la voit venir, et c'est justement ce qui la rend drôle : le boss parle, quelqu'un s'apprête à répondre « Ben oui, c'est ça. »… vite, le mute !
 
+**Une réplique qui ne convient pas à tout le monde.** Certaines phrases n'ont pas de sens dans la bouche d'un participant précis : le boss qui se moque du boss, par exemple. Le champ facultatif `"pasDitePar": ["boss"]` l'exclut de cette réplique (R-26).
+
 ### Volume visé
 Au moins 40 phrases correctes et 25 phrases déplacées pour la première version. Il n'y a jamais deux fois la même phrase dans une même partie.
 
@@ -245,6 +247,7 @@ Chaque exigence [M] doit être couverte par au moins un test automatisé (voir l
 - **R-23 [M]** La réplique signature « Ben oui, c'est ça. » est présente dans la banque, comme réplique déplacée marquée `signature`. Un test le vérifie.
 - **R-24 [M]** Une réplique avec `"declencheur": "boss"` n'est annoncée que juste après la fin d'une prise de parole du boss, et par un autre participant que le boss.
 - **R-25 [S]** Si le boss est présent dans la réunion, la réplique signature est annoncée au moins une fois par partie.
+- **R-26 [M]** Une réplique peut exclure des participants avec `"pasDitePar"`. Ces participants ne l'annoncent jamais. Exemple : le boss ne dit pas « Le boss a encore lu un article de motivation, hein ? » (`fr-d-14`).
 
 ### Retour visuel et sonore
 - **R-30 [M]** Chaque résultat de la table 3.3 a un retour visuel distinct, perceptible en moins de 100 ms après la fin de l'annonce ou le clic.
@@ -372,3 +375,4 @@ Cette idée généralise le duo « annonce du boss → réplique signature ». I
 | 0.3 | 2026-11-09 | Le visuel « éclatant » devient une exigence de premier plan : pilier 3 renforcé, section 8 détaillée, exigences R-34 à R-39 |
 | 0.4 | 2026-11-09 | Maquette v1 validée (R-34) : direction « Bureau pop arcade » adoptée, choix du café fusionné avec l'accueil, SynergiQ et les personnages adoptés (Q-4, Q-5) |
 | 0.5 | 2026-11-09 | Réplique signature « Ben oui, c'est ça. » en réaction au boss (R-23 à R-25, R-64). Premier tri des répliques par Marc |
+| 0.6 | 2026-11-09 | Champ `pasDitePar` : le boss ne dit plus la réplique qui se moque de lui (R-26) |

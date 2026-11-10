@@ -15,6 +15,7 @@ export const LineSchema = z.object({
   text: z.string().check(z.minLength(1)),
   signature: z.optional(z.boolean()),
   declencheur: z.optional(participantId),
+  pasDitePar: z.optional(z.array(participantId)),
   note: z.optional(z.string()),
 });
 

@@ -135,9 +135,10 @@ function nextDeadline(s: GameState): Deadline | null {
 function nextAnnounceTime(s: GameState): number | null {
   const { readMs } = CONFIG.cafe[s.cafe];
   if (s.slotsFreeAt.length === 0) return null; // R-09 : toutes les places sont prises
-  const idle = s.participants.filter((p) => !p.turn);
-  if (idle.length === 0) return null;
   if (!hasAnyLineLeft(s)) return null; // R-21 : jamais de répétition
+  // Seuls ceux qui ont encore une réplique permise comptent (R-26), sinon le moteur attendrait sans fin.
+  const idle = s.participants.filter((p) => !p.turn && (s.bossReactionPending || canSpeak(s, p.id)));
+  if (idle.length === 0) return null;
   const earliestRest = Math.min(...idle.map((p) => p.restUntil));
   const earliestSlot = Math.min(...s.slotsFreeAt);
   const gap = s.bossReactionPending ? 0 : CONFIG.minStartGapMs;
@@ -174,9 +175,12 @@ function announce(s: GameState, rng: Rng, emit: Emit) {
   }
 
   if (!speaker || !line) {
-    speaker = rng.pick(candidates);
+    const able = candidates.filter((p) => canSpeak(s, p.id));
+    if (able.length === 0) return;
+    speaker = rng.pick(able);
     const wanted: LineType = rng.chance(CONFIG.deplaceeRatio) ? "deplacee" : "correcte";
-    line = pickLine(s, rng, wanted) ?? pickLine(s, rng, wanted === "deplacee" ? "correcte" : "deplacee");
+    const id = speaker.id;
+    line = pickLine(s, rng, wanted, id) ?? pickLine(s, rng, wanted === "deplacee" ? "correcte" : "deplacee", id);
   }
   if (!line) return;
 
@@ -254,9 +258,17 @@ function hasAnyLineLeft(s: GameState): boolean {
   return unusedLines(s).some((l) => !l.declencheur);
 }
 
-function pickLine(s: GameState, rng: Rng, type: LineType): Line | undefined {
-  const pool = unusedLines(s).filter((l) => l.type === type && !l.declencheur);
-  return pool.length ? rng.pick(pool) : undefined;
+/** Réplique au hasard parmi celles que ce participant peut dire (R-21, R-26). */
+/** Vrai s'il reste au moins une réplique que ce participant a le droit de dire (R-21, R-26). */
+function canSpeak(s: GameState, id: ParticipantId): boolean {
+  return !!(pickLine(s, null, "correcte", id) || pickLine(s, null, "deplacee", id));
+}
+
+/** Sans `rng`, indique seulement s'il en reste une (premier élément), sans consommer de hasard. */
+function pickLine(s: GameState, rng: Rng | null, type: LineType, speaker: ParticipantId): Line | undefined {
+  const pool = unusedLines(s).filter((l) => l.type === type && !l.declencheur && !l.pasDitePar?.includes(speaker));
+  if (pool.length === 0) return undefined;
+  return rng ? rng.pick(pool) : pool[0];
 }
 
 function cloneState(s: GameState): GameState {

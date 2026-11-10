@@ -10,6 +10,8 @@ export interface Line {
   text: string;
   signature?: boolean;
   declencheur?: ParticipantId;
+  /** Participants qui ne disent jamais cette réplique (ex. : le boss ne parle pas de lui-même, R-26). */
+  pasDitePar?: ParticipantId[];
 }
 
 export type Mic = "open" | "muted";

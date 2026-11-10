@@ -61,7 +61,7 @@
     { "id": "fr-d-10", "lang": "fr", "type": "deplacee", "text": "Hier, j'ai rien fait. Mais avec beaucoup de conviction." },
     { "id": "fr-d-11", "lang": "fr", "type": "deplacee", "text": "Synergie, alignement, levier… BINGO !" },
     { "id": "fr-d-12", "lang": "fr", "type": "deplacee", "text": "Je magasine un kayak pendant qu'on se parle." },
-    { "id": "fr-d-14", "lang": "fr", "type": "deplacee", "text": "Le boss a encore lu un article de motivation, hein ?" },
+    { "id": "fr-d-14", "lang": "fr", "type": "deplacee", "pasDitePar": ["boss"], "text": "Le boss a encore lu un article de motivation, hein ?" },
     { "id": "fr-d-15", "lang": "fr", "type": "deplacee", "text": "Mon statut est vert, mais mon âme est rouge." },
     { "id": "fr-d-16", "lang": "fr", "type": "deplacee", "text": "Je suis en pyjama en bas. Personne ne le saura." },
     { "id": "fr-d-17", "lang": "fr", "type": "deplacee", "text": "Ça fait trois fois qu'on prend la même décision." },
