@@ -91,6 +91,22 @@ export const CONFIG = {
     { min: 0, key: "ecourtee" },
   ] as const,
 
+  /** Durées d'affichage côté interface, en ms de jeu (elles suivent donc `?vitesse=`). */
+  ui: {
+    /** Notification en bas de la réunion. */
+    toastMs: 1_800,
+    /** Grande phrase affichée lors d'un malaise. */
+    blunderOverlayMs: 1_600,
+    /** Réaction 😬 des autres participants après un malaise. */
+    reactionMs: 1_600,
+    /** Rebond d'une tuile qui vient de rejoindre. */
+    joinBounceMs: 700,
+    /** Pause avant l'écran de fin, pour voir le dernier effet, en ms réelles (divisées par `?vitesse=`). */
+    endScreenDelayMs: 1_300,
+    /** Durée de vie de l'effet de marteau à l'endroit touché (R-32), en ms réelles. */
+    tapFlashMs: 380,
+  },
+
   /** Bornes du paramètre de debug `?vitesse=` (R-42). */
   speed: { min: 0.1, max: 20, default: 1 },
 

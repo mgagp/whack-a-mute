@@ -6,6 +6,8 @@ export default defineConfig({
   // Chemins relatifs : fonctionne sur GitHub Pages comme sur un autre hébergeur statique.
   base: "./",
   plugins: [react()],
+  // Le poids réel est surveillé par `pnpm size` (R-44, < 300 Ko compressés).
+  build: { chunkSizeWarningLimit: 600 },
   test: {
     include: ["tests/engine/**/*.test.ts"],
   },

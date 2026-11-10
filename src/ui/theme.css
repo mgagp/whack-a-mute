@@ -1,0 +1,66 @@
+/*
+ * Thème centralisé (R-35) : couleurs, polices, rayons, contours et ombres.
+ * Repris de la maquette validée design/maquette-v1.html (R-34).
+ * Pour changer toute l'ambiance d'un coup, c'est ici et nulle part ailleurs.
+ */
+:root {
+  /* Couleurs de base */
+  --ink: #1b1033; /* contours et ombres */
+  --deep: #2a1356; /* fond principal */
+  --deep2: #160832;
+  --deep-glow: #5a2bc0;
+  --page: #0e0620;
+  --panel: #3b1d7a;
+  --track: #1a0b3b;
+  --cream: #fff8e7;
+  --muted-text: #cfc3ee;
+  --label-text: #6b5a8e;
+  --story-text: #3d2d5c;
+  --bubble: #ffffff;
+  --bubble-hushed: #ede7f6;
+  --bubble-hushed-text: #6a5c88;
+  --timer-track: #e5def2;
+  --mic-idle: #e8e1f5;
+
+  /* Couleurs signature des participants */
+  --coral: #ff6b6b; /* Ginette */
+  --coral-light: #ff9a9a;
+  --turq: #22d3c5; /* Kevin */
+  --turq-light: #7debe1;
+  --sun: #ffd23f; /* Josée */
+  --sun-light: #ffe58a;
+  --lime: #9be564; /* Le boss */
+  --lime-light: #c9f59e;
+
+  /* États */
+  --mute: #ff3d7f; /* sur mute */
+  --live: #3dff8b; /* micro ouvert */
+  --live-glow: rgba(61, 255, 139, 0.75);
+  --warn: #ffb703; /* compte à rebours, mi-course */
+  --violet: #7b4dff;
+  --blush: #ff7fa8;
+
+  /* Polices (licence OFL, auto-hébergées) */
+  --display: "Lilita One", system-ui, sans-serif;
+  --text: "Nunito", system-ui, sans-serif;
+
+  /* Formes */
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 18px;
+  --r-xl: 22px;
+  --r-pill: 999px;
+  --line: 3px;
+  --line-thick: 4px;
+
+  /* Ombres franches et décalées */
+  --shadow-sm: 0 3px 0 var(--ink);
+  --shadow-md: 0 6px 0 var(--ink);
+  --shadow-offset: 5px 5px 0 var(--ink);
+  --shadow-card: 6px 6px 0 var(--ink);
+
+  /* Mouvement : ressort court (< 400 ms, section 8.4) */
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --fast: 180ms;
+  --medium: 320ms;
+}
