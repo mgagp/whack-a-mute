@@ -13,7 +13,7 @@ export const STRINGS = {
     logoBig: "MUTE",
     taglineA: "Sauve la réunion d'équipe…",
     taglineB: "un mute à la fois.",
-    storyWho: "Une collègue, en pleine réunion",
+    storyWho: "Un collègue, en pleine réunion",
     storyMsg: "« Marc… t'es pas sur mute. » 😬",
     storyMeta:
       "Inspiré d'une histoire vraie. Ton mandat : lire ce que tes collègues s'apprêtent à dire et les couper juste à temps.",
