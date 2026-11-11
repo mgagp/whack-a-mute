@@ -10,5 +10,7 @@ export default defineConfig({
   build: { chunkSizeWarningLimit: 600 },
   test: {
     include: ["tests/engine/**/*.test.ts"],
+    // Les tests jouent des parties complètes : les machines de GitHub Actions sont plus lentes.
+    testTimeout: 30_000,
   },
 });

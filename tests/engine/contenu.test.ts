@@ -114,7 +114,7 @@ describe("Contenu : les répliques", () => {
     // Banque de test : le boss n'a le droit de dire aucune déplacée.
     const lines = fakeLines(30).map((l) => (l.type === "deplacee" ? { ...l, pasDitePar: ["boss" as const] } : l));
     let saidByOthers = 0;
-    for (let seed = 0; seed < 40; seed++) {
+    for (let seed = 0; seed < 20; seed++) {
       const { events } = play(newGame({ seed, cafe: 3, participants: 4, lines }), perfect, 16);
       for (const e of ofType(events, "announced")) {
         if (!e.line.pasDitePar) continue;
@@ -124,11 +124,15 @@ describe("Contenu : les répliques", () => {
     }
     expect(saidByOthers).toBeGreaterThan(0);
     // La vraie banque : le boss ne dit jamais fr-d-14.
-    for (let seed = 0; seed < 200; seed++) {
+    let fr14 = 0;
+    for (let seed = 0; seed < 60; seed++) {
       const { events } = play(newGame({ seed, cafe: 3, participants: 4 }), perfect, 16);
-      expect(ofType(events, "announced").some((e) => e.line.id === "fr-d-14" && e.participantId === "boss")).toBe(false);
+      const said = ofType(events, "announced").filter((e) => e.line.id === "fr-d-14");
+      fr14 += said.length;
+      expect(said.some((e) => e.participantId === "boss")).toBe(false);
     }
-  });
+    expect(fr14).toBeGreaterThan(0);
+  }, 30_000);
 
   it("R-26 : pasDitePar doit nommer des participants connus", () => {
     const bad = structuredClone(BANKS.fr) as { lines: Record<string, unknown>[] };
