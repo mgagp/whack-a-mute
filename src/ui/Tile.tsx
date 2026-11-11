@@ -5,7 +5,7 @@ import type { ParticipantId } from "../engine/config";
 import type { Outcome, Participant } from "../engine/state";
 import { turnProgress } from "../engine/step";
 import { Avatar, type Mood } from "./Avatar";
-import { Boom, MicIcon } from "./Icons";
+import { Boom, MicIcon, ThoughtCloud } from "./Icons";
 import { STRINGS } from "./strings.fr";
 
 const COLOR: Record<ParticipantId, string> = { ginette: "coral", kevin: "turq", josee: "sun", boss: "lime" };
@@ -74,7 +74,8 @@ export const Tile = memo(function Tile({ p, t, reacting, justJoined, debug, onTa
       transition={{ type: "spring", stiffness: 520, damping: 16 }}
     >
       {state === "announcing" && p.turn && (
-        <div className="bubble" key={p.turn.line.id} style={{ ["--p" as string]: progress }}>
+        <div className="bubble think" key={p.turn.line.id} style={{ ["--p" as string]: progress }}>
+          <ThoughtCloud className="cloud" />
           <div className="tag">
             <svg className="timer" viewBox="0 0 20 20" aria-hidden="true">
               <circle cx="10" cy="10" r="8" className="timer-track" />

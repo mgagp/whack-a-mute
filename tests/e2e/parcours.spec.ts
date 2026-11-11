@@ -163,14 +163,16 @@ test("R-37 : le texte des bulles a un contraste d'au moins 4,5:1", async ({ page
       return (l1! + 0.05) / (l2! + 0.05);
     };
     // Toutes les variantes de bulles, rendues hors écran avec les vraies classes.
-    const variants = ["bubble", "bubble said normal", "bubble said blunder", "bubble hushed", "bubble hushed wrong"];
+    const variants = ["bubble think", "bubble said normal", "bubble said blunder", "bubble hushed", "bubble hushed wrong"];
     const host = document.querySelector(".tile")!;
     return variants.map((cls) => {
       const b = document.createElement("div");
       b.className = cls;
-      b.innerHTML = '<div class="tag">tag</div><q>texte</q><span class="note">note</span>';
+      b.innerHTML =
+        '<svg class="cloud" viewBox="0 0 240 100"><path d="M0 0H240V100H0Z"/></svg><div class="tag">tag</div><q>texte</q><span class="note">note</span>';
       host.appendChild(b);
-      const bg = getComputedStyle(b).backgroundColor;
+      // La bulle-pensée (#10) tient son fond dans le nuage SVG ; les autres, dans leur arrière-plan.
+      const bg = cls.includes("think") ? getComputedStyle(b.querySelector(".cloud path")!).fill : getComputedStyle(b).backgroundColor;
       const out = [b.querySelector("q")!, b.querySelector(".tag")!, b.querySelector(".note")!].map((el) => ratio(getComputedStyle(el).color, bg));
       b.remove();
       return { cls, min: Math.min(...out) };
@@ -224,4 +226,17 @@ test("#4 : icônes d'onglet et d'écran d'accueil, avec un manifeste", async ({ 
     const res = await request.get(new URL(icon.src, manifestUrl).href);
     expect(res.headers()["content-type"]).toContain("image/png");
   }
+});
+
+test("#10 : ce qui va être dit est une bulle-pensée ; ce qui est dit, une bulle de parole", async ({ page }) => {
+  test.setTimeout(30_000);
+  await page.goto("./?seed=pensee&participants=4&cafe=3&vitesse=2");
+  await start(page);
+  const announcing = page.locator('.tile[data-state="announcing"]').first();
+  await expect(announcing).toBeVisible({ timeout: 10_000 });
+  await expect(announcing.locator(".bubble.think .cloud")).toHaveCount(1);
+  const said = page.locator('.tile[data-state="normal"], .tile[data-state="blunder"]').first();
+  await expect(said).toBeVisible({ timeout: 15_000 });
+  await expect(said.locator(".bubble.said")).toHaveCount(1);
+  await expect(said.locator(".bubble.think, .cloud")).toHaveCount(0);
 });
