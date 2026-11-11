@@ -27,14 +27,14 @@ describe("Choix de la langue", () => {
     expect(resolveLang({ ...base, param: "klingon", stored: "??", deviceLangs: ["fr-CA"] })).toBe("fr");
   });
 
-  it("R-60 : on partage l'adresse de la langue jouée", () => {
+  it("R-60, R-52 : on partage l'adresse de la langue jouée, avec le marqueur de partage", () => {
     const o = "https://exemple.test";
-    expect(shareUrl(o, "/whack-a-mute/", "fr")).toBe("https://exemple.test/whack-a-mute/");
-    expect(shareUrl(o, "/whack-a-mute/", "en")).toBe("https://exemple.test/whack-a-mute/en/");
-    expect(shareUrl(o, "/whack-a-mute/en/", "en")).toBe("https://exemple.test/whack-a-mute/en/");
-    expect(shareUrl(o, "/whack-a-mute/en/", "fr")).toBe("https://exemple.test/whack-a-mute/");
-    expect(shareUrl(o, "/whack-a-mute/en/index.html", "en")).toBe("https://exemple.test/whack-a-mute/en/");
-    expect(shareUrl(o, "/", "en")).toBe("https://exemple.test/en/");
+    expect(shareUrl(o, "/whack-a-mute/", "fr")).toBe("https://exemple.test/whack-a-mute/?ref=partage");
+    expect(shareUrl(o, "/whack-a-mute/", "en")).toBe("https://exemple.test/whack-a-mute/en/?ref=partage");
+    expect(shareUrl(o, "/whack-a-mute/en/", "en")).toBe("https://exemple.test/whack-a-mute/en/?ref=partage");
+    expect(shareUrl(o, "/whack-a-mute/en/", "fr")).toBe("https://exemple.test/whack-a-mute/?ref=partage");
+    expect(shareUrl(o, "/whack-a-mute/en/index.html", "en")).toBe("https://exemple.test/whack-a-mute/en/?ref=partage");
+    expect(shareUrl(o, "/", "en")).toBe("https://exemple.test/en/?ref=partage");
   });
 
   it("R-60 : chaque langue a ses propres textes", () => {

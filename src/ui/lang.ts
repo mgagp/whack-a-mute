@@ -50,11 +50,14 @@ export function pageLang(): string | undefined {
   return document.documentElement.dataset.pageLang;
 }
 
+/** Marqueur ajouté au lien partagé : GoatCounter le range dans les provenances (R-52, #24). */
+export const SHARE_REF = "?ref=partage";
+
 /**
  * Adresse à partager : la page anglaise (`…/en/`) a son propre aperçu de lien en anglais.
  * `pathname` est celui de la page courante, avec ou sans `en/` à la fin.
  */
 export function shareUrl(origin: string, pathname: string, lang: Lang): string {
   const root = pathname.replace(/index\.html$/, "").replace(/en\/$/, "");
-  return origin + root + (lang === "en" ? "en/" : "");
+  return origin + root + (lang === "en" ? "en/" : "") + SHARE_REF;
 }

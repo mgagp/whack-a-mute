@@ -220,7 +220,7 @@ test("R-50, #19 : sur ordinateur, « Partager » copie le stand-up du jour, ses 
   await page.getByTestId("share").click({ force: true });
   await expect(page.getByTestId("share")).toContainText("Copié");
   const copied = await page.evaluate(() => navigator.clipboard.readText());
-  expectShareLayout(copied, /^J'ai gardé \d+ % d'harmonie au stand-up du jour /, new URL("./", page.url().replace(/\?.*$/, "")).href);
+  expectShareLayout(copied, /^J'ai gardé \d+ % d'harmonie au stand-up du jour /, `${new URL("./", page.url().replace(/\?.*$/, "")).href}?ref=partage`);
 });
 
 test("R-52, #20 : les parties lancées et les partages sont comptés, avec leur langue", async ({ page, context, isMobile }) => {
@@ -373,7 +373,7 @@ test.describe("Version anglaise (R-60)", () => {
     await page.getByTestId("share").click({ force: true });
     await expect(page.getByTestId("share")).toContainText("Copied");
     const copied = await page.evaluate(() => navigator.clipboard.readText());
-    expectShareLayout(copied, /^I kept \d+% harmony at today's stand-up /, new URL("./en/", page.url().replace(/\?.*$/, "")).href);
+    expectShareLayout(copied, /^I kept \d+% harmony at today's stand-up /, `${new URL("./en/", page.url().replace(/\?.*$/, "")).href}?ref=partage`);
   });
 });
 
