@@ -25,6 +25,8 @@ export interface Turn {
   endAt: number;
   mic: Mic;
   initiallyMuted: boolean;
+  /** Vrai dès que le joueur a cliqué pendant cette annonce. */
+  touched: boolean;
 }
 
 /** Résultat de la dernière prise de parole, affiché un moment sur la tuile. */
@@ -32,6 +34,8 @@ export interface LastResult {
   line: Line;
   outcome: Outcome;
   at: number;
+  /** Interception sans clic : le participant s'était mis sur mute lui-même (R-08, #29). */
+  selfMuted: boolean;
 }
 
 export interface Participant {
@@ -101,6 +105,8 @@ export type GameEvent =
       participantId: ParticipantId;
       line: Line;
       outcome: Outcome;
+      /** Interception sans clic : le participant s'était mis sur mute lui-même (R-08, #29). */
+      selfMuted: boolean;
       harmonyDelta: number;
       harmony: number;
     })

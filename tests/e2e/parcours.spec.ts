@@ -141,6 +141,20 @@ test("R-30 : chaque résultat a son retour visuel distinct", async ({ page }) =>
   expect([...seen].filter((s) => s.startsWith("manque"))).toEqual([]);
 });
 
+test("R-08, #29 : déjà sur mute et sans clic, le retour dit « Bien vu ! », pas « MUTE ! »", async ({ page }) => {
+  test.setTimeout(60_000);
+  await page.goto("./?seed=deja&vitesse=2&participants=4");
+  await start(page);
+  // On ne touche à rien : la première interception ne peut venir que d'un collègue déjà sur mute.
+  const tile = page.locator('.tile[data-state="intercepted"]').first();
+  await expect(tile).toHaveAttribute("data-self", "true", { timeout: 40_000 });
+  await expect(tile.locator(".stamp")).toHaveText("BIEN VU !");
+  await expect(tile.locator(".bubble .tag")).toHaveText("🤐 Déjà sur mute");
+  // Pas de « SCHLAC ! » : il est réservé au clic du joueur.
+  await expect(tile.locator(".boom")).toHaveCount(0);
+  await expect(page.getByTestId("toast")).toContainText("Bien vu !");
+});
+
 test("R-31 : le bouton de son coupe ou rétablit le son, et le choix est mémorisé", async ({ page }) => {
   await page.goto("./");
   const btn = page.getByTestId("sound");

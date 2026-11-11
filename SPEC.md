@@ -254,6 +254,7 @@ Chaque exigence [M] doit être couverte par au moins un test automatisé (voir l
 
 ### Retour visuel et sonore
 - **R-30 [M]** Chaque résultat de la table 3.3 a un retour visuel distinct, perceptible en moins de 100 ms après la fin de l'annonce ou le clic.
+  - **Déjà sur mute (#29)** : une interception sans clic (le collègue s'était mis sur mute lui-même, R-08) a son propre retour, positif et de la même famille : tampon « BIEN VU ! » au lieu de « MUTE ! », bulle « 🤐 Déjà sur mute », message « 👌 Bien vu ! +3 harmonie » et le carillon sans le souffle. Elle compte comme une interception. Pendant l'annonce, rien ne la signale, pour garder le piège.
 - **R-31 [M]** Chaque résultat a un bruitage distinct. Un bouton coupe ou rétablit le son, et ce choix est mémorisé.
 - **R-32 [S]** Le curseur prend la forme d'un marteau sur ordinateur, et un flash apparaît à l'endroit touché sur écran tactile.
 - **R-33 [S]** Un léger tremblement d'écran signale un malaise. Il est désactivé si le système demande de réduire les animations.
@@ -394,3 +395,4 @@ Cette idée généralise le duo « annonce du boss → réplique signature ». I
 | 0.10 | 2026-11-11 | Compteur de visites GoatCounter, sans cookies (R-52, #20) |
 | 0.11 | 2026-11-11 | Le lien partagé porte `?ref=partage` pour compter les visites venues d'un partage (R-52, #24) |
 | 0.12 | 2026-11-11 | Le lien partagé en français porte `?lang=fr` : il s'ouvre en français même sur un appareil en anglais (R-60, #26) |
+| 0.13 | 2026-11-11 | Retour distinct « Bien vu ! » pour une interception sans clic, quand le collègue était déjà sur mute (R-30, #29) |
