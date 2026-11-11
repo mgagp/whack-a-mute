@@ -23,6 +23,7 @@ TypeScript, Vite, React, CSS et Motion, Howler.js, Zod, Vitest, Playwright, pnpm
 - Toute exigence `[M]` implémentée doit avoir au moins un test.
 - Les tests de bout en bout utilisent `?seed=` et `?vitesse=` pour être déterministes.
 - Avant de dire qu'une tâche est terminée, lance les tests et le typecheck.
+- GitHub Actions relance tout (typecheck, Vitest, poids, Playwright) sur chaque PR, et la mise en ligne n'a lieu que si tout passe (`.github/workflows/verification.yml`).
 
 ## Visuel : priorité de premier plan
 - Le jeu doit être **éclatant** : beau, coloré, expressif, hors de l'ordinaire (SPEC.md, section 8). Une interface fonctionnelle mais terne ne compte pas comme terminée.
