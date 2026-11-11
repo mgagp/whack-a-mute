@@ -1,4 +1,4 @@
-// R-44 : la page doit peser moins de 300 Ko compressés, hors sons.
+// R-44 : la page doit peser moins de 300 Ko compressés, hors sons et hors image d'aperçu.
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { gzipSync } from "node:zlib";
@@ -9,7 +9,8 @@ const walk = (dir) => {
   for (const f of readdirSync(dir)) {
     const p = join(dir, f);
     if (statSync(p).isDirectory()) walk(p);
-    else if (!p.includes("sounds")) files.push(p);
+    // Les sons et l'image d'aperçu (lue seulement par les robots de partage, R-51) ne comptent pas.
+    else if (!p.includes("sounds") && !p.endsWith("apercu.jpg")) files.push(p);
   }
 };
 walk("dist");
