@@ -105,6 +105,8 @@ export const CONFIG = {
     endScreenDelayMs: 1_300,
     /** Durée de vie de l'effet de marteau à l'endroit touché (R-32), en ms réelles. */
     tapFlashMs: 380,
+    /** Nombre maximal d'émojis dans le récapitulatif partagé (#19) ; au-delà, on coupe avec « … ». */
+    shareRecapMax: 30,
   },
 
   /** Bornes du paramètre de debug `?vitesse=` (R-42). */

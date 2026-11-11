@@ -77,6 +77,8 @@ export interface GameState {
   /** Vrai entre la fin d'une prise de parole du boss et l'annonce suivante. */
   bossReactionPending: boolean;
   stats: Stats;
+  /** Résultat de chaque prise de parole, dans l'ordre : sert au récapitulatif partagé (#19). */
+  outcomes: Outcome[];
   over: boolean;
   endReason: EndReason | null;
   /** Compteur pour donner un identifiant unique à chaque événement. */

@@ -15,6 +15,8 @@ export const STRINGS = {
   percent: (n: number) => `${n} %`,
   appName: "SynergiQ",
   meetingName: "Stand-up quotidien",
+  /** Langue et région pour écrire les dates. */
+  dateLocale: "fr-CA",
   home: {
     logoSmall: "WHACK-A-",
     logoBig: "MUTE",
@@ -86,8 +88,10 @@ export const STRINGS = {
       rh: "Invitation surprise des RH",
       ecourtee: "Réunion écourtée par l'organisateur",
     } satisfies Record<EndTitleKey, string>,
-    shareText: (harmony: number, cups: string, intercepted: number, total: number) =>
-      `J'ai gardé ${harmony} % d'harmonie au stand-up ${cups} (${intercepted}/${total} commentaires interceptés) — whack-a-mute`,
+    /** Nom de la réunion du jour sur l'écran de fin ; `date` est déjà écrite (ex. : « 11 novembre »). */
+    dailyMeeting: (date: string) => `Stand-up du ${date}`,
+    shareText: (harmony: number, cups: string, intercepted: number, total: number, daily: boolean) =>
+      `J'ai gardé ${harmony} % d'harmonie au stand-up${daily ? " du jour" : ""} ${cups} (${intercepted}/${total} commentaires interceptés)`,
   },
 } as const;
 
