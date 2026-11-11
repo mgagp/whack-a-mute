@@ -22,6 +22,8 @@ test("R-01 : l'accueil affiche le titre, l'anecdote et un bouton pour commencer"
   await page.goto("./");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("MUTE");
   await expect(page.getByText("t'es pas sur mute")).toBeVisible();
+  // L'anecdote de Marc : c'est un collègue (masculin) qui l'a averti.
+  await expect(page.getByText("Un collègue, en pleine réunion")).toBeVisible();
   await expect(page.getByTestId("start")).toBeVisible();
 });
 
