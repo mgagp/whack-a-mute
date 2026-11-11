@@ -240,3 +240,103 @@ test("#10 : ce qui va être dit est une bulle-pensée ; ce qui est dit, une bull
   await expect(said.locator(".bubble.said")).toHaveCount(1);
   await expect(said.locator(".bubble.think, .cloud")).toHaveCount(0);
 });
+
+test.describe("Version anglaise (R-60)", () => {
+  test("R-60 : avec ?lang=en, une partie complète se joue en anglais", async ({ page }) => {
+    test.setTimeout(60_000);
+    await page.goto("./?lang=en&seed=english&vitesse=6");
+    await expect(page.locator("html")).toHaveAttribute("lang", "en");
+    await expect(page).toHaveTitle(/save the meeting/);
+    await expect(page.getByText("you're not on mute")).toBeVisible();
+    await expect(page.getByText("A coworker, mid-meeting")).toBeVisible();
+    await expect(page.getByTestId("start")).toContainText("Join the meeting");
+    await start(page);
+    await expect(page.getByTestId("harmony")).toContainText("Team harmony · 100%");
+    await expect(page.locator(".bubble.think .tag").first()).toContainText("About to say", { timeout: 10_000 });
+    await playPerfectly(page);
+    await expect(page.getByTestId("final-harmony")).toContainText("100%");
+    await expect(page.getByTestId("end-title")).toHaveText("Synergy champion");
+    await expect(page.getByTestId("replay")).toContainText("Play again");
+    // Aucun texte français ne traîne sur l'écran de fin.
+    await expect(page.getByTestId("end")).not.toContainText(/harmonie|Rejouer|Partager|réunion/i);
+  });
+
+  test("R-60 : la page /en/ est en anglais, avec son propre aperçu de lien", async ({ page, request }) => {
+    await page.goto("./en/");
+    await expect(page.locator("html")).toHaveAttribute("lang", "en");
+    await expect(page.getByTestId("start")).toContainText("Join the meeting");
+    const meta = (sel: string) => page.locator(sel).getAttribute("content");
+    expect(await meta('meta[property="og:url"]')).toMatch(/\/en\/$/);
+    expect(await meta('meta[property="og:description"]')).toContain("you're not on mute");
+    expect(await meta('meta[property="og:image"]')).toMatch(/^https:\/\/.+\/apercu-en\.jpg$/);
+    const res = await request.get("./apercu-en.jpg");
+    expect(res.ok()).toBe(true);
+    expect(res.headers()["content-type"]).toContain("image/jpeg");
+    // Les icônes et le manifeste, partagés avec la page française, répondent aussi depuis /en/.
+    for (const sel of ['link[rel="icon"]', 'link[rel="apple-touch-icon"]', 'link[rel="manifest"]']) {
+      const href = await page.locator(sel).getAttribute("href");
+      expect((await request.get(new URL(href!, page.url()).href)).ok(), sel).toBe(true);
+    }
+  });
+
+  test("R-60 : le bouton FR/EN change la langue, et le choix est mémorisé", async ({ page }) => {
+    await page.goto("./");
+    await expect(page.getByTestId("lang-fr")).toHaveAttribute("aria-pressed", "true");
+    await page.getByTestId("lang-en").click();
+    await expect(page.getByTestId("start")).toContainText("Join the meeting");
+    await expect(page.getByTestId("lang-en")).toHaveAttribute("aria-pressed", "true");
+    await page.reload();
+    await expect(page.getByTestId("start")).toContainText("Join the meeting");
+    await page.getByTestId("lang-fr").click();
+    await expect(page.getByTestId("start")).toContainText("Rejoindre la réunion");
+    await page.reload();
+    await expect(page.getByTestId("start")).toContainText("Rejoindre la réunion");
+  });
+
+  test.describe("appareil en anglais", () => {
+    test.use({ locale: "en-US" });
+    test("R-60 : un appareil en anglais voit le jeu en anglais dès l'arrivée", async ({ page }) => {
+      await page.goto("./");
+      await expect(page.getByTestId("start")).toContainText("Join the meeting");
+      await expect(page.getByTestId("lang-en")).toHaveAttribute("aria-pressed", "true");
+    });
+  });
+
+  test("R-43 : en anglais aussi, l'accueil et la réunion à 4 tiennent dans l'écran", async ({ page }) => {
+    await page.goto("./?lang=en&seed=ecran&participants=4&vitesse=1");
+    const noScroll = () =>
+      page.evaluate(() => {
+        const doc = document.scrollingElement!;
+        return doc.scrollWidth <= window.innerWidth + 1;
+      });
+    expect(await noScroll()).toBe(true);
+    await start(page);
+    await expect(page.locator(".tile")).toHaveCount(4);
+    await page.waitForTimeout(400);
+    const fits = await page.evaluate(() => {
+      const doc = document.scrollingElement!;
+      const tiles = [...document.querySelectorAll(".tile")].map((t) => t.getBoundingClientRect());
+      return {
+        noScroll: doc.scrollHeight <= window.innerHeight + 1 && doc.scrollWidth <= window.innerWidth + 1,
+        inside: tiles.every((r) => r.top >= 0 && r.bottom <= window.innerHeight && r.left >= 0 && r.right <= window.innerWidth),
+        bottomVisible: document.querySelector(".bottombar")!.getBoundingClientRect().bottom <= window.innerHeight,
+      };
+    });
+    expect(fits).toEqual({ noScroll: true, inside: true, bottomVisible: true });
+  });
+
+  test("R-50 : en anglais, « Share » copie le score avec l'adresse de la page anglaise", async ({ page, context, isMobile }) => {
+    test.skip(isMobile, "sur téléphone, c'est le partage natif");
+    test.setTimeout(60_000);
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await page.goto("./?lang=en&seed=partage&vitesse=20");
+    await start(page);
+    await expect(page.getByTestId("end")).toBeVisible({ timeout: 20_000 });
+    await page.getByTestId("share").click({ force: true });
+    await expect(page.getByTestId("share")).toContainText("Copied");
+    const copied = await page.evaluate(() => navigator.clipboard.readText());
+    expect(copied).toMatch(/I kept \d+% harmony/);
+    expect(copied.endsWith(new URL("./en/", page.url().replace(/\?.*$/, "")).href)).toBe(true);
+  });
+});
+

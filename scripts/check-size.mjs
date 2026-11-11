@@ -11,7 +11,7 @@ const walk = (dir) => {
     if (statSync(p).isDirectory()) walk(p);
     // Ne comptent pas : les sons, l'image d'aperçu (lue par les robots de partage, R-51)
     // et les icônes d'écran d'accueil (téléchargées seulement à l'installation, #4).
-    else if (!p.includes("sounds") && !/apercu\.jpg$|icone-\d+\.png$|apple-touch-icon\.png$/.test(p)) files.push(p);
+    else if (!p.includes("sounds") && !/apercu(-en)?\.jpg$|icone-\d+\.png$|apple-touch-icon\.png$/.test(p)) files.push(p);
   }
 };
 walk("dist");

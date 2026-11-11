@@ -1,11 +1,18 @@
 /**
  * Textes de l'interface, en français québécois léger (Q-2, Q-8).
- * Toute chaîne visible passe par ici : une traduction n'aura qu'à fournir un fichier équivalent.
+ * Toute chaîne visible passe par ici. Ce fichier sert de modèle : chaque autre langue
+ * (strings.en.ts) doit fournir exactement les mêmes clés, ce que le type `Strings` vérifie.
  */
 import type { CafeLevel, EndTitleKey, ParticipantId } from "../engine/config";
 
 export const STRINGS = {
   lang: "fr",
+  /** Nom de la langue, affiché sur le bouton de choix de langue. */
+  langName: "Français",
+  langLabel: "Langue",
+  pageTitle: "Whack-a-Mute — sauve la réunion, un mute à la fois",
+  /** Pourcentage : espace avant le signe en français. */
+  percent: (n: number) => `${n} %`,
   appName: "SynergiQ",
   meetingName: "Stand-up quotidien",
   home: {
@@ -84,4 +91,13 @@ export const STRINGS = {
   },
 } as const;
 
-export type Strings = typeof STRINGS;
+/** Élargit les textes littéraux en `string`, pour qu'une autre langue puisse fournir ses propres textes. */
+type Widen<T> = T extends string
+  ? string
+  : T extends boolean
+    ? boolean
+    : T extends (...args: infer A) => infer R
+      ? (...args: A) => Widen<R>
+      : { readonly [K in keyof T]: Widen<T[K]> };
+
+export type Strings = Widen<typeof STRINGS>;

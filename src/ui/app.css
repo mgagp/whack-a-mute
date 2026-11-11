@@ -24,6 +24,10 @@ button {
 q {
   quotes: "« " " »";
 }
+/* En anglais (R-60), les guillemets anglais. La langue vient de <html lang>, tenu à jour par App. */
+:lang(en) q {
+  quotes: "“" "”";
+}
 
 .app {
   position: relative;
@@ -136,13 +140,49 @@ q {
 .home {
   max-width: 440px;
   min-height: 100dvh;
-  padding-top: max(40px, env(safe-area-inset-top));
+  /* Laisse la rangée du haut (son et langue) dégagée au-dessus du logo. */
+  padding-top: max(56px, env(safe-area-inset-top));
 }
 .home-sound {
   position: fixed;
   top: max(14px, env(safe-area-inset-top));
   left: 16px;
   z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+/* Choix de la langue (R-60) : pastille FR | EN à côté du bouton de son, en haut à gauche de l'accueil.
+   (En haut à droite, elle recouvrait le badge du logo sur téléphone.) */
+.lang-switch {
+  display: flex;
+  border: var(--line) solid var(--ink);
+  border-radius: var(--r-pill);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  background: var(--panel);
+}
+.lang-switch button {
+  appearance: none;
+  border: 0;
+  margin: 0;
+  padding: 0 10px;
+  min-width: 40px;
+  min-height: 36px;
+  background: none;
+  color: var(--muted-text);
+  font-family: var(--display);
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+}
+.lang-switch button.on {
+  background: var(--sun);
+  color: var(--ink);
+}
+.lang-switch button:focus-visible {
+  outline: 3px solid var(--cream);
+  outline-offset: -3px;
 }
 .logo {
   position: relative;
@@ -1339,14 +1379,15 @@ q {
 
 /* Petits écrans en hauteur : on resserre l'accueil */
 @media (max-height: 700px) {
-  .home {
-    padding-top: 24px;
+  /* Écran court : le logo rapetisse et les marges se resserrent, pour garder la rangée du haut dégagée. */
+  .logo .big {
+    font-size: clamp(72px, 23vw, 96px);
   }
   .tagline {
-    margin: 16px 6px 12px;
+    margin: 10px 6px 8px;
   }
   .label {
-    margin: 16px 0 8px;
+    margin: 10px 0 6px;
   }
 }
 

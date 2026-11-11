@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { CONFIG } from "../../src/engine/config";
 import { createGame, step } from "../../src/engine/step";
 import type { GameEvent } from "../../src/engine/state";
-import { BANKS, parseLineBank } from "../../src/content/lines";
+import { BANKS, loadLines, parseLineBank } from "../../src/content/lines";
 import { LINES, fakeLines, newGame, ofType, perfect, play } from "./helpers";
 
 describe("Contenu : les répliques", () => {
@@ -140,3 +140,47 @@ describe("Contenu : les répliques", () => {
     expect(() => parseLineBank(bad)).toThrow();
   });
 });
+
+describe("Contenu : la banque anglaise (R-60)", () => {
+  const EN = loadLines("en");
+
+  it("R-60 : chaque réplique française a sa réplique anglaise, avec le même rôle dans le jeu", () => {
+    const key = (id: string) => id.slice(3);
+    expect(EN.map((l) => key(l.id))).toEqual(LINES.map((l) => key(l.id)));
+    LINES.forEach((fr, i) => {
+      const en = EN[i]!;
+      expect(en.id, fr.id).toBe(`en-${key(fr.id)}`);
+      expect(en.lang).toBe("en");
+      expect(en.type, fr.id).toBe(fr.type);
+      expect(en.signature, fr.id).toBe(fr.signature);
+      expect(en.declencheur, fr.id).toBe(fr.declencheur);
+      expect(en.pasDitePar, fr.id).toEqual(fr.pasDitePar);
+      // Une vraie réécriture : jamais le texte français recopié.
+      expect(en.text, fr.id).not.toBe(fr.text);
+    });
+  });
+
+  it("R-22 : en anglais aussi, chaque réplique fait au plus 70 caractères et le volume minimal est atteint", () => {
+    for (const l of EN) expect(l.text.length, l.id).toBeLessThanOrEqual(CONFIG.maxLineLength);
+    expect(EN.filter((l) => l.type === "correcte").length).toBeGreaterThanOrEqual(CONFIG.minLines.correcte);
+    expect(EN.filter((l) => l.type === "deplacee").length).toBeGreaterThanOrEqual(CONFIG.minLines.deplacee);
+  });
+
+  it("R-23 et R-24 : la réplique signature anglaise « Yeah, right. » réagit au boss, comme en français", () => {
+    const sig = EN.find((l) => l.signature);
+    expect(sig?.text).toBe("Yeah, right.");
+    expect(sig?.type).toBe("deplacee");
+    expect(sig?.declencheur).toBe("boss");
+    let seen = 0;
+    for (let seed = 0; seed < 20; seed++) {
+      const { events } = play(newGame({ seed, cafe: 2, lines: EN }), perfect, 16);
+      for (const e of ofType(events, "announced")) {
+        if (!e.line.signature) continue;
+        seen++;
+        expect(e.participantId).not.toBe("boss");
+      }
+    }
+    expect(seen).toBeGreaterThan(0);
+  });
+});
+

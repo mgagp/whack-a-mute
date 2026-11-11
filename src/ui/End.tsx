@@ -4,7 +4,9 @@ import { CONFIG, type CafeLevel } from "../engine/config";
 import type { GameState } from "../engine/state";
 import { endTitleKey } from "../engine/step";
 import { Avatar, type Mood } from "./Avatar";
-import { STRINGS } from "./strings.fr";
+import type { Lang } from "../content/lines";
+import { useStrings } from "./i18n";
+import { shareUrl } from "./lang";
 
 const CONFETTI_COLORS = ["var(--sun)", "var(--turq)", "var(--coral)", "var(--lime)", "var(--mute)", "var(--violet)"];
 const CONFETTI = Array.from({ length: 24 }, (_, i) => ({
@@ -17,14 +19,17 @@ const CONFETTI = Array.from({ length: 24 }, (_, i) => ({
 export function End({
   game,
   cafe,
+  lang,
   onReplay,
   onChangeCafe,
 }: {
   game: GameState;
   cafe: CafeLevel;
+  lang: Lang;
   onReplay: () => void;
   onChangeCafe: () => void;
 }) {
+  const STRINGS = useStrings();
   const e = STRINGS.end;
   const key = endTitleKey(game.harmony);
   const good = game.harmony >= CONFIG.endTitleThresholds[1].min;
@@ -41,7 +46,8 @@ export function End({
 
   const share = async () => {
     const text = e.shareText(game.harmony, STRINGS.cafe[cafe].cups, game.stats.intercepted, game.stats.deplacees);
-    const url = location.origin + location.pathname;
+    // La page anglaise a son propre aperçu de lien : on partage l'adresse de la langue jouée.
+    const url = shareUrl(location.origin, location.pathname, lang);
     const touch = matchMedia("(pointer: coarse)").matches;
     if (touch && navigator.share) {
       try {
@@ -75,7 +81,7 @@ export function End({
       </div>
       <div className="donut" style={{ ["--deg" as string]: `${deg}deg` }}>
         <div data-testid="final-harmony">
-          {game.harmony} %<small>{e.harmony}</small>
+          {STRINGS.percent(game.harmony)}<small>{e.harmony}</small>
         </div>
       </div>
       <div className="ribbon" data-testid="end-title">

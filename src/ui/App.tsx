@@ -1,17 +1,19 @@
 /** Parcours : Accueil → Réunion → Fin → Rejouer / Changer de café. */
 import { domAnimation, LazyMotion } from "motion/react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { loadSounds } from "../audio";
-import { loadLines } from "../content/lines";
+import { loadLines, type Lang } from "../content/lines";
 import { CONFIG, type CafeLevel } from "../engine/config";
 import type { GameState } from "../engine/state";
 import { End } from "./End";
 import { Game } from "./Game";
 import { Home } from "./Home";
+import { ALL_STRINGS, StringsProvider } from "./i18n";
+import { pageLang, readStoredLang, resolveLang, storeLang } from "./lang";
 import { readParams } from "./params";
 
-// Validation de la banque au démarrage (R-20) : une erreur bloque tout de suite, en développement comme en test.
-const LINES = loadLines("fr");
+// Validation des banques au démarrage (R-20) : une erreur bloque tout de suite, en développement comme en test.
+const LINES = { fr: loadLines("fr"), en: loadLines("en") } satisfies Record<Lang, unknown>;
 
 type Screen = { name: "home" } | { name: "game"; round: number } | { name: "end"; game: GameState };
 
@@ -20,6 +22,18 @@ export function App() {
   const [cafe, setCafe] = useState<CafeLevel>(params.cafe ?? CONFIG.defaultCafe);
   const [screen, setScreen] = useState<Screen>({ name: "home" });
   const [round, setRound] = useState(0);
+  const [lang, setLangState] = useState<Lang>(() =>
+    resolveLang({ param: params.lang, pageLang: pageLang(), stored: readStoredLang(), deviceLangs: navigator.languages ?? [navigator.language] }),
+  );
+  const strings = ALL_STRINGS[lang];
+  const setLang = (next: Lang) => {
+    storeLang(next);
+    setLangState(next);
+  };
+  useEffect(() => {
+    document.documentElement.lang = lang;
+    document.title = strings.pageTitle;
+  }, [lang, strings]);
 
   const start = () => {
     void loadSounds();
@@ -36,12 +50,13 @@ export function App() {
 
   return (
     <LazyMotion features={domAnimation} strict>
+    <StringsProvider value={strings}>
     <main className="app">
-      {screen.name === "home" && <Home cafe={cafe} onCafe={setCafe} onStart={start} />}
+      {screen.name === "home" && <Home cafe={cafe} onCafe={setCafe} onStart={start} lang={lang} onLang={setLang} />}
       {screen.name === "game" && (
         <Game
           key={screen.round}
-          lines={LINES}
+          lines={LINES[lang]}
           cafe={cafe}
           seed={seed}
           speed={params.speed}
@@ -51,9 +66,10 @@ export function App() {
         />
       )}
       {screen.name === "end" && (
-        <End game={screen.game} cafe={cafe} onReplay={start} onChangeCafe={() => setScreen({ name: "home" })} />
+        <End game={screen.game} cafe={cafe} lang={lang} onReplay={start} onChangeCafe={() => setScreen({ name: "home" })} />
       )}
     </main>
+    </StringsProvider>
     </LazyMotion>
   );
 }
