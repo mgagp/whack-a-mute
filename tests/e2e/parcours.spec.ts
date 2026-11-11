@@ -75,7 +75,7 @@ test("R-03 et R-11 : sans rien faire, la réunion finit ; on rejoue en un clic o
   await expect(page.getByText("☕☕☕").first()).toBeVisible();
   await expect(page.getByTestId("end")).toBeVisible({ timeout: 20_000 });
 
-  // Changer de café : retour à l'accueil, le choix précédent est conservé.
+  // Changer le niveau de café : retour à l'accueil, le choix précédent est conservé.
   await page.getByTestId("change-cafe").click();
   await expect(page.getByTestId("home")).toBeVisible();
   await expect(page.getByTestId("cafe-3")).toHaveAttribute("aria-checked", "true");
@@ -255,6 +255,23 @@ test("R-60, #26 : un score partagé en français s'ouvre en français, même sur
   await expect(page.locator("html")).toHaveAttribute("lang", "fr");
   await expect(page.getByTestId("start")).toContainText("Rejoindre");
   await context.close();
+});
+
+test("#28 : « Changer le niveau de café » tient sur une ligne, dans les deux langues", async ({ page }) => {
+  test.setTimeout(60_000);
+  for (const [lang, text] of [["fr", "Changer le niveau de café ☕"], ["en", "Change coffee level ☕"]]) {
+    await page.goto(`./?lang=${lang}&seed=cafe&vitesse=20`);
+    await start(page);
+    const link = page.getByTestId("change-cafe");
+    await expect(link).toHaveText(text, { timeout: 20_000 });
+    // Un rectangle par ligne de texte : une seule ligne, un seul rectangle.
+    const lines = await link.evaluate((el) => {
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      return new Set([...range.getClientRects()].map((r) => Math.round(r.top))).size;
+    });
+    expect(lines, lang).toBe(1);
+  }
 });
 
 test("#4 : icônes d'onglet et d'écran d'accueil, avec un manifeste", async ({ page, request }) => {
