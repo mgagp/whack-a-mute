@@ -12,6 +12,7 @@ import { ALL_STRINGS, StringsProvider } from "./i18n";
 import { pageLang, readStoredLang, resolveLang, storeLang } from "./lang";
 import { readParams } from "./params";
 import { dailySeed } from "./share";
+import { countEvent } from "./stats";
 
 // Validation des banques au démarrage (R-20) : une erreur bloque tout de suite, en développement comme en test.
 const LINES = { fr: loadLines("fr"), en: loadLines("en") } satisfies Record<Lang, unknown>;
@@ -39,6 +40,7 @@ export function App() {
 
   const start = () => {
     void loadSounds();
+    countEvent("partie", lang);
     const next = round + 1;
     setRound(next);
     // Par défaut, le stand-up du jour (#19) : même réunion pour tous ce jour-là, et « Rejouer » la reprend.

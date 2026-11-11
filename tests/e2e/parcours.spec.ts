@@ -1,5 +1,10 @@
 import { expect, test, type Page } from "@playwright/test";
 
+// R-52 : aucun test ne contacte le vrai compteur ; le script bloqué montre aussi que le jeu s'en passe.
+test.beforeEach(async ({ page }) => {
+  await page.route("https://gc.zgo.at/**", (route) => route.abort());
+});
+
 /** Le bouton « Rejoindre » pulse sans arrêt : on clique sans attendre qu'il soit immobile. */
 async function start(page: Page) {
   await page.getByTestId("start").click({ force: true });
@@ -216,6 +221,30 @@ test("R-50, #19 : sur ordinateur, « Partager » copie le stand-up du jour, ses 
   await expect(page.getByTestId("share")).toContainText("Copié");
   const copied = await page.evaluate(() => navigator.clipboard.readText());
   expectShareLayout(copied, /^J'ai gardé \d+ % d'harmonie au stand-up du jour /, new URL("./", page.url().replace(/\?.*$/, "")).href);
+});
+
+test("R-52, #20 : les parties lancées et les partages sont comptés, avec leur langue", async ({ page, context, isMobile }) => {
+  test.skip(isMobile, "sur téléphone, c'est le partage natif");
+  test.setTimeout(60_000);
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  // Faux script du compteur : il note les événements au lieu de les envoyer.
+  await page.route("https://gc.zgo.at/count.js", (route) =>
+    route.fulfill({
+      contentType: "text/javascript",
+      body: "window.__comptes = []; window.goatcounter = { count: (v) => window.__comptes.push(v) };",
+    }),
+  );
+  await page.goto("./?vitesse=20");
+  await expect(page.locator('script[data-goatcounter="https://whack-a-mute.goatcounter.com/count"]')).toHaveCount(1);
+  await page.waitForFunction(() => "__comptes" in window);
+  await start(page);
+  await expect(page.getByTestId("end")).toBeVisible({ timeout: 20_000 });
+  await page.getByTestId("share").click({ force: true });
+  const comptes = await page.evaluate(() => (window as unknown as { __comptes: unknown[] }).__comptes);
+  expect(comptes).toEqual([
+    { path: "partie-fr", event: true },
+    { path: "partage-fr", event: true },
+  ]);
 });
 
 test("#4 : icônes d'onglet et d'écran d'accueil, avec un manifeste", async ({ page, request }) => {

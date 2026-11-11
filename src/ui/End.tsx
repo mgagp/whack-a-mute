@@ -8,6 +8,7 @@ import type { Lang } from "../content/lines";
 import { useStrings } from "./i18n";
 import { shareUrl } from "./lang";
 import { shareText } from "./share";
+import { countEvent } from "./stats";
 
 const CONFETTI_COLORS = ["var(--sun)", "var(--turq)", "var(--coral)", "var(--lime)", "var(--mute)", "var(--violet)"];
 const CONFETTI = Array.from({ length: 24 }, (_, i) => ({
@@ -52,6 +53,7 @@ export function End({
   const deg = (game.harmony / 100) * 360;
 
   const share = async () => {
+    countEvent("partage", lang);
     const headline = e.shareText(game.harmony, STRINGS.cafe[cafe].cups, game.stats.intercepted, game.stats.deplacees, day !== null);
     const text = shareText(headline, game.outcomes);
     // La page anglaise a son propre aperçu de lien : on partage l'adresse de la langue jouée.
