@@ -275,6 +275,8 @@ Chaque exigence [M] doit être couverte par au moins un test automatisé (voir l
 
 ### Partage
 - **R-50 [S]** Un bouton « Partager » utilise le partage natif du téléphone. Sur ordinateur, il copie plutôt un texte du genre : « J'ai gardé 85 % d'harmonie au stand-up ☕☕ — whack-a-mute ».
+  - **Récapitulatif en émojis (#19)** : sous la phrase du score, un émoji par moment décisif dans l'ordre de la partie (🔇 intercepté, 😬 malaise, 🤐 coupé à tort ; les répliques correctes laissées passer n'apparaissent pas), au plus 30, puis « whack-a-mute » et l'adresse.
+  - **Stand-up du jour (#19)** : par défaut, la graine est tirée de la date locale du joueur. Tout le monde joue la même réunion ce jour-là (par langue et par café), « Rejouer » la reprend, et le texte partagé dit « stand-up du jour ». L'écran de fin affiche « Stand-up du 11 novembre ». `?seed=` reste une partie de debug, hors stand-up du jour.
 - **R-51 [S]** La page a une image d'aperçu et une description pour un bel affichage quand on partage le lien.
 
 ### Langues
@@ -388,3 +390,4 @@ Cette idée généralise le duo « annonce du boss → réplique signature ». I
 | 0.6 | 2026-11-09 | Champ `pasDitePar` : le boss ne dit plus la réplique qui se moque de lui (R-26) |
 | 0.7 | 2026-11-11 | Dépôt public sous licence MIT, publication sur GitHub Pages (Q-7). Les bruitages générés sont adoptés tels quels (Q-6) |
 | 0.8 | 2026-11-11 | Positionnement : petit jeu social à pic de partage court (section 1). Version anglaise (R-60) : interface, répliques, page `/en/` et bouton FR/EN |
+| 0.9 | 2026-11-11 | Partage (#19) : récapitulatif en émojis et stand-up du jour par défaut (R-50) |

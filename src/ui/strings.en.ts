@@ -12,6 +12,7 @@ export const STRINGS_EN: Strings = {
   percent: (n) => `${n}%`,
   appName: "SynergiQ",
   meetingName: "Daily stand-up",
+  dateLocale: "en-US",
   home: {
     logoSmall: "WHACK-A-",
     logoBig: "MUTE",
@@ -83,7 +84,8 @@ export const STRINGS_EN: Strings = {
       rh: "Surprise invite from HR",
       ecourtee: "Meeting ended by the organizer",
     },
-    shareText: (harmony, cups, intercepted, total) =>
-      `I kept ${harmony}% harmony at the stand-up ${cups} (${intercepted}/${total} comments intercepted) — whack-a-mute`,
+    dailyMeeting: (date) => `${date} stand-up`,
+    shareText: (harmony, cups, intercepted, total, daily) =>
+      `I kept ${harmony}% harmony at ${daily ? "today's" : "the"} stand-up ${cups} (${intercepted}/${total} comments intercepted)`,
   },
 };

@@ -11,11 +11,13 @@ import { Home } from "./Home";
 import { ALL_STRINGS, StringsProvider } from "./i18n";
 import { pageLang, readStoredLang, resolveLang, storeLang } from "./lang";
 import { readParams } from "./params";
+import { dailySeed } from "./share";
 
 // Validation des banques au démarrage (R-20) : une erreur bloque tout de suite, en développement comme en test.
 const LINES = { fr: loadLines("fr"), en: loadLines("en") } satisfies Record<Lang, unknown>;
 
-type Screen = { name: "home" } | { name: "game"; round: number } | { name: "end"; game: GameState };
+/** `day` : date du stand-up du jour, ou null avec `?seed=` (partie de debug, hors stand-up du jour). */
+type Screen = { name: "home" } | { name: "game"; round: number; day: Date | null } | { name: "end"; game: GameState; day: Date | null };
 
 export function App() {
   const params = useMemo(() => readParams(location.search), []);
@@ -39,14 +41,11 @@ export function App() {
     void loadSounds();
     const next = round + 1;
     setRound(next);
-    setScreen({ name: "game", round: next });
+    // Par défaut, le stand-up du jour (#19) : même réunion pour tous ce jour-là, et « Rejouer » la reprend.
+    setScreen({ name: "game", round: next, day: params.seed === null ? new Date() : null });
   };
 
-  // Avec ?seed=, chaque partie est reproductible ; sinon, une graine au hasard.
-  const seed = useMemo(
-    () => (params.seed !== null ? params.seed : `${Date.now()}-${round}`),
-    [params.seed, round],
-  );
+  const seed = screen.name === "game" ? (screen.day ? dailySeed(screen.day) : (params.seed ?? "")) : "";
 
   return (
     <LazyMotion features={domAnimation} strict>
@@ -62,11 +61,11 @@ export function App() {
           speed={params.speed}
           participants={params.participants}
           debug={params.debug}
-          onOver={(game) => setScreen({ name: "end", game })}
+          onOver={(game) => setScreen({ name: "end", game, day: screen.day })}
         />
       )}
       {screen.name === "end" && (
-        <End game={screen.game} cafe={cafe} lang={lang} onReplay={start} onChangeCafe={() => setScreen({ name: "home" })} />
+        <End game={screen.game} day={screen.day} cafe={cafe} lang={lang} onReplay={start} onChangeCafe={() => setScreen({ name: "home" })} />
       )}
     </main>
     </StringsProvider>

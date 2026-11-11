@@ -7,6 +7,7 @@ import { Avatar, type Mood } from "./Avatar";
 import type { Lang } from "../content/lines";
 import { useStrings } from "./i18n";
 import { shareUrl } from "./lang";
+import { shareText } from "./share";
 
 const CONFETTI_COLORS = ["var(--sun)", "var(--turq)", "var(--coral)", "var(--lime)", "var(--mute)", "var(--violet)"];
 const CONFETTI = Array.from({ length: 24 }, (_, i) => ({
@@ -18,12 +19,15 @@ const CONFETTI = Array.from({ length: 24 }, (_, i) => ({
 
 export function End({
   game,
+  day,
   cafe,
   lang,
   onReplay,
   onChangeCafe,
 }: {
   game: GameState;
+  /** Date du stand-up du jour, ou null pour une partie de debug (`?seed=`). */
+  day: Date | null;
   cafe: CafeLevel;
   lang: Lang;
   onReplay: () => void;
@@ -41,11 +45,15 @@ export function End({
     return () => clearTimeout(id);
   }, [copied]);
 
+  const meeting = day
+    ? e.dailyMeeting(day.toLocaleDateString(STRINGS.dateLocale, { day: "numeric", month: "long" }))
+    : STRINGS.meetingName;
   const mood: Mood = good ? "happy" : cut ? "shocked" : "oops";
   const deg = (game.harmony / 100) * 360;
 
   const share = async () => {
-    const text = e.shareText(game.harmony, STRINGS.cafe[cafe].cups, game.stats.intercepted, game.stats.deplacees);
+    const headline = e.shareText(game.harmony, STRINGS.cafe[cafe].cups, game.stats.intercepted, game.stats.deplacees, day !== null);
+    const text = shareText(headline, game.outcomes);
     // La page anglaise a son propre aperçu de lien : on partage l'adresse de la langue jouée.
     const url = shareUrl(location.origin, location.pathname, lang);
     const touch = matchMedia("(pointer: coarse)").matches;
@@ -77,7 +85,7 @@ export function End({
       )}
       <h2>{cut ? e.titleCut : e.titleTime}</h2>
       <div className="sub">
-        {cut ? e.cutSub : `${STRINGS.meetingName} · ${STRINGS.cafe[cafe].short} ${STRINGS.cafe[cafe].cups}`}
+        {cut ? e.cutSub : `${meeting} · ${STRINGS.cafe[cafe].short} ${STRINGS.cafe[cafe].cups}`}
       </div>
       <div className="donut" style={{ ["--deg" as string]: `${deg}deg` }}>
         <div data-testid="final-harmony">

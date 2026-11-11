@@ -195,18 +195,27 @@ test("R-51 : la page a une image d'aperçu et une description pour le partage du
   expect(res.headers()["content-type"]).toContain("image/jpeg");
 });
 
-test("R-50 : sur ordinateur, « Partager » copie le score avec l'adresse du jeu", async ({ page, context, isMobile }) => {
+/** Le texte copié : phrase du score, ligne d'émojis, puis « whack-a-mute » suivi de l'adresse (#19). */
+function expectShareLayout(copied: string, headline: RegExp, url: string) {
+  const lines = copied.split("\n");
+  expect(lines).toHaveLength(3);
+  expect(lines[0]).toMatch(headline);
+  expect(lines[1]).toMatch(/^[🔇😬🤐]+…?$/u);
+  expect(lines[2]).toBe(`whack-a-mute ${url}`);
+}
+
+test("R-50, #19 : sur ordinateur, « Partager » copie le stand-up du jour, ses émojis et l'adresse du jeu", async ({ page, context, isMobile }) => {
   test.skip(isMobile, "sur téléphone, c'est le partage natif");
   test.setTimeout(60_000);
   await context.grantPermissions(["clipboard-read", "clipboard-write"]);
-  await page.goto("./?seed=partage&vitesse=20");
+  // Sans ?seed=, c'est le stand-up du jour (#19).
+  await page.goto("./?vitesse=20");
   await start(page);
   await expect(page.getByTestId("end")).toBeVisible({ timeout: 20_000 });
   await page.getByTestId("share").click({ force: true });
   await expect(page.getByTestId("share")).toContainText("Copié");
   const copied = await page.evaluate(() => navigator.clipboard.readText());
-  expect(copied).toMatch(/% d'harmonie/);
-  expect(copied).toContain(new URL("./", page.url()).href.replace(/\?.*$/, ""));
+  expectShareLayout(copied, /^J'ai gardé \d+ % d'harmonie au stand-up du jour /, new URL("./", page.url().replace(/\?.*$/, "")).href);
 });
 
 test("#4 : icônes d'onglet et d'écran d'accueil, avec un manifeste", async ({ page, request }) => {
@@ -325,18 +334,17 @@ test.describe("Version anglaise (R-60)", () => {
     expect(fits).toEqual({ noScroll: true, inside: true, bottomVisible: true });
   });
 
-  test("R-50 : en anglais, « Share » copie le score avec l'adresse de la page anglaise", async ({ page, context, isMobile }) => {
+  test("R-50, #19 : en anglais, « Share » copie le stand-up du jour avec l'adresse de la page anglaise", async ({ page, context, isMobile }) => {
     test.skip(isMobile, "sur téléphone, c'est le partage natif");
     test.setTimeout(60_000);
     await context.grantPermissions(["clipboard-read", "clipboard-write"]);
-    await page.goto("./?lang=en&seed=partage&vitesse=20");
+    await page.goto("./?lang=en&vitesse=20");
     await start(page);
     await expect(page.getByTestId("end")).toBeVisible({ timeout: 20_000 });
     await page.getByTestId("share").click({ force: true });
     await expect(page.getByTestId("share")).toContainText("Copied");
     const copied = await page.evaluate(() => navigator.clipboard.readText());
-    expect(copied).toMatch(/I kept \d+% harmony/);
-    expect(copied.endsWith(new URL("./en/", page.url().replace(/\?.*$/, "")).href)).toBe(true);
+    expectShareLayout(copied, /^I kept \d+% harmony at today's stand-up /, new URL("./en/", page.url().replace(/\?.*$/, "")).href);
   });
 });
 

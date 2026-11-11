@@ -50,6 +50,7 @@ export function createGame(opts: NewGameOptions): GameState {
     bossReactionUntil: -1,
     bossReactionPending: false,
     stats: { intercepted: 0, blunders: 0, wrongMutes: 0, normals: 0, deplacees: 0 },
+    outcomes: [],
     over: false,
     endReason: null,
     eventSeq: 0,
@@ -213,6 +214,7 @@ function resolveTurn(s: GameState, p: Participant, emit: Emit) {
   if (outcome === "blunder") s.stats.blunders++;
   if (outcome === "wrongMute") s.stats.wrongMutes++;
   if (outcome === "normal") s.stats.normals++;
+  s.outcomes.push(outcome);
 
   p.turn = null;
   p.lastResult = { line: turn.line, outcome, at: s.t };
@@ -279,6 +281,7 @@ function cloneState(s: GameState): GameState {
     usedLineIds: [...s.usedLineIds],
     slotsFreeAt: [...s.slotsFreeAt],
     stats: { ...s.stats },
+    outcomes: [...s.outcomes],
   };
 }
 
