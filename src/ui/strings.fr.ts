@@ -80,7 +80,7 @@ export const STRINGS = {
     replay: "Rejouer ↻",
     share: "Partager mon score",
     copied: "Copié ! Colle-le où tu veux 📋",
-    changeCafe: "Changer de café ☕",
+    changeCafe: "Changer le niveau de café ☕",
     titles: {
       champion: "Champion·ne de la synergie",
       modele: "Collègue modèle (ou presque)",

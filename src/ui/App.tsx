@@ -1,4 +1,4 @@
-/** Parcours : Accueil → Réunion → Fin → Rejouer / Changer de café. */
+/** Parcours : Accueil → Réunion → Fin → Rejouer / Changer le niveau de café. */
 import { domAnimation, LazyMotion } from "motion/react";
 import { useEffect, useMemo, useState } from "react";
 import { loadSounds } from "../audio";

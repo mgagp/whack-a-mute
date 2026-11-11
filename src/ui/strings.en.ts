@@ -76,7 +76,7 @@ export const STRINGS_EN: Strings = {
     replay: "Play again ↻",
     share: "Share my score",
     copied: "Copied! Paste it anywhere 📋",
-    changeCafe: "Change coffee ☕",
+    changeCafe: "Change coffee level ☕",
     titles: {
       champion: "Synergy champion",
       modele: "Model coworker (almost)",
