@@ -206,3 +206,22 @@ test("R-50 : sur ordinateur, « Partager » copie le score avec l'adresse du jeu
   expect(copied).toMatch(/% d'harmonie/);
   expect(copied).toContain(new URL("./", page.url()).href.replace(/\?.*$/, ""));
 });
+
+test("#4 : icônes d'onglet et d'écran d'accueil, avec un manifeste", async ({ page, request }) => {
+  await page.goto("./");
+  const href = (sel: string) => page.locator(sel).getAttribute("href");
+  for (const sel of ['link[rel="icon"]', 'link[rel="apple-touch-icon"]', 'link[rel="manifest"]']) {
+    const res = await request.get(new URL((await href(sel))!, page.url()).href);
+    expect(res.ok(), sel).toBe(true);
+  }
+  const manifestUrl = new URL((await href('link[rel="manifest"]'))!, page.url());
+  const manifest = await (await request.get(manifestUrl.href)).json();
+  expect(manifest.name).toBe("Whack-a-Mute");
+  const sizes = manifest.icons.map((i: { sizes: string }) => i.sizes);
+  expect(sizes).toEqual(expect.arrayContaining(["192x192", "512x512"]));
+  expect(manifest.icons.some((i: { purpose: string }) => i.purpose === "maskable")).toBe(true);
+  for (const icon of manifest.icons) {
+    const res = await request.get(new URL(icon.src, manifestUrl).href);
+    expect(res.headers()["content-type"]).toContain("image/png");
+  }
+});
