@@ -36,8 +36,15 @@ TypeScript, Vite, React, CSS et Motion, Howler.js, Zod, Vitest, Playwright, pnpm
 - Humour léger. Interdits : viser un groupe, la vulgarité forte, les vraies personnes ou entreprises.
 - Interface de visio **parodique et générique** : aucun nom, logo ou couleur signature de Teams, Slack, Zoom, etc.
 
-## Git
-- Commits courts et descriptifs, en français.
-- Ne pas pousser vers GitHub sans que Marc le demande.
+## Git et GitHub
 - Le dépôt GitHub est **public** depuis le 2026-11-11 (github.com/mgagp/whack-a-mute), sous licence MIT. Tout ce qui est commité est visible de tous : ne rien y mettre de personnel ou de secret.
-- Chaque push sur `main` met le jeu en ligne sur GitHub Pages.
+- Chaque push sur `main` met le jeu en ligne sur GitHub Pages, après la vérification complète.
+
+### Façon de travailler (ticket #6)
+- **Le backlog vit dans les tickets GitHub.** Un retour de Marc qui mérite du travail devient d'abord un ticket.
+- **Une branche et une PR par ticket**, à partir de `origin/main`, avec un nom court en français (`bulle-pensee`, `icone-accueil`).
+- Commits courts et descriptifs, en français.
+- La description de la PR commence par `Closes #n` (en anglais : GitHub ne reconnaît pas « ferme #n ») et explique le changement pour Marc, en français.
+- Pour un changement visuel, joindre des captures téléphone et ordinateur.
+- **Marc décide de la fusion.** Ne jamais fusionner une PR sans son accord explicite pour cette PR-là. Après la fusion, vérifier que la mise en ligne a réussi.
+- `main` est protégée : on n'y pousse jamais directement, et une PR ne peut être fusionnée que si la vérification passe.
