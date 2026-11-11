@@ -360,8 +360,8 @@ Cette idée généralise le duo « annonce du boss → réplique signature ». I
 | Q-3 | Ajoute-t-on la mécanique inverse « Tu es sur mute ! » ? | Non pour la première version, voir R-61 |
 | ~~Q-4~~ | Nom de l'application de visio fictive ? | ✅ **Adopté avec la maquette v1** : « SynergiQ » |
 | ~~Q-5~~ | Prénoms et rôles des personnages ? | ✅ **Adopté avec la maquette v1** : Ginette (compta), Kevin (stagiaire), Josée (scrum master), Le boss (gestion) |
-| Q-6 | D'où viendront les bruitages (générés, banque libre de droits, enregistrés par Marc) ? | Générés ou libres de droits |
-| Q-7 | Hébergement et adresse web finale ? Le dépôt GitHub sera **privé** au départ, et GitHub Pages ne publie depuis un dépôt privé qu'avec un abonnement payant (GitHub Pro). | À trancher à la mise en ligne : rendre le dépôt public, prendre GitHub Pro, ou héberger sur Netlify, Vercel ou Cloudflare Pages (gratuits depuis un dépôt privé) |
+| ~~Q-6~~ | D'où viendront les bruitages (générés, banque libre de droits, enregistrés par Marc) ? | ✅ **Décidé (v0.7)** : les bruitages générés en Web Audio sont adoptés tels quels |
+| ~~Q-7~~ | Hébergement et adresse web finale ? | ✅ **Décidé (v0.7)** : dépôt public sous licence MIT, jeu publié sur GitHub Pages à chaque push sur `main` (https://mgagp.github.io/whack-a-mute/) |
 | ~~Q-8~~ | Français québécois assumé dans les répliques ? | ✅ **Décidé (v0.2)** : québécois léger, voir section 7 |
 
 ---
@@ -376,3 +376,4 @@ Cette idée généralise le duo « annonce du boss → réplique signature ». I
 | 0.4 | 2026-11-09 | Maquette v1 validée (R-34) : direction « Bureau pop arcade » adoptée, choix du café fusionné avec l'accueil, SynergiQ et les personnages adoptés (Q-4, Q-5) |
 | 0.5 | 2026-11-09 | Réplique signature « Ben oui, c'est ça. » en réaction au boss (R-23 à R-25, R-64). Premier tri des répliques par Marc |
 | 0.6 | 2026-11-09 | Champ `pasDitePar` : le boss ne dit plus la réplique qui se moque de lui (R-26) |
+| 0.7 | 2026-11-11 | Dépôt public sous licence MIT, publication sur GitHub Pages (Q-7). Les bruitages générés sont adoptés tels quels (Q-6) |

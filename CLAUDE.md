@@ -38,4 +38,5 @@ TypeScript, Vite, React, CSS et Motion, Howler.js, Zod, Vitest, Playwright, pnpm
 ## Git
 - Commits courts et descriptifs, en français.
 - Ne pas pousser vers GitHub sans que Marc le demande.
-- Le dépôt GitHub sera **privé** au départ. Ne jamais le rendre public sans que Marc le demande.
+- Le dépôt GitHub est **public** depuis le 2026-11-11 (github.com/mgagp/whack-a-mute), sous licence MIT. Tout ce qui est commité est visible de tous : ne rien y mettre de personnel ou de secret.
+- Chaque push sur `main` met le jeu en ligne sur GitHub Pages.
