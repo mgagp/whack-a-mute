@@ -176,3 +176,31 @@ test("R-37 : le texte des bulles a un contraste d'au moins 4,5:1", async ({ page
   });
   for (const r of ratios) expect(r.min, r.cls).toBeGreaterThanOrEqual(4.5);
 });
+
+test("R-51 : la page a une image d'aperçu et une description pour le partage du lien", async ({ page, request }) => {
+  await page.goto("./");
+  const meta = (sel: string) => page.locator(sel).getAttribute("content");
+  expect(await meta('meta[property="og:title"]')).toBe("Whack-a-Mute");
+  expect(await meta('meta[property="og:description"]')).toMatch(/mute/);
+  expect(await meta('meta[name="twitter:card"]')).toBe("summary_large_image");
+  const image = await meta('meta[property="og:image"]');
+  expect(image).toMatch(/^https:\/\/.+\/apercu\.jpg$/);
+  // L'image est bien servie avec le site (on la demande au serveur local).
+  const res = await request.get("./apercu.jpg");
+  expect(res.ok()).toBe(true);
+  expect(res.headers()["content-type"]).toContain("image/jpeg");
+});
+
+test("R-50 : sur ordinateur, « Partager » copie le score avec l'adresse du jeu", async ({ page, context, isMobile }) => {
+  test.skip(isMobile, "sur téléphone, c'est le partage natif");
+  test.setTimeout(60_000);
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  await page.goto("./?seed=partage&vitesse=20");
+  await start(page);
+  await expect(page.getByTestId("end")).toBeVisible({ timeout: 20_000 });
+  await page.getByTestId("share").click({ force: true });
+  await expect(page.getByTestId("share")).toContainText("Copié");
+  const copied = await page.evaluate(() => navigator.clipboard.readText());
+  expect(copied).toMatch(/% d'harmonie/);
+  expect(copied).toContain(new URL("./", page.url()).href.replace(/\?.*$/, ""));
+});

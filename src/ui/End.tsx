@@ -47,8 +47,9 @@ export function End({
       try {
         await navigator.share({ text, url });
         return;
-      } catch {
-        // Partage annulé : on se rabat sur la copie.
+      } catch (err) {
+        // Annulé par le joueur : on ne fait rien. Sinon (partage refusé), on se rabat sur la copie.
+        if (err instanceof DOMException && err.name === "AbortError") return;
       }
     }
     try {
