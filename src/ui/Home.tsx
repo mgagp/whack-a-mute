@@ -6,9 +6,24 @@ import { Avatar } from "./Avatar";
 import { Deco } from "./Deco";
 import { MicIcon } from "./Icons";
 import { SoundButton } from "./Game";
-import { STRINGS } from "./strings.fr";
+import type { Lang } from "../content/lines";
+import { ALL_STRINGS, useStrings } from "./i18n";
+import { LANGS } from "./lang";
 
-export function Home({ cafe, onCafe, onStart }: { cafe: CafeLevel; onCafe: (c: CafeLevel) => void; onStart: () => void }) {
+export function Home({
+  cafe,
+  onCafe,
+  onStart,
+  lang,
+  onLang,
+}: {
+  cafe: CafeLevel;
+  onCafe: (c: CafeLevel) => void;
+  onStart: () => void;
+  lang: Lang;
+  onLang: (lang: Lang) => void;
+}) {
+  const STRINGS = useStrings();
   const h = STRINGS.home;
   const [muted, setMutedState] = useState(isMuted);
   return (
@@ -16,6 +31,23 @@ export function Home({ cafe, onCafe, onStart }: { cafe: CafeLevel; onCafe: (c: C
       <Deco items={["☕", "📎", "📈", "🗒️"]} />
       <div className="home-sound">
         <SoundButton muted={muted} onChange={(m) => (setMuted(m), setMutedState(m))} />
+        <div className="lang-switch" role="group" aria-label={STRINGS.langLabel}>
+          {LANGS.map((l) => (
+            <button
+              key={l}
+              type="button"
+              lang={l}
+              data-testid={`lang-${l}`}
+              aria-pressed={lang === l}
+              aria-label={ALL_STRINGS[l].langName}
+              title={ALL_STRINGS[l].langName}
+              className={lang === l ? "on" : ""}
+              onClick={() => onLang(l)}
+            >
+              {l.toUpperCase()}
+            </button>
+          ))}
+        </div>
       </div>
       <h1 className="logo">
         <span className="small">{h.logoSmall}</span>

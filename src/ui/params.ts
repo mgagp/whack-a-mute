@@ -1,5 +1,6 @@
 /**
  * Paramètres de debug dans l'adresse (R-42) : ?seed=, ?vitesse=, ?participants=, ?cafe=.
+ * `?lang=` (R-60) choisit la langue ; ce n'est pas un paramètre de debug.
  */
 import { CONFIG, type CafeLevel } from "../engine/config";
 
@@ -8,6 +9,8 @@ export interface DebugParams {
   speed: number;
   participants: number | undefined;
   cafe: CafeLevel | null;
+  /** Langue demandée par `?lang=`, telle quelle (validée par resolveLang). */
+  lang: string | null;
   /** Vrai dès qu'un paramètre de debug est présent. */
   debug: boolean;
 }
@@ -24,5 +27,5 @@ export function readParams(search: string): DebugParams {
   const rawCafe = Number(q.get("cafe"));
   const cafe = rawCafe === 1 || rawCafe === 2 || rawCafe === 3 ? (rawCafe as CafeLevel) : null;
   const debug = ["seed", "vitesse", "participants", "cafe"].some((k) => q.has(k));
-  return { seed, speed, participants, cafe, debug };
+  return { seed, speed, participants, cafe, lang: q.get("lang"), debug };
 }

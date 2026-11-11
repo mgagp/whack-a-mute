@@ -4,6 +4,7 @@
  */
 import * as z from "zod/mini";
 import type { Line } from "../engine/state";
+import enRaw from "./lines.en.json";
 import frRaw from "./lines.fr.json";
 
 const participantId = z.enum(["ginette", "kevin", "josee", "boss"]);
@@ -39,7 +40,7 @@ export function parseLineBank(raw: unknown): Line[] {
   return bank.lines.map(({ note: _note, ...line }) => line);
 }
 
-export const BANKS = { fr: frRaw } as const;
+export const BANKS = { fr: frRaw, en: enRaw } as const;
 export type Lang = keyof typeof BANKS;
 
 export function loadLines(lang: Lang = "fr"): Line[] {

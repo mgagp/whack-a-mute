@@ -1,0 +1,89 @@
+/**
+ * Interface en anglais neutre et international (R-60).
+ * Mêmes clés que strings.fr.ts : le type `Strings` signale toute clé manquante.
+ */
+import type { Strings } from "./strings.fr";
+
+export const STRINGS_EN: Strings = {
+  lang: "en",
+  langName: "English",
+  langLabel: "Language",
+  pageTitle: "Whack-a-Mute — save the meeting, one mute at a time",
+  percent: (n) => `${n}%`,
+  appName: "SynergiQ",
+  meetingName: "Daily stand-up",
+  home: {
+    logoSmall: "WHACK-A-",
+    logoBig: "MUTE",
+    taglineA: "Save the team meeting…",
+    taglineB: "one mute at a time.",
+    storyWho: "A coworker, mid-meeting",
+    storyMsg: "“Marc… you're not on mute.” 😬",
+    storyMeta:
+      "Inspired by a true story. Your job: read what your coworkers are about to say and mute them just in time.",
+    cafeLabel: "Your coffee level",
+    start: "Join the meeting →",
+    fine: "90-second game · best with sound 🔊",
+  },
+  cafe: {
+    1: { cups: "☕", line1: "Monday 9 a.m.,", line2: "no coffee", short: "no coffee" },
+    2: { cups: "☕☕", line1: "After the", line2: "1st coffee", short: "after the 1st coffee" },
+    3: { cups: "☕☕☕", line1: "4th", line2: "espresso", short: "4th espresso" },
+  },
+  participants: {
+    ginette: { name: "Ginette", role: "accounting", feminine: true },
+    kevin: { name: "Kevin", role: "intern", feminine: false },
+    josee: { name: "Josée", role: "scrum master", feminine: true },
+    boss: { name: "The boss", role: "management", feminine: false },
+  },
+  game: {
+    harmony: "Team harmony",
+    willSay: "About to say…",
+    said: "🎙️ Said",
+    cutF: "🔇 Muted in time",
+    cutM: "🔇 Muted in time",
+    nobodyHeard: "…nobody heard it 🤫",
+    wrongMuteTag: "🔇 Muted by mistake",
+    wrongMuteSay: "Uh… did you just mute me?",
+    stamp: "MUTE!",
+    boom: "WHACK!",
+    oops: "😬",
+    waiting: "Waiting…",
+    joined: (name) => `👋 ${name} joined the meeting`,
+    toast: {
+      intercepted: (d) => `🔇 Intercepted! +${d} harmony`,
+      blunder: (d) => `😬 Awkward! −${Math.abs(d)} harmony`,
+      wrongMute: (d) => `🙃 Muted by mistake! −${Math.abs(d)} harmony`,
+    },
+    chipIntercepted: (n) => `🔇 ${n} intercepted`,
+    chipBlunders: (n) => `😬 ${n} awkward`,
+    soundOn: "Mute sound",
+    soundOff: "Unmute sound",
+    tileLabel: (name, mic) => `${name}, mic ${mic}`,
+    micOpen: "on",
+    micMuted: "muted",
+    micIdle: "idle",
+  },
+  end: {
+    titleTime: "Meeting over!",
+    titleCut: "Meeting cut short!",
+    cutSub: "The organizer ended the meeting early.",
+    harmony: "HARMONY",
+    statIntercepted: "comments intercepted",
+    statWrong: (n) => (n === 1 ? "coworker muted by mistake" : "coworkers muted by mistake"),
+    statBlunders: (n) => (n === 1 ? "awkward moment" : "awkward moments"),
+    replay: "Play again ↻",
+    share: "Share my score",
+    copied: "Copied! Paste it anywhere 📋",
+    changeCafe: "Change coffee ☕",
+    titles: {
+      champion: "Synergy champion",
+      modele: "Model coworker (almost)",
+      unUn: "“Let's chat one-on-one”",
+      rh: "Surprise invite from HR",
+      ecourtee: "Meeting ended by the organizer",
+    },
+    shareText: (harmony, cups, intercepted, total) =>
+      `I kept ${harmony}% harmony at the stand-up ${cups} (${intercepted}/${total} comments intercepted) — whack-a-mute`,
+  },
+};

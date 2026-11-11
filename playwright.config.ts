@@ -9,7 +9,8 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? [["list"], ["html", { open: "never" }]] : "list",
-  use: { baseURL: `http://localhost:${PORT}/` },
+  // Les tests se font en français par défaut ; les tests de la version anglaise le demandent (R-60).
+  use: { baseURL: `http://localhost:${PORT}/`, locale: "fr-CA" },
   webServer: {
     command: `pnpm build && pnpm preview --port ${PORT} --strictPort`,
     port: PORT,

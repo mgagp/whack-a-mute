@@ -32,7 +32,9 @@ TypeScript, Vite, React, CSS et Motion, Howler.js, Zod, Vitest, Playwright, pnpm
 - On s'inspire des qualités des jeux sociaux colorés, sans copier l'apparence d'un jeu ou d'un produit précis.
 
 ## Ton et contenu
-- Interface et répliques en **français québécois léger** pour la première version (décisions Q-2 et Q-8). Le code reste prêt pour une traduction.
+- Deux langues (R-60) : **français québécois léger** (Q-8) et **anglais neutre et international**. Les prénoms des personnages ne changent pas.
+- Tout texte ajouté doit exister dans les deux langues : `strings.fr.ts` et `strings.en.ts` pour l'interface, `lines.fr.json` et `lines.en.json` pour les répliques (mêmes numéros). L'anglais est une réécriture qui sonne naturel, pas une traduction mot à mot. Un test et le typecheck le vérifient.
+- **Positionnement** (SPEC.md, section 1) : petit jeu social qui vise un pic de partage court. Avant de proposer une évolution, se demander si elle élargit le public ou donne envie de partager.
 - Humour léger. Interdits : viser un groupe, la vulgarité forte, les vraies personnes ou entreprises.
 - Interface de visio **parodique et générique** : aucun nom, logo ou couleur signature de Teams, Slack, Zoom, etc.
 

@@ -7,7 +7,7 @@ import type { GameEvent, GameState, Line } from "../engine/state";
 import { endTitleKey, meetingMinutes } from "../engine/step";
 import { Deco } from "./Deco";
 import { Mallet } from "./Icons";
-import { STRINGS } from "./strings.fr";
+import { useStrings } from "./i18n";
 import { Tile } from "./Tile";
 import { useGame } from "./useGame";
 
@@ -34,6 +34,7 @@ export function Game(props: {
   debug: boolean;
   onOver: (game: GameState) => void;
 }) {
+  const STRINGS = useStrings();
   const [muted, setMutedState] = useState(isMuted);
   const overSent = useRef(false);
 
@@ -114,7 +115,7 @@ export function Game(props: {
         <div className="bar" role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={game.harmony} aria-label={STRINGS.game.harmony}>
           <div className="fill" style={{ width: `${game.harmony}%` }} />
           <span data-testid="harmony">
-            {STRINGS.game.harmony} · {game.harmony} %
+            {STRINGS.game.harmony} · {STRINGS.percent(game.harmony)}
           </span>
         </div>
       </motion.div>
@@ -171,6 +172,7 @@ export function Game(props: {
 }
 
 export function SoundButton({ muted, onChange }: { muted: boolean; onChange: (muted: boolean) => void }) {
+  const STRINGS = useStrings();
   return (
     <button
       type="button"

@@ -6,7 +6,7 @@ import type { Outcome, Participant } from "../engine/state";
 import { turnProgress } from "../engine/step";
 import { Avatar, type Mood } from "./Avatar";
 import { Boom, MicIcon, ThoughtCloud } from "./Icons";
-import { STRINGS } from "./strings.fr";
+import { useStrings } from "./i18n";
 
 const COLOR: Record<ParticipantId, string> = { ginette: "coral", kevin: "turq", josee: "sun", boss: "lime" };
 const TIMER_LEN = 2 * Math.PI * 8;
@@ -33,6 +33,7 @@ export interface TileProps {
 }
 
 export const Tile = memo(function Tile({ p, t, reacting, justJoined, debug, onTap }: TileProps) {
+  const STRINGS = useStrings();
   const s = STRINGS.participants[p.id];
   const result = p.lastResult && t < p.restUntil ? p.lastResult : null;
   const state: TileState = p.turn ? "announcing" : result ? result.outcome : "idle";

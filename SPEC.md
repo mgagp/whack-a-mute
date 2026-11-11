@@ -1,6 +1,6 @@
 # Whack-a-Mute — Spécification (PRD)
 
-> **Version** 0.5 (brouillon) · **Date** 2026-11-09 · **Auteur** Marc
+> **Version** 0.8 · **Date** 2026-11-11 · **Auteur** Marc
 > Source d'origine : [VERBATIM.md](VERBATIM.md). En cas de doute sur l'intention, c'est le verbatim qui fait foi.
 > Les sections marquées **⚠️ Hypothèse** sont des propositions à valider. Elles sont reprises dans la section 13, « Questions ouvertes ».
 
@@ -11,6 +11,9 @@
 Un petit jeu web, drôle et instantanément compréhensible, inspiré du principe du jeu de la taupe. Le joueur surveille une réunion d'équipe en visio et doit **mettre sur mute** les collègues qui s'apprêtent à lâcher un commentaire déplacé, avant qu'il soit trop tard.
 
 Une partie dure environ 90 secondes. On y joue de 5 à 15 minutes, on partage son score, puis on passe à autre chose. Le jeu vise le « Ah ben voyons, quelqu'un a fait ça ! ».
+
+### Positionnement (décidé le 2026-11-11)
+C'est un **petit jeu social qui vise un pic de partage court**, pas un jeu qu'on garde des mois. L'effort investi reste modéré, et chaque évolution se juge à une question : est-ce que ça élargit le public ou donne envie de partager ? La profondeur de contenu, qui sert surtout les joueurs qui reviennent, passe après. Premier geste : la version anglaise (R-60).
 
 ### Origine (à raconter dans l'intro)
 Marc, en fin de carrière, est devenu un peu moins participatif en réunion, puis un jour un petit commentaire déplacé lui a échappé. Quelqu'un lui a alors dit : « Marc, tu n'es pas sur mute. » Petit moment de gêne… et une leçon de vie devenue un jeu.
@@ -274,8 +277,14 @@ Chaque exigence [M] doit être couverte par au moins un test automatisé (voir l
 - **R-50 [S]** Un bouton « Partager » utilise le partage natif du téléphone. Sur ordinateur, il copie plutôt un texte du genre : « J'ai gardé 85 % d'harmonie au stand-up ☕☕ — whack-a-mute ».
 - **R-51 [S]** La page a une image d'aperçu et une description pour un bel affichage quand on partage le lien.
 
+### Langues
+- **R-60 [M]** Le jeu existe en **français et en anglais** (anglais neutre et international ; les prénoms des personnages ne changent pas).
+  - La langue est choisie dans cet ordre : `?lang=` dans l'adresse, puis la page `/en/` (toujours en anglais), puis le choix mémorisé du joueur, puis la langue de l'appareil (français si elle commence par « fr », anglais sinon).
+  - Un bouton FR/EN sur l'accueil change la langue, et ce choix est mémorisé.
+  - La page `/en/` a son propre aperçu de lien en anglais. Le score partagé pointe vers la page de la langue jouée.
+  - Chaque réplique française a sa réplique anglaise (`lines.en.json`, mêmes numéros, même rôle dans le jeu) : c'est une réécriture, pas une traduction mot à mot. La réplique signature anglaise est « Yeah, right. ». Un test vérifie cette correspondance, de même que le type `Strings` pour les textes de l'interface.
+
 ### Plus tard
-- **R-60 [L]** Version anglaise (voir Q-2).
 - **R-61 [L]** Mécanique inverse : un collègue sur mute dit quelque chose d'utile (« Tu es sur mute ! »), et il faut lui ouvrir le micro (voir Q-3).
 - **R-62 [L]** Classement mondial (nécessiterait un serveur).
 - **R-63 [L]** Phrases ambiguës comme troisième axe de difficulté.
@@ -304,7 +313,8 @@ src/
 │   ├── rng.ts         ← générateur aléatoire à graine
 │   └── config.ts      ← toutes les valeurs de jouabilité (R-40)
 ├── content/
-│   └── lines.fr.json  ← répliques (R-20)
+│   ├── lines.fr.json  ← répliques en français (R-20)
+│   └── lines.en.json  ← les mêmes répliques, réécrites en anglais (R-60)
 ├── ui/                ← composants React, qui lisent l'état et envoient les clics
 ├── audio/             ← chargement et lecture des bruitages
 └── main.tsx
@@ -356,7 +366,7 @@ Cette idée généralise le duo « annonce du boss → réplique signature ». I
 | # | Question | Hypothèse actuelle |
 |---|---|---|
 | ~~Q-1~~ | La boucle « ils enlèvent eux-mêmes le mute, le joueur le remet » convient-elle ? | ✅ **Décidé (v0.2)** : oui, telle que décrite en section 3, avec le piège R-08 |
-| ~~Q-2~~ | Français seulement, ou français et anglais dès la première version ? | ✅ **Décidé (v0.2)** : français d'abord, code prêt pour la traduction (R-20 inclut la langue). L'anglais reste R-60 |
+| ~~Q-2~~ | Français seulement, ou français et anglais dès la première version ? | ✅ **Décidé (v0.2, revu v0.8)** : français d'abord, puis anglais ajouté le 2026-11-11 (R-60) |
 | Q-3 | Ajoute-t-on la mécanique inverse « Tu es sur mute ! » ? | Non pour la première version, voir R-61 |
 | ~~Q-4~~ | Nom de l'application de visio fictive ? | ✅ **Adopté avec la maquette v1** : « SynergiQ » |
 | ~~Q-5~~ | Prénoms et rôles des personnages ? | ✅ **Adopté avec la maquette v1** : Ginette (compta), Kevin (stagiaire), Josée (scrum master), Le boss (gestion) |
@@ -377,3 +387,4 @@ Cette idée généralise le duo « annonce du boss → réplique signature ». I
 | 0.5 | 2026-11-09 | Réplique signature « Ben oui, c'est ça. » en réaction au boss (R-23 à R-25, R-64). Premier tri des répliques par Marc |
 | 0.6 | 2026-11-09 | Champ `pasDitePar` : le boss ne dit plus la réplique qui se moque de lui (R-26) |
 | 0.7 | 2026-11-11 | Dépôt public sous licence MIT, publication sur GitHub Pages (Q-7). Les bruitages générés sont adoptés tels quels (Q-6) |
+| 0.8 | 2026-11-11 | Positionnement : petit jeu social à pic de partage court (section 1). Version anglaise (R-60) : interface, répliques, page `/en/` et bouton FR/EN |
