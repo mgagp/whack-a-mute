@@ -284,7 +284,7 @@ Chaque exigence [M] doit être couverte par au moins un test automatisé (voir l
 - **R-60 [M]** Le jeu existe en **français et en anglais** (anglais neutre et international ; les prénoms des personnages ne changent pas).
   - La langue est choisie dans cet ordre : `?lang=` dans l'adresse, puis la page `/en/` (toujours en anglais), puis le choix mémorisé du joueur, puis la langue de l'appareil (français si elle commence par « fr », anglais sinon).
   - Un bouton FR/EN sur l'accueil change la langue, et ce choix est mémorisé.
-  - La page `/en/` a son propre aperçu de lien en anglais. Le score partagé pointe vers la page de la langue jouée.
+  - La page `/en/` a son propre aperçu de lien en anglais. Le score partagé pointe vers la page de la langue jouée : `/en/` en anglais, et la page racine avec `?lang=fr` en français (#26), pour qu'un appareil réglé en anglais ouvre quand même en français un score partagé en français. La page racine sans paramètre garde la détection d'après l'appareil.
   - Chaque réplique française a sa réplique anglaise (`lines.en.json`, mêmes numéros, même rôle dans le jeu) : c'est une réécriture, pas une traduction mot à mot. La réplique signature anglaise est « Yeah, right. ». Un test vérifie cette correspondance, de même que le type `Strings` pour les textes de l'interface.
 
 ### Plus tard
@@ -393,3 +393,4 @@ Cette idée généralise le duo « annonce du boss → réplique signature ». I
 | 0.9 | 2026-11-11 | Partage (#19) : récapitulatif en émojis et stand-up du jour par défaut (R-50) |
 | 0.10 | 2026-11-11 | Compteur de visites GoatCounter, sans cookies (R-52, #20) |
 | 0.11 | 2026-11-11 | Le lien partagé porte `?ref=partage` pour compter les visites venues d'un partage (R-52, #24) |
+| 0.12 | 2026-11-11 | Le lien partagé en français porte `?lang=fr` : il s'ouvre en français même sur un appareil en anglais (R-60, #26) |

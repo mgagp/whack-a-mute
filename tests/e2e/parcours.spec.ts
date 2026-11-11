@@ -220,7 +220,7 @@ test("R-50, #19 : sur ordinateur, « Partager » copie le stand-up du jour, ses 
   await page.getByTestId("share").click({ force: true });
   await expect(page.getByTestId("share")).toContainText("Copié");
   const copied = await page.evaluate(() => navigator.clipboard.readText());
-  expectShareLayout(copied, /^J'ai gardé \d+ % d'harmonie au stand-up du jour /, `${new URL("./", page.url().replace(/\?.*$/, "")).href}?ref=partage`);
+  expectShareLayout(copied, /^J'ai gardé \d+ % d'harmonie au stand-up du jour /, `${new URL("./", page.url().replace(/\?.*$/, "")).href}?lang=fr&ref=partage`);
 });
 
 test("R-52, #20 : les parties lancées et les partages sont comptés, avec leur langue", async ({ page, context, isMobile }) => {
@@ -245,6 +245,16 @@ test("R-52, #20 : les parties lancées et les partages sont comptés, avec leur 
     { path: "partie-fr", event: true },
     { path: "partage-fr", event: true },
   ]);
+});
+
+test("R-60, #26 : un score partagé en français s'ouvre en français, même sur un appareil en anglais", async ({ browser }) => {
+  const context = await browser.newContext({ locale: "en-US" });
+  const page = await context.newPage();
+  await page.route("https://gc.zgo.at/**", (route) => route.abort());
+  await page.goto("./?lang=fr&ref=partage");
+  await expect(page.locator("html")).toHaveAttribute("lang", "fr");
+  await expect(page.getByTestId("start")).toContainText("Rejoindre");
+  await context.close();
 });
 
 test("#4 : icônes d'onglet et d'écran d'accueil, avec un manifeste", async ({ page, request }) => {
