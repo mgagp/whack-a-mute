@@ -9,8 +9,9 @@ const walk = (dir) => {
   for (const f of readdirSync(dir)) {
     const p = join(dir, f);
     if (statSync(p).isDirectory()) walk(p);
-    // Les sons et l'image d'aperçu (lue seulement par les robots de partage, R-51) ne comptent pas.
-    else if (!p.includes("sounds") && !p.endsWith("apercu.jpg")) files.push(p);
+    // Ne comptent pas : les sons, l'image d'aperçu (lue par les robots de partage, R-51)
+    // et les icônes d'écran d'accueil (téléchargées seulement à l'installation, #4).
+    else if (!p.includes("sounds") && !/apercu\.jpg$|icone-\d+\.png$|apple-touch-icon\.png$/.test(p)) files.push(p);
   }
 };
 walk("dist");
