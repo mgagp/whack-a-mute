@@ -79,6 +79,7 @@ export function step(prev: GameState, dtMs: number, inputs: readonly Input[] = [
     const p = s.participants.find((x) => x.id === input.participantId);
     if (!p || !p.turn || s.t >= p.turn.endAt) continue; // hors annonce : rien ne change (R-07)
     p.turn.mic = p.turn.mic === "open" ? "muted" : "open";
+    p.turn.touched = true;
     emit({ type: "micToggled", participantId: p.id, mic: p.turn.mic });
   }
 
@@ -193,6 +194,7 @@ function announce(s: GameState, rng: Rng, emit: Emit) {
     endAt: s.t + cafe.readMs,
     mic: alreadyMuted ? "muted" : "open",
     initiallyMuted: alreadyMuted,
+    touched: false,
   };
   // On occupe la place libre la plus ancienne.
   const slot = s.slotsFreeAt.indexOf(Math.min(...s.slotsFreeAt));
@@ -217,7 +219,8 @@ function resolveTurn(s: GameState, p: Participant, emit: Emit) {
   s.outcomes.push(outcome);
 
   p.turn = null;
-  p.lastResult = { line: turn.line, outcome, at: s.t };
+  const selfMuted = outcome === "intercepted" && turn.initiallyMuted && !turn.touched;
+  p.lastResult = { line: turn.line, outcome, at: s.t, selfMuted };
   p.restUntil = s.t + CONFIG.resultDisplayMs;
 
   // La place se libère, mais ne resservira qu'après la pause du niveau (R-14).
@@ -237,6 +240,7 @@ function resolveTurn(s: GameState, p: Participant, emit: Emit) {
     participantId: p.id,
     line: turn.line,
     outcome,
+    selfMuted,
     harmonyDelta: delta,
     harmony: s.harmony,
   });

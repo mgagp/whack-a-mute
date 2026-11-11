@@ -51,12 +51,16 @@ export const STRINGS = {
     wrongMuteTag: "🔇 Coupé à tort",
     wrongMuteSay: "Euh… tu m'as coupé ?",
     stamp: "MUTE !",
+    /** Interception sans clic : le collègue s'était mis sur mute lui-même (#29). */
+    selfMutedTag: "🤐 Déjà sur mute",
+    stampSelf: "BIEN VU !",
     boom: "SCHLAC !",
     oops: "😬",
     waiting: "En attente…",
     joined: (name: string) => `👋 ${name} a rejoint la réunion`,
     toast: {
       intercepted: (d: number) => `🔇 Intercepté ! +${d} harmonie`,
+      selfMuted: (d: number) => `👌 Bien vu ! +${d} harmonie`,
       blunder: (d: number) => `😬 Malaise ! −${Math.abs(d)} harmonie`,
       wrongMute: (d: number) => `🙃 Coupé à tort ! −${Math.abs(d)} harmonie`,
     },

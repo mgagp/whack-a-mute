@@ -69,6 +69,39 @@ describe("Boucle de jeu", () => {
     expect(tapAll.state.harmony).toBe(idle.state.harmony);
   });
 
+  it("R-08, #29 : une interception sans clic (déjà sur mute) est signalée à part ; avec un clic, non", () => {
+    let found = false;
+    for (let seed = 0; seed < 300; seed++) {
+      const { state, event } = advanceUntil(newGame({ seed }), (e) => e.type === "announced");
+      if (event.type !== "announced" || event.mic !== "muted") continue;
+      // Sans clic : interception signalée « déjà sur mute », comptée comme une interception ordinaire.
+      const quiet = advanceUntil(state, (e) => e.type === "resolved");
+      expect(quiet.event.type === "resolved" && [quiet.event.outcome, quiet.event.selfMuted]).toEqual(["intercepted", true]);
+      expect(quiet.state.participants.find((p) => p.id === event.participantId)?.lastResult?.selfMuted).toBe(true);
+      expect(quiet.state.stats.intercepted).toBe(1);
+      // Deux clics (rouvrir puis recouper) : c'est le joueur qui a coupé.
+      const twice = step(state, 0, [
+        { type: "tap", participantId: event.participantId },
+        { type: "tap", participantId: event.participantId },
+      ]).state;
+      const res = advanceUntil(twice, (e) => e.type === "resolved").event;
+      expect(res.type === "resolved" && [res.outcome, res.selfMuted]).toEqual(["intercepted", false]);
+      found = true;
+      break;
+    }
+    expect(found).toBe(true);
+    // Une interception par clic n'est jamais signalée « déjà sur mute ».
+    for (let seed = 0; seed < 300; seed++) {
+      const { state, event } = advanceUntil(newGame({ seed }), (e) => e.type === "announced");
+      if (event.type !== "announced" || event.mic !== "open" || event.line.type !== "deplacee") continue;
+      const tapped = step(state, 0, [{ type: "tap", participantId: event.participantId }]).state;
+      const res = advanceUntil(tapped, (e) => e.type === "resolved").event;
+      expect(res.type === "resolved" && [res.outcome, res.selfMuted]).toEqual(["intercepted", false]);
+      return;
+    }
+    throw new Error("aucune déplacée au micro ouvert trouvée");
+  });
+
   it("R-08 : environ 25 % des déplacées arrivent déjà sur mute ; ne rien faire intercepte, cliquer est un piège", () => {
     let deplacees = 0;
     let muted = 0;

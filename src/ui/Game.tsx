@@ -148,7 +148,7 @@ export function Game(props: {
             {toast.type === "participantJoined"
               ? STRINGS.game.joined(STRINGS.participants[toast.participantId].name)
               : toast.type === "resolved" && toast.outcome !== "normal"
-                ? STRINGS.game.toast[toast.outcome](toast.harmonyDelta)
+                ? STRINGS.game.toast[toast.selfMuted ? "selfMuted" : toast.outcome](toast.harmonyDelta)
                 : null}
           </div>
         )}

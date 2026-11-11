@@ -8,6 +8,7 @@ export type SoundName =
   | "whack" // clic qui met sur mute : « SCHLAC »
   | "unmute" // clic qui réouvre le micro
   | "intercepted" // interception réussie
+  | "selfMuted" // interception sans clic : même carillon, sans le souffle « chhh » (#29)
   | "blunder" // malaise : criquets et toux
   | "wrongMute" // coupé à tort : « boop » déçu
   | "said" // phrase correcte dite normalement
@@ -67,6 +68,12 @@ const RECIPES: Record<SoundName, Recipe> = {
     build: (c) => {
       noise(c, 0, 0.35, 0.25, "highpass", 3000); // « chhh »
       [880, 1175, 1568].forEach((f, i) => tone(c, "sine", f, f, 0.12 + i * 0.07, 0.25, 0.35));
+    },
+  },
+  selfMuted: {
+    duration: 0.5,
+    build: (c) => {
+      [880, 1175, 1568].forEach((f, i) => tone(c, "sine", f, f, i * 0.07, 0.25, 0.35));
     },
   },
   blunder: {

@@ -57,6 +57,7 @@ export const Tile = memo(function Tile({ p, t, reacting, justJoined, debug, onTa
       className={`tile ${COLOR[p.id]} state-${state}${speaking ? " speaking" : ""}`}
       data-testid={`tile-${p.id}`}
       data-state={state}
+      data-self={result?.selfMuted ? "true" : undefined}
       data-mic={mic}
       data-type={debug && p.turn ? p.turn.line.type : undefined}
       aria-label={STRINGS.game.tileLabel(s.name, micLabel)}
@@ -107,7 +108,7 @@ export const Tile = memo(function Tile({ p, t, reacting, justJoined, debug, onTa
 
       {result && state === "intercepted" && (
         <div className="bubble hushed" key={`r-${result.line.id}`}>
-          <div className="tag">{s.feminine ? STRINGS.game.cutF : STRINGS.game.cutM}</div>
+          <div className="tag">{result.selfMuted ? STRINGS.game.selfMutedTag : s.feminine ? STRINGS.game.cutF : STRINGS.game.cutM}</div>
           <q>{result.line.text}</q>
           <span className="note">{STRINGS.game.nobodyHeard}</span>
         </div>
@@ -134,11 +135,12 @@ export const Tile = memo(function Tile({ p, t, reacting, justJoined, debug, onTa
 
       {result && state === "intercepted" && (
         <span className="fx" key={`fx-${result.line.id}`}>
-          <span className="stamp">{STRINGS.game.stamp}</span>
+          <span className={result.selfMuted ? "stamp self" : "stamp"}>{result.selfMuted ? STRINGS.game.stampSelf : STRINGS.game.stamp}</span>
           {SPARKS.map((k, i) => (
             <span key={i} className="spark" style={{ ["--dx" as string]: `${k.dx}px`, ["--dy" as string]: `${k.dy}px`, background: k.c }} />
           ))}
-          <Boom text={STRINGS.game.boom} className="boom" />
+          {/* « SCHLAC ! » seulement quand le joueur a coupé lui-même (#29). */}
+          {!result.selfMuted && <Boom text={STRINGS.game.boom} className="boom" />}
         </span>
       )}
     </motion.button>

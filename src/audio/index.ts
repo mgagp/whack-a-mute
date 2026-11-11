@@ -68,7 +68,9 @@ export function soundForEvent(e: GameEvent): SoundName | null {
       return e.t > 0 ? "join" : null;
     case "resolved":
       return e.outcome === "intercepted"
-        ? "intercepted"
+        ? e.selfMuted
+          ? "selfMuted"
+          : "intercepted"
         : e.outcome === "blunder"
           ? "blunder"
           : e.outcome === "wrongMute"
