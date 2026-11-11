@@ -689,6 +689,51 @@ q {
   border-bottom: var(--line) solid var(--ink);
   transform: rotate(45deg);
 }
+/* Bulle-pensée (#10) : ce que le personnage s'apprête à dire. Nuage festonné et petits ronds
+   qui remontent vers la tête ; la bulle carrée à pointe est réservée à ce qui est vraiment dit. */
+.bubble.think {
+  background: none;
+  border: 0;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 10px clamp(11px, 5cqw, 18px) 12px;
+}
+.bubble.think .cloud {
+  position: absolute;
+  inset: -4px;
+  width: calc(100% + 8px);
+  height: calc(100% + 8px);
+  z-index: -1;
+  overflow: visible;
+  filter: drop-shadow(3px 3px 0 var(--ink));
+}
+.bubble.think .cloud path {
+  fill: var(--bubble);
+  stroke: var(--ink);
+  stroke-width: var(--line);
+}
+.bubble.think::before,
+.bubble.think::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: var(--bubble);
+  border: var(--line) solid var(--ink);
+  box-shadow: 2px 2px 0 var(--ink);
+  transform: none;
+}
+.bubble.think::before {
+  left: 26px;
+  bottom: -15px;
+  width: 15px;
+  height: 15px;
+}
+.bubble.think::after {
+  left: 16px;
+  bottom: -29px;
+  width: 9px;
+  height: 9px;
+}
 .bubble .tag {
   display: flex;
   align-items: center;
@@ -763,6 +808,17 @@ q {
     bottom: auto;
     top: 28px;
     transform: rotate(135deg);
+  }
+  .bubble.think::before {
+    left: -16px;
+    bottom: auto;
+    top: 46%;
+  }
+  .bubble.think::after {
+    left: -30px;
+    bottom: auto;
+    top: calc(46% + 18px);
+    transform: none;
   }
   .stamp,
   .spark {

@@ -44,3 +44,15 @@ export function Boom({ text, className }: { text: string; className?: string }) 
     </svg>
   );
 }
+
+/**
+ * Contour festonné de la bulle-pensée (#10) : convention de bande dessinée pour « ce qu'il s'apprête à dire ».
+ * Étiré à la taille de la bulle ; le trait garde son épaisseur grâce à `non-scaling-stroke`.
+ */
+export function ThoughtCloud({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 240 100" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M16 14A20.8 20.8 0 0 1 50.7 14A20.8 20.8 0 0 1 85.3 14A20.8 20.8 0 0 1 120 14A20.8 20.8 0 0 1 154.7 14A20.8 20.8 0 0 1 189.3 14A20.8 20.8 0 0 1 224 14A21.6 21.6 0 0 1 224 50A21.6 21.6 0 0 1 224 86A20.8 20.8 0 0 1 189.3 86A20.8 20.8 0 0 1 154.7 86A20.8 20.8 0 0 1 120 86A20.8 20.8 0 0 1 85.3 86A20.8 20.8 0 0 1 50.7 86A20.8 20.8 0 0 1 16 86A21.6 21.6 0 0 1 16 50A21.6 21.6 0 0 1 16 14Z" vectorEffect="non-scaling-stroke" />
+    </svg>
+  );
+}
