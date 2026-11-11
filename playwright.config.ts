@@ -5,7 +5,10 @@ const PORT = 4321;
 export default defineConfig({
   testDir: "tests/e2e",
   fullyParallel: true,
-  reporter: "list",
+  // Sur GitHub Actions : un essai de plus (machines plus lentes) et un rapport HTML à télécharger en cas d'échec.
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 1 : 0,
+  reporter: process.env.CI ? [["list"], ["html", { open: "never" }]] : "list",
   use: { baseURL: `http://localhost:${PORT}/` },
   webServer: {
     command: `pnpm build && pnpm preview --port ${PORT} --strictPort`,

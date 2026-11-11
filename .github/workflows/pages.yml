@@ -1,4 +1,5 @@
-# Met le jeu en ligne sur GitHub Pages à chaque push sur main (Q-7).
+# Met le jeu en ligne sur GitHub Pages à chaque push sur main (Q-7),
+# seulement si toute la vérification passe, parcours Playwright compris (#5).
 name: Mise en ligne
 
 on:
@@ -16,7 +17,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  verifier:
+    uses: ./.github/workflows/verification.yml
+
   build:
+    needs: verifier
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,10 +31,7 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm typecheck
-      - run: pnpm test
       - run: pnpm build
-      - run: pnpm size
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
