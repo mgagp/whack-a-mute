@@ -53,10 +53,11 @@ test("R-15 : le premier meeting guide le joueur, puis les parties suivantes se j
   await expect(band).toBeVisible({ timeout: 20_000 });
   await expect(page.locator(".guide-tag").first()).toHaveText(/Coupe-l[ae] !/);
   await playPerfectly(page);
-  // Le premier meeting est terminé : retour à l'accueil, le guide est désactivé…
-  await page.getByTestId("change-cafe").click();
-  await expect(page.getByTestId("guide")).not.toBeChecked();
-  // … et le reste à la visite suivante.
+  // Le premier meeting est terminé (partie parfaite : R-16 propose plus de café, R-15 coupe le guide).
+  await page.getByTestId("suggest-cafe").click();
+  await expect(page.getByTestId("game")).toBeVisible();
+  await expect(page.locator(".guide-band")).toHaveCount(0);
+  // … et le guide reste désactivé à la visite suivante.
   await page.reload();
   await expect(page.getByTestId("guide")).not.toBeChecked();
   // On peut le réactiver soi-même.
@@ -113,9 +114,45 @@ test("R-03 et R-11 : sans rien faire, la réunion finit ; on rejoue en un clic o
   await expect(page.getByTestId("end")).toBeVisible({ timeout: 20_000 });
 
   // Changer le niveau de café : retour à l'accueil, le choix précédent est conservé.
+  // (Après une mauvaise partie au café 3, R-16 propose plutôt moins de café : on passe par une partie à 70 %+.)
+  await page.goto("./?seed=paresseux&vitesse=20&cafe=1");
+  await start(page);
+  await expect(page.getByTestId("end")).toBeVisible({ timeout: 20_000 });
   await page.getByTestId("change-cafe").click();
   await expect(page.getByTestId("home")).toBeVisible();
-  await expect(page.getByTestId("cafe-3")).toHaveAttribute("aria-checked", "true");
+  await expect(page.getByTestId("cafe-1")).toHaveAttribute("aria-checked", "true");
+});
+
+test("R-16 : après une mauvaise partie, un toucher relance avec moins de café, jusqu'au plus facile", async ({ page }) => {
+  test.setTimeout(90_000);
+  await page.goto("./?seed=paresseux&vitesse=20&cafe=3");
+  await start(page);
+  const suggest = page.getByTestId("suggest-cafe");
+  await expect(suggest).toHaveAttribute("data-cafe", "2", { timeout: 20_000 });
+  await expect(suggest).toHaveText("Trop corsé ? Essaie « après le 1er café » ☕☕");
+  await expect(page.getByTestId("change-cafe")).toHaveCount(0);
+
+  await suggest.click();
+  await expect(page.getByTestId("game")).toBeVisible();
+  await expect(suggest).toHaveAttribute("data-cafe", "1", { timeout: 20_000 });
+  await suggest.click();
+  await expect(page.getByTestId("game")).toBeVisible();
+  // Au café 1, il n'y a plus moins de café à proposer : le lien habituel revient.
+  await page.getByTestId("change-cafe").click();
+  await expect(page.getByTestId("cafe-1")).toHaveAttribute("aria-checked", "true");
+});
+
+test("R-16 : après une partie parfaite, on propose plus de café", async ({ page }) => {
+  test.setTimeout(60_000);
+  await page.goto("./?seed=parcours&vitesse=6&cafe=1");
+  await start(page);
+  await playPerfectly(page);
+  const suggest = page.getByTestId("suggest-cafe");
+  await expect(suggest).toHaveAttribute("data-cafe", "2");
+  await expect(suggest).toHaveText("Trop facile ? Essaie « après le 1er café » ☕☕");
+  await suggest.click();
+  await expect(page.getByTestId("game")).toBeVisible();
+  await expect(page.getByText("☕☕").first()).toBeVisible();
 });
 
 test("R-43 : la réunion à 4 tient dans l'écran, sans défilement", async ({ page }) => {

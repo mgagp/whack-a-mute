@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { CONFIG, type CafeLevel } from "../engine/config";
 import type { GameState } from "../engine/state";
-import { endTitleKey } from "../engine/step";
+import { endTitleKey, suggestedCafe } from "../engine/step";
 import { Avatar, type Mood } from "./Avatar";
 import type { Lang } from "../content/lines";
 import { useStrings } from "./i18n";
@@ -25,6 +25,7 @@ export function End({
   lang,
   onReplay,
   onChangeCafe,
+  onPlayCafe,
 }: {
   game: GameState;
   /** Date du stand-up du jour, ou null pour une partie de debug (`?seed=`). */
@@ -33,12 +34,15 @@ export function End({
   lang: Lang;
   onReplay: () => void;
   onChangeCafe: () => void;
+  /** Rejoue tout de suite au niveau proposé (R-16). */
+  onPlayCafe: (c: CafeLevel) => void;
 }) {
   const STRINGS = useStrings();
   const e = STRINGS.end;
   const key = endTitleKey(game.harmony);
   const good = game.harmony >= CONFIG.endTitleThresholds[1].min;
   const cut = game.endReason === "harmonie";
+  const suggestion = suggestedCafe(game.harmony, cafe);
   const [copied, setCopied] = useState(false);
   useEffect(() => {
     if (!copied) return;
@@ -127,9 +131,22 @@ export function End({
         <button type="button" className="btn turq" data-testid="share" onClick={share}>
           {copied ? e.copied : e.share}
         </button>
-        <button type="button" className="link" data-testid="change-cafe" onClick={onChangeCafe}>
-          {e.changeCafe}
-        </button>
+        {suggestion === null ? (
+          <button type="button" className="link" data-testid="change-cafe" onClick={onChangeCafe}>
+            {e.changeCafe}
+          </button>
+        ) : (
+          <button
+            type="button"
+            className={`btn suggest ${suggestion < cafe ? "less" : "more"}`}
+            data-testid="suggest-cafe"
+            data-cafe={suggestion}
+            onClick={() => onPlayCafe(suggestion)}
+          >
+            {(suggestion < cafe ? e.suggestLess : e.suggestMore)(STRINGS.cafe[suggestion].short)}{" "}
+            <span className="cups">{STRINGS.cafe[suggestion].cups}</span>
+          </button>
+        )}
       </div>
     </div>
   );

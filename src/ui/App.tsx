@@ -79,7 +79,19 @@ export function App() {
         />
       )}
       {screen.name === "end" && (
-        <End game={screen.game} day={screen.day} cafe={cafe} lang={lang} onReplay={start} onChangeCafe={() => setScreen({ name: "home" })} />
+        <End
+          game={screen.game}
+          day={screen.day}
+          cafe={cafe}
+          lang={lang}
+          onReplay={start}
+          onChangeCafe={() => setScreen({ name: "home" })}
+          onPlayCafe={(c) => {
+            // R-16 : le niveau proposé devient le niveau choisi, et la partie repart tout de suite.
+            setCafe(c);
+            start();
+          }}
+        />
       )}
     </main>
     </StringsProvider>
