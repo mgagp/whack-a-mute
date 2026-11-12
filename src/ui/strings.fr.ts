@@ -40,10 +40,10 @@ export const STRINGS = {
     fine: "Partie de 90 secondes · son conseillé 🔊",
   },
   cafe: {
-    1: { cups: "☕", line1: "Lundi 9 h,", line2: "pas de café", short: "pas de café" },
-    2: { cups: "☕☕", line1: "Après le", line2: "1er café", short: "après le 1er café" },
-    3: { cups: "☕☕☕", line1: "4e", line2: "espresso", short: "4e espresso" },
-  } satisfies Record<CafeLevel, { cups: string; line1: string; line2: string; short: string }>,
+    1: { cups: "☕", level: "Facile", line1: "Lundi 9 h,", line2: "pas de café", short: "pas de café" },
+    2: { cups: "☕☕", level: "Normal", line1: "Après le", line2: "1er café", short: "après le 1er café" },
+    3: { cups: "☕☕☕", level: "Corsé", line1: "4e", line2: "espresso", short: "4e espresso" },
+  } satisfies Record<CafeLevel, { cups: string; level: string; line1: string; line2: string; short: string }>,
   participants: {
     ginette: { name: "Ginette", role: "compta", feminine: true },
     kevin: { name: "Kevin", role: "stagiaire", feminine: false },
