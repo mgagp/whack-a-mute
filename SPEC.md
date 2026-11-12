@@ -1,6 +1,6 @@
 # Whack-a-Mute — Spécification (PRD)
 
-> **Version** 0.8 · **Date** 2026-11-11 · **Auteur** Marc
+> **Version** 0.14 · **Date** 2026-11-12 · **Auteur** Marc
 > Source d'origine : [VERBATIM.md](VERBATIM.md). En cas de doute sur l'intention, c'est le verbatim qui fait foi.
 > Les sections marquées **⚠️ Hypothèse** sont des propositions à valider. Elles sont reprises dans la section 13, « Questions ouvertes ».
 
@@ -38,7 +38,7 @@ Chaque nouvelle idée doit respecter ces quatre piliers.
 Accueil (intro + choix du café)  →  Réunion (partie)  →  Écran de fin  →  Rejouer / Partager
 ```
 
-1. **Accueil.** Titre, une phrase d'accroche, l'anecdote de Marc racontée comme un message de collègue, le **choix du niveau de café** (trois boutons, voir la section 6) et le bouton « Rejoindre la réunion ». Il n'y a qu'un seul écran avant de jouer.
+1. **Accueil.** Titre, une phrase d'accroche, l'anecdote de Marc racontée comme un message de collègue, le **choix du niveau de café** (trois boutons, voir la section 6), l'interrupteur **« 🎓 Premier meeting »** (section 6.3) et le bouton « Rejoindre la réunion ». Il n'y a qu'un seul écran avant de jouer.
 2. **Réunion.** La partie de 90 secondes.
 3. **Fin.** Harmonie finale, titre humoristique, statistiques, boutons « Rejouer », « Partager » et « Changer de café ».
 
@@ -124,12 +124,25 @@ La difficulté repose sur **deux axes seulement**.
 
 | Niveau | Nom affiché | Temps de lecture (annonce) | Pause entre deux prises de parole | Prises de parole simultanées max. |
 |---|---|---|---|---|
-| Facile | ☕ Lundi 9 h, pas de café | 4,0 s | 2,5 s | 1 |
+| Facile (par défaut) | ☕ Lundi 9 h, pas de café | 4,0 s | 2,5 s | 1 |
 | Moyen | ☕☕ Après le premier café | 3,0 s | 1,8 s | 2 |
 | Difficile | ☕☕☕ Quatrième espresso | 2,0 s | 1,0 s | 3 |
 
 - La proportion de phrases déplacées est d'environ 35 %.
+- Le niveau Facile est proposé par défaut (#32) : un nouveau joueur ne voit qu'une bulle à la fois, ce qui laisse le temps de comprendre et rend le guide lisible.
 - Toutes ces valeurs vivent dans **un seul fichier de configuration** (voir R-40), pour pouvoir ajuster la jouabilité.
+
+---
+
+### 6.3 Premier meeting : le guide du nouveau joueur (#32)
+
+Un joueur qui arrive par un lien ne sait pas encore où regarder : il lit les bulles, hésite, et 20 à 30 secondes passent dans les « schlac » et les « boop ». Le mode « Premier meeting » lui montre, sans tutoriel à lire, quelle tuile couper.
+
+- **Quand.** Actif par défaut tant que le joueur n'a pas terminé une partie guidée sur cet appareil, puis désactivé. Un interrupteur sur l'accueil permet de le réactiver ou de le couper. Pas de bouton pendant la partie.
+- **Combien de temps.** Les 30 premières secondes de la partie seulement (la phase à 1 ou 2 participants). Un message annonce ensuite la fin du guide, et la partie continue normalement. Le jeu ne devient donc pas « tape sur ce qui clignote », et le score partagé garde son sens.
+- **Quoi.** Chaque phrase déplacée annoncée pendant le guide encercle sa tuile d'une bande cartoon, avec des flèches tournées vers le collègue et l'étiquette « Coupe-le ! ». L'insistance monte avec le compte à rebours : blanc, puis jaune, puis rouge, aux mêmes paliers que l'anneau de la bulle. La bande disparaît dès que le micro est coupé.
+- **Pas de piège.** Personne n'est annoncé déjà sur mute (R-08) pendant le guide : on encerclerait un collègue sur qui il ne faut surtout pas taper.
+- **Toujours un exemple.** La toute première prise de parole d'une partie guidée est une phrase déplacée : chaque premier meeting montre au moins une tuile guidée. En contrepartie, la réunion d'un joueur guidé diffère un peu du stand-up du jour des autres joueurs.
 
 ---
 
@@ -242,6 +255,7 @@ Chaque exigence [M] doit être couverte par au moins un test automatisé (voir l
 ### Difficulté et participants
 - **R-13 [M]** Les participants arrivent selon le calendrier de la section 6.1, avec une notification.
 - **R-14 [M]** Le rythme (temps de lecture, pause, simultanéité) suit la section 6.2.
+- **R-15 [M]** Mode « Premier meeting » (section 6.3) : actif par défaut jusqu'à la fin d'une première partie guidée, réglable sur l'accueil (`?guide=0|1` l'impose). Pendant les 30 premières secondes, chaque phrase déplacée est signalée sur sa tuile, sans annonce déjà sur mute, et la première prise de parole est toujours une phrase déplacée. Un message annonce ensuite la fin du guide.
 
 ### Contenu
 - **R-20 [M]** Les répliques sont chargées depuis un fichier de données validé au démarrage. Chacune a un identifiant, un texte, un type (correcte ou déplacée) et une langue.
@@ -396,3 +410,4 @@ Cette idée généralise le duo « annonce du boss → réplique signature ». I
 | 0.11 | 2026-11-11 | Le lien partagé porte `?ref=partage` pour compter les visites venues d'un partage (R-52, #24) |
 | 0.12 | 2026-11-11 | Le lien partagé en français porte `?lang=fr` : il s'ouvre en français même sur un appareil en anglais (R-60, #26) |
 | 0.13 | 2026-11-11 | Retour distinct « Bien vu ! » pour une interception sans clic, quand le collègue était déjà sur mute (R-30, #29) |
+| 0.14 | 2026-11-12 | Mode « Premier meeting » pour guider le nouveau joueur (section 6.3, R-15) et niveau de café Facile par défaut (#32) |

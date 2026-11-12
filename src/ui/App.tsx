@@ -7,6 +7,7 @@ import { CONFIG, type CafeLevel } from "../engine/config";
 import type { GameState } from "../engine/state";
 import { End } from "./End";
 import { Game } from "./Game";
+import { initialGuided, readGuideDone, storeGuideDone } from "./guide";
 import { Home } from "./Home";
 import { ALL_STRINGS, StringsProvider } from "./i18n";
 import { pageLang, readStoredLang, resolveLang, storeLang } from "./lang";
@@ -18,11 +19,12 @@ import { countEvent } from "./stats";
 const LINES = { fr: loadLines("fr"), en: loadLines("en") } satisfies Record<Lang, unknown>;
 
 /** `day` : date du stand-up du jour, ou null avec `?seed=` (partie de debug, hors stand-up du jour). */
-type Screen = { name: "home" } | { name: "game"; round: number; day: Date | null } | { name: "end"; game: GameState; day: Date | null };
+type Screen = { name: "home" } | { name: "game"; round: number; day: Date | null; guided: boolean } | { name: "end"; game: GameState; day: Date | null };
 
 export function App() {
   const params = useMemo(() => readParams(location.search), []);
   const [cafe, setCafe] = useState<CafeLevel>(params.cafe ?? CONFIG.defaultCafe);
+  const [guided, setGuided] = useState(() => initialGuided(params.guide, readGuideDone()));
   const [screen, setScreen] = useState<Screen>({ name: "home" });
   const [round, setRound] = useState(0);
   const [lang, setLangState] = useState<Lang>(() =>
@@ -44,7 +46,7 @@ export function App() {
     const next = round + 1;
     setRound(next);
     // Par défaut, le stand-up du jour (#19) : même réunion pour tous ce jour-là, et « Rejouer » la reprend.
-    setScreen({ name: "game", round: next, day: params.seed === null ? new Date() : null });
+    setScreen({ name: "game", round: next, day: params.seed === null ? new Date() : null, guided });
   };
 
   const seed = screen.name === "game" ? (screen.day ? dailySeed(screen.day) : (params.seed ?? "")) : "";
@@ -53,7 +55,9 @@ export function App() {
     <LazyMotion features={domAnimation} strict>
     <StringsProvider value={strings}>
     <main className="app">
-      {screen.name === "home" && <Home cafe={cafe} onCafe={setCafe} onStart={start} lang={lang} onLang={setLang} />}
+      {screen.name === "home" && (
+        <Home cafe={cafe} onCafe={setCafe} guided={guided} onGuided={setGuided} onStart={start} lang={lang} onLang={setLang} />
+      )}
       {screen.name === "game" && (
         <Game
           key={screen.round}
@@ -63,7 +67,15 @@ export function App() {
           speed={params.speed}
           participants={params.participants}
           debug={params.debug}
-          onOver={(game) => setScreen({ name: "end", game, day: screen.day })}
+          guided={screen.guided}
+          onOver={(game) => {
+            // Premier meeting terminé (R-15) : les parties suivantes se jouent sans guide.
+            if (screen.guided) {
+              storeGuideDone();
+              setGuided(false);
+            }
+            setScreen({ name: "end", game, day: screen.day });
+          }}
         />
       )}
       {screen.name === "end" && (

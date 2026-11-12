@@ -76,6 +76,8 @@ export function soundForEvent(e: GameEvent): SoundName | null {
           : e.outcome === "wrongMute"
             ? "wrongMute"
             : "said";
+    case "guideEnded":
+      return "join"; // petit carillon : le joueur est maintenant seul (R-15)
     case "gameOver":
       return "fanfare";
   }

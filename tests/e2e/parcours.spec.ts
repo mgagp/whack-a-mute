@@ -36,10 +36,32 @@ test("R-02 : le joueur choisit son café parmi trois, directement sur l'accueil"
   await page.goto("./");
   const radios = page.getByRole("radio");
   await expect(radios).toHaveCount(3);
-  await expect(page.getByTestId("cafe-2")).toHaveAttribute("aria-checked", "true");
+  // #32 : le niveau le plus calme est proposé par défaut.
+  await expect(page.getByTestId("cafe-1")).toHaveAttribute("aria-checked", "true");
   await page.getByTestId("cafe-3").click();
   await expect(page.getByTestId("cafe-3")).toHaveAttribute("aria-checked", "true");
-  await expect(page.getByTestId("cafe-2")).toHaveAttribute("aria-checked", "false");
+  await expect(page.getByTestId("cafe-1")).toHaveAttribute("aria-checked", "false");
+});
+
+test("R-15 : le premier meeting guide le joueur, puis les parties suivantes se jouent sans guide", async ({ page }) => {
+  test.setTimeout(60_000);
+  await page.goto("./?seed=guide&vitesse=8");
+  await expect(page.getByTestId("guide")).toBeChecked();
+  await start(page);
+  // Une phrase déplacée pendant le guide : la tuile est encerclée avec son étiquette.
+  const band = page.locator(".guide-band").first();
+  await expect(band).toBeVisible({ timeout: 20_000 });
+  await expect(page.locator(".guide-tag").first()).toHaveText(/Coupe-l[ae] !/);
+  await playPerfectly(page);
+  // Le premier meeting est terminé : retour à l'accueil, le guide est désactivé…
+  await page.getByTestId("change-cafe").click();
+  await expect(page.getByTestId("guide")).not.toBeChecked();
+  // … et le reste à la visite suivante.
+  await page.reload();
+  await expect(page.getByTestId("guide")).not.toBeChecked();
+  // On peut le réactiver soi-même.
+  await page.getByTestId("guide-toggle").click();
+  await expect(page.getByTestId("guide")).toBeChecked();
 });
 
 test("R-42 : ?cafe= présélectionne le niveau de café", async ({ page }) => {
@@ -122,7 +144,8 @@ test("R-30 : le clic sur une tuile qui va parler change le micro en moins de 100
 
 test("R-30 : chaque résultat a son retour visuel distinct", async ({ page }) => {
   test.setTimeout(60_000);
-  await page.goto("./?seed=retours&vitesse=3&participants=4");
+  // Sans guide : ce test suit le déroulé exact de sa graine, que le premier meeting modifie (R-15).
+  await page.goto("./?seed=retours&vitesse=3&participants=4&guide=0");
   await start(page);
   const seen = new Set<string>();
   // Politique mixte : on coupe toujours Ginette, jamais Kevin, et les autres seulement s'ils vont déraper.
@@ -143,7 +166,8 @@ test("R-30 : chaque résultat a son retour visuel distinct", async ({ page }) =>
 
 test("R-08, #29 : déjà sur mute et sans clic, le retour dit « Bien vu ! », pas « MUTE ! »", async ({ page }) => {
   test.setTimeout(60_000);
-  await page.goto("./?seed=deja&vitesse=2&participants=4");
+  // Sans guide : le piège R-08 est absent des 30 premières secondes d'une partie guidée (R-15).
+  await page.goto("./?seed=deja&vitesse=2&participants=4&guide=0");
   await start(page);
   // On ne touche à rien : la première interception ne peut venir que d'un collègue déjà sur mute.
   const tile = page.locator('.tile[data-state="intercepted"]').first();

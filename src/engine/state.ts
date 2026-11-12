@@ -27,6 +27,8 @@ export interface Turn {
   initiallyMuted: boolean;
   /** Vrai dès que le joueur a cliqué pendant cette annonce. */
   touched: boolean;
+  /** Mode « Premier meeting » (R-15) : phrase déplacée annoncée pendant le guide, à signaler sur la tuile. */
+  guided: boolean;
 }
 
 /** Résultat de la dernière prise de parole, affiché un moment sur la tuile. */
@@ -87,6 +89,10 @@ export interface GameState {
   endReason: EndReason | null;
   /** Compteur pour donner un identifiant unique à chaque événement. */
   eventSeq: number;
+  /** Mode « Premier meeting » (R-15) : fin du guide, en ms de jeu ; 0 si la partie n'est pas guidée. */
+  guideUntil: number;
+  /** Vrai tant que le guide n'a pas pris fin (l'événement `guideEnded` n'est émis qu'une fois). */
+  guideActive: boolean;
 }
 
 export type Input = { type: "tap"; participantId: ParticipantId };
@@ -110,6 +116,7 @@ export type GameEvent =
       harmonyDelta: number;
       harmony: number;
     })
+  | (EventBase & { type: "guideEnded" })
   | (EventBase & { type: "gameOver"; reason: EndReason; harmony: number });
 
 export type GameEventType = GameEvent["type"];
