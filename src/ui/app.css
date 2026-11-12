@@ -1541,18 +1541,25 @@ q {
   width: 0;
   height: 0;
 }
+/* La rangée du bas se pose juste au-dessus de la barre du nom, sinon elle serait cachée dessous. */
+.guide-arrow.low {
+  top: calc(100% - 7px - (clamp(12px, 4.5cqw, 17px) * 1.25 + 22px));
+}
 .guide-arrow svg {
   position: absolute;
   left: 2px;
   top: 0;
   transform: translateY(-50%);
-  width: clamp(28px, 12cqw, 46px);
+  width: clamp(24px, 10cqw, 42px);
   height: auto;
   overflow: visible;
-  animation: guidepoke 0.55s ease-in-out infinite alternate;
+  /* Chaque flèche part un peu après sa voisine : une vague fait le tour de la tuile (#36). */
+  --wave: 1.1s;
+  animation: guidepoke calc(var(--wave) / 2) ease-in-out infinite alternate;
+  animation-delay: calc(var(--wave) * var(--i) / var(--n) * -1);
 }
 .lvl-urgent .guide-arrow svg {
-  animation-duration: 0.25s;
+  --wave: 0.5s;
 }
 .guide-arrow path {
   fill: var(--g);
@@ -1562,8 +1569,13 @@ q {
   transition: fill var(--fast);
 }
 @keyframes guidepoke {
+  0% {
+    translate: 0 0;
+    scale: 0.85;
+  }
   100% {
-    translate: 9px 0;
+    translate: 12px 0;
+    scale: 1.1;
   }
 }
 .guide-tag {

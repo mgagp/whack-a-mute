@@ -1,6 +1,6 @@
 # Whack-a-Mute — Spécification (PRD)
 
-> **Version** 0.15 · **Date** 2026-11-12 · **Auteur** Marc
+> **Version** 0.16 · **Date** 2026-11-12 · **Auteur** Marc
 > Source d'origine : [VERBATIM.md](VERBATIM.md). En cas de doute sur l'intention, c'est le verbatim qui fait foi.
 > Les sections marquées **⚠️ Hypothèse** sont des propositions à valider. Elles sont reprises dans la section 13, « Questions ouvertes ».
 
@@ -140,7 +140,7 @@ Un joueur qui arrive par un lien ne sait pas encore où regarder : il lit les bu
 
 - **Quand.** Actif par défaut tant que le joueur n'a pas terminé une partie guidée sur cet appareil, puis désactivé. Un interrupteur sur l'accueil permet de le réactiver ou de le couper. Pas de bouton pendant la partie.
 - **Combien de temps.** Les 30 premières secondes de la partie seulement (la phase à 1 ou 2 participants). Un message annonce ensuite la fin du guide, et la partie continue normalement. Le jeu ne devient donc pas « tape sur ce qui clignote », et le score partagé garde son sens.
-- **Quoi.** Chaque phrase déplacée annoncée pendant le guide encercle sa tuile d'une bande cartoon, avec des flèches tournées vers le collègue et l'étiquette « Coupe-le ! ». L'insistance monte avec le compte à rebours : blanc, puis jaune, puis rouge, aux mêmes paliers que l'anneau de la bulle. La bande disparaît dès que le micro est coupé.
+- **Quoi.** Chaque phrase déplacée annoncée pendant le guide encercle sa tuile d'une bande cartoon, avec une ribambelle de flèches tournées vers le collègue (environ 25, parcourues par une vague, #36) et l'étiquette « Coupe-le ! ». L'insistance monte avec le compte à rebours : blanc, puis jaune, puis rouge, aux mêmes paliers que l'anneau de la bulle. La bande disparaît dès que le micro est coupé.
 - **Pas de piège.** Personne n'est annoncé déjà sur mute (R-08) pendant le guide : on encerclerait un collègue sur qui il ne faut surtout pas taper.
 - **Toujours un exemple.** La toute première prise de parole d'une partie guidée est une phrase déplacée : chaque premier meeting montre au moins une tuile guidée. En contrepartie, la réunion d'un joueur guidé diffère un peu du stand-up du jour des autres joueurs.
 
@@ -413,3 +413,4 @@ Cette idée généralise le duo « annonce du boss → réplique signature ». I
 | 0.13 | 2026-11-11 | Retour distinct « Bien vu ! » pour une interception sans clic, quand le collègue était déjà sur mute (R-30, #29) |
 | 0.14 | 2026-11-12 | Mode « Premier meeting » pour guider le nouveau joueur (section 6.3, R-15) et niveau de café Facile par défaut (#32) |
 | 0.15 | 2026-11-12 | Lien discret vers le code source au bas de l'accueil (R-53, #33) |
+| 0.16 | 2026-11-12 | Guide du premier meeting plus insistant : environ 25 flèches tout le tour de la tuile, avec une vague qui circule (#36) |
