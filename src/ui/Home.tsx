@@ -94,10 +94,24 @@ export function Home({
               className={cafe === c ? "on" : ""}
               onClick={() => onCafe(c)}
             >
-              <b>{s.cups}</b>
-              {s.line1}
-              <br />
-              {s.line2}
+              <span className="cups">
+                {s.cups}
+                {cafe === c && (
+                  <span className="steam" aria-hidden="true">
+                    <i />
+                    <i />
+                    <i />
+                  </span>
+                )}
+              </span>
+              <span className="lvl" data-testid={`cafe-${c}-level`}>
+                {s.level}
+              </span>
+              <span className="desc">
+                {s.line1}
+                <br />
+                {s.line2}
+              </span>
             </button>
           );
         })}

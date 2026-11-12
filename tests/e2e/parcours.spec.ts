@@ -41,6 +41,11 @@ test("R-02 : le joueur choisit son café parmi trois, directement sur l'accueil"
   await page.getByTestId("cafe-3").click();
   await expect(page.getByTestId("cafe-3")).toHaveAttribute("aria-checked", "true");
   await expect(page.getByTestId("cafe-1")).toHaveAttribute("aria-checked", "false");
+  // #38 : chaque carte porte un mot de difficulté, et seule la tasse choisie fume.
+  await expect(page.getByTestId("cafe-1-level")).toHaveText("Facile");
+  await expect(page.getByTestId("cafe-3-level")).toHaveText("Corsé");
+  await expect(page.locator(".coffee .steam")).toHaveCount(1);
+  await expect(page.getByTestId("cafe-3").locator(".steam")).toHaveCount(1);
 });
 
 test("R-15 : le premier meeting guide le joueur, puis les parties suivantes se jouent sans guide", async ({ page }) => {

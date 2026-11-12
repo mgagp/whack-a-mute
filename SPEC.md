@@ -236,7 +236,7 @@ Chaque exigence [M] doit être couverte par au moins un test automatisé (voir l
 
 ### Accueil et parcours
 - **R-01 [M]** L'accueil affiche le titre, l'anecdote d'origine (3 lignes max.) et un bouton pour commencer.
-- **R-02 [M]** Le joueur choisit un niveau de café parmi trois, directement sur l'accueil, avant de lancer la partie.
+- **R-02 [M]** Le joueur choisit un niveau de café parmi trois, directement sur l'accueil, avant de lancer la partie. Le choix se remarque (#38) : titre en jaune, un mot de difficulté par carte (*Facile · Normal · Corsé*) et une petite vapeur animée au-dessus de la tasse choisie.
 - **R-03 [M]** À la fin, le joueur peut rejouer en un seul clic, au même niveau ou en changeant de niveau.
 
 ### Boucle de jeu
@@ -415,4 +415,5 @@ Cette idée généralise le duo « annonce du boss → réplique signature ». I
 | 0.14 | 2026-11-12 | Mode « Premier meeting » pour guider le nouveau joueur (section 6.3, R-15) et niveau de café Facile par défaut (#32) |
 | 0.15 | 2026-11-12 | Lien discret vers le code source au bas de l'accueil (R-53, #33) |
 | 0.16 | 2026-11-12 | Guide du premier meeting plus insistant : environ 25 flèches tout le tour de la tuile, avec une vague qui circule (#36) |
+| 0.17 | 2026-11-12 | Choix du café plus visible sur l'accueil : titre en jaune, mot de difficulté, vapeur animée (R-02, #38) |
 | 0.18 | 2026-11-12 | En fin de partie, proposition de moins ou de plus de café selon le score (R-16, #39) |
