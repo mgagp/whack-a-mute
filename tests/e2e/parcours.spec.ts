@@ -42,6 +42,21 @@ test("R-02 : le joueur choisit son café parmi trois, directement sur l'accueil"
   await expect(page.getByTestId("cafe-2")).toHaveAttribute("aria-checked", "false");
 });
 
+test("R-53 : un lien discret au bas de l'accueil mène au code source, dans un nouvel onglet", async ({ page }) => {
+  await page.goto("./");
+  const link = page.getByTestId("source-link");
+  await expect(link).toBeVisible();
+  await expect(link).toHaveAttribute("href", "https://github.com/mgagp/whack-a-mute");
+  await expect(link).toHaveAttribute("target", "_blank");
+  await expect(page.getByTestId("credits")).toContainText("Fait par Marc · Code source");
+  // Discret : la ligne est sous le bouton « Rejoindre la réunion », et absente de la réunion.
+  const linkBox = (await link.boundingBox())!;
+  const startBox = (await page.getByTestId("start").boundingBox())!;
+  expect(linkBox.y).toBeGreaterThan(startBox.y + startBox.height);
+  await start(page);
+  await expect(page.getByTestId("source-link")).toHaveCount(0);
+});
+
 test("R-42 : ?cafe= présélectionne le niveau de café", async ({ page }) => {
   await page.goto("./?cafe=1");
   await expect(page.getByTestId("cafe-1")).toHaveAttribute("aria-checked", "true");

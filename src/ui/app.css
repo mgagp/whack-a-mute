@@ -352,6 +352,31 @@ q {
   opacity: 0.6;
   margin-top: 12px;
 }
+/* Pied de page discret : auteur et code source (R-53, #33) */
+.credits {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--muted-text);
+  opacity: 0.6;
+  margin-top: 6px;
+}
+.credits a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px dashed currentColor;
+}
+.credits a:hover,
+.credits a:focus-visible {
+  color: var(--sun);
+  opacity: 1;
+}
+.credits .gh {
+  width: 1.15em;
+  height: 1.15em;
+  vertical-align: -0.2em;
+  margin-right: 4px;
+}
 
 /* ===== Écran 2 : la réunion ===== */
 .game {

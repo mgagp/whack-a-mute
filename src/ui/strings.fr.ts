@@ -17,6 +17,12 @@ export const STRINGS = {
   meetingName: "Stand-up quotidien",
   /** Langue et région pour écrire les dates. */
   dateLocale: "fr-CA",
+  /** Pied de page de l'accueil : auteur et lien vers le code source (R-53, #33). */
+  credits: {
+    madeBy: "Fait par Marc",
+    source: "Code source",
+    sourceLabel: "Code source sur GitHub (nouvel onglet)",
+  },
   home: {
     logoSmall: "WHACK-A-",
     logoBig: "MUTE",
