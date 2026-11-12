@@ -26,6 +26,8 @@ export interface NewGameOptions {
   /** Debug (R-42) : nombre fixe de participants présents dès le départ. */
   participants?: number;
   durationMs?: number;
+  /** Mode « Premier meeting » (R-15) : partie guidée pendant `CONFIG.guide.durationMs`. */
+  guided?: boolean;
 }
 
 export function createGame(opts: NewGameOptions): GameState {
@@ -54,6 +56,8 @@ export function createGame(opts: NewGameOptions): GameState {
     over: false,
     endReason: null,
     eventSeq: 0,
+    guideUntil: opts.guided ? CONFIG.guide.durationMs : 0,
+    guideActive: !!opts.guided,
   };
 }
 
@@ -96,6 +100,10 @@ export function step(prev: GameState, dtMs: number, inputs: readonly Input[] = [
       case "gameEnd":
         endGame(s, "temps", emit);
         break;
+      case "guideEnd":
+        s.guideActive = false;
+        emit({ type: "guideEnded" });
+        break;
       case "arrival":
         arrive(s, emit);
         break;
@@ -115,13 +123,14 @@ export function step(prev: GameState, dtMs: number, inputs: readonly Input[] = [
 
 type Deadline =
   | { kind: "turnEnd"; at: number; participant: Participant }
-  | { kind: "gameEnd" | "arrival" | "announce"; at: number };
+  | { kind: "gameEnd" | "guideEnd" | "arrival" | "announce"; at: number };
 
 /** Ordre de priorité quand deux échéances tombent au même moment. */
-const PRIORITY: Record<Deadline["kind"], number> = { turnEnd: 0, gameEnd: 1, arrival: 2, announce: 3 };
+const PRIORITY: Record<Deadline["kind"], number> = { turnEnd: 0, gameEnd: 1, guideEnd: 2, arrival: 3, announce: 4 };
 
 function nextDeadline(s: GameState): Deadline | null {
   const list: Deadline[] = [{ kind: "gameEnd", at: s.durationMs }];
+  if (s.guideActive) list.push({ kind: "guideEnd", at: s.guideUntil });
   for (const p of s.participants) {
     if (p.turn) list.push({ kind: "turnEnd", at: p.turn.endAt, participant: p });
   }
@@ -186,7 +195,11 @@ function announce(s: GameState, rng: Rng, emit: Emit) {
   }
   if (!line) return;
 
-  const alreadyMuted = line.type === "deplacee" && !line.declencheur && rng.chance(CONFIG.alreadyMutedRatio);
+  // Le tirage a lieu même pendant le guide : la suite de la réunion reste la même pour tous (stand-up du jour).
+  const drawnMuted = line.type === "deplacee" && !line.declencheur && rng.chance(CONFIG.alreadyMutedRatio);
+  const inGuide = s.guideActive && s.t < s.guideUntil;
+  const alreadyMuted = drawnMuted && !inGuide; // R-15 : pas de piège R-08 pendant le guide
+  const guided = inGuide && line.type === "deplacee";
   s.usedLineIds.push(line.id);
   speaker.turn = {
     line,
@@ -195,6 +208,7 @@ function announce(s: GameState, rng: Rng, emit: Emit) {
     mic: alreadyMuted ? "muted" : "open",
     initiallyMuted: alreadyMuted,
     touched: false,
+    guided,
   };
   // On occupe la place libre la plus ancienne.
   const slot = s.slotsFreeAt.indexOf(Math.min(...s.slotsFreeAt));

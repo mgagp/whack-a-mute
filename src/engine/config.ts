@@ -43,8 +43,14 @@ export const CONFIG = {
     3: { readMs: 2_000, pauseMs: 1_000, maxSimultaneous: 3 },
   } satisfies Record<CafeLevel, CafeConfig>,
 
-  /** Niveau de café proposé par défaut sur l'accueil. */
-  defaultCafe: 2 as CafeLevel,
+  /** Niveau de café proposé par défaut sur l'accueil (#32 : le plus calme, pour la première impression). */
+  defaultCafe: 1 as CafeLevel,
+
+  /**
+   * Mode « Premier meeting » (R-15, #32) : pendant ce temps au début d'une partie guidée,
+   * chaque phrase déplacée est signalée sur sa tuile, et personne n'est annoncé déjà sur mute (R-08).
+   */
+  guide: { durationMs: 30_000 },
 
   /** Ordre d'arrivée des participants et moment d'arrivée, en ms (section 6.1, R-13). */
   arrivals: [
@@ -93,6 +99,12 @@ export const CONFIG = {
 
   /** Durées d'affichage côté interface, en ms de jeu (elles suivent donc `?vitesse=`). */
   ui: {
+    /**
+     * Paliers du compte à rebours, en part de l'annonce écoulée : l'anneau de la bulle
+     * et les flèches du guide (#32) passent au jaune puis au rouge aux mêmes moments.
+     */
+    timerWarnAt: 0.55,
+    timerUrgentAt: 0.8,
     /** Notification en bas de la réunion. */
     toastMs: 1_800,
     /** Grande phrase affichée lors d'un malaise. */

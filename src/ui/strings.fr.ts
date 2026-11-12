@@ -27,6 +27,9 @@ export const STRINGS = {
     storyMeta:
       "Inspiré d'une histoire vraie. Ton mandat : lire ce que tes collègues s'apprêtent à dire et les couper juste à temps.",
     cafeLabel: "Ton niveau de café",
+    /** Mode « Premier meeting » (R-15). */
+    guide: "🎓 Premier meeting",
+    guideHint: "Je te montre qui couper, les 30 premières secondes",
     start: "Rejoindre la réunion →",
     fine: "Partie de 90 secondes · son conseillé 🔊",
   },
@@ -57,6 +60,10 @@ export const STRINGS = {
     boom: "SCHLAC !",
     oops: "😬",
     waiting: "En attente…",
+    /** Bande du guide autour d'une tuile (R-15). */
+    guideTap: "👆 Coupe-le !",
+    guideTapF: "👆 Coupe-la !",
+    guideEnded: "🎓 Fin du guide : à toi de jouer !",
     joined: (name: string) => `👋 ${name} a rejoint la réunion`,
     toast: {
       intercepted: (d: number) => `🔇 Intercepté ! +${d} harmonie`,

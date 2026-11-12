@@ -28,10 +28,11 @@ export function useGame(opts: {
   seed: string;
   speed: number;
   participants?: number;
+  guided: boolean;
   onEvents: (events: GameEvent[]) => void;
 }) {
   const [view, setView] = useState<GameView>(() => ({
-    game: createGame({ lines: opts.lines, cafe: opts.cafe, seed: opts.seed, participants: opts.participants }),
+    game: createGame({ lines: opts.lines, cafe: opts.cafe, seed: opts.seed, participants: opts.participants, guided: opts.guided }),
     recent: [],
   }));
   const viewRef = useRef(view);
