@@ -4,11 +4,14 @@ import { isMuted, setMuted } from "../audio";
 import type { CafeLevel } from "../engine/config";
 import { Avatar } from "./Avatar";
 import { Deco } from "./Deco";
-import { MicIcon } from "./Icons";
+import { GitHubMark, MicIcon } from "./Icons";
 import { SoundButton } from "./Game";
 import type { Lang } from "../content/lines";
 import { ALL_STRINGS, useStrings } from "./i18n";
 import { LANGS } from "./lang";
+
+/** Dépôt public du jeu, sous licence MIT (R-53, #33). */
+export const SOURCE_URL = "https://github.com/mgagp/whack-a-mute";
 
 export function Home({
   cafe,
@@ -111,6 +114,14 @@ export function Home({
         {h.start}
       </button>
       <div className="fine">{h.fine}</div>
+      <footer className="credits" data-testid="credits">
+        {STRINGS.credits.madeBy}
+        <span aria-hidden="true"> · </span>
+        <a href={SOURCE_URL} target="_blank" rel="noopener noreferrer" aria-label={STRINGS.credits.sourceLabel} data-testid="source-link">
+          <GitHubMark className="gh" />
+          {STRINGS.credits.source}
+        </a>
+      </footer>
     </div>
   );
 }

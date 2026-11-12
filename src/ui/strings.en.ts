@@ -13,6 +13,11 @@ export const STRINGS_EN: Strings = {
   appName: "SynergiQ",
   meetingName: "Daily stand-up",
   dateLocale: "en-US",
+  credits: {
+    madeBy: "Made by Marc",
+    source: "Source code",
+    sourceLabel: "Source code on GitHub (new tab)",
+  },
   home: {
     logoSmall: "WHACK-A-",
     logoBig: "MUTE",

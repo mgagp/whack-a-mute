@@ -1,6 +1,6 @@
 # Whack-a-Mute — Spécification (PRD)
 
-> **Version** 0.14 · **Date** 2026-11-12 · **Auteur** Marc
+> **Version** 0.15 · **Date** 2026-11-12 · **Auteur** Marc
 > Source d'origine : [VERBATIM.md](VERBATIM.md). En cas de doute sur l'intention, c'est le verbatim qui fait foi.
 > Les sections marquées **⚠️ Hypothèse** sont des propositions à valider. Elles sont reprises dans la section 13, « Questions ouvertes ».
 
@@ -294,6 +294,7 @@ Chaque exigence [M] doit être couverte par au moins un test automatisé (voir l
   - **Stand-up du jour (#19)** : par défaut, la graine est tirée de la date locale du joueur. Tout le monde joue la même réunion ce jour-là (par langue et par café), « Rejouer » la reprend, et le texte partagé dit « stand-up du jour ». L'écran de fin affiche « Stand-up du 11 novembre ». `?seed=` reste une partie de debug, hors stand-up du jour.
 - **R-51 [S]** La page a une image d'aperçu et une description pour un bel affichage quand on partage le lien.
 - **R-52 [S]** Les visites, les parties lancées et les partages sont comptés par GoatCounter (whack-a-mute.goatcounter.com), sans cookies, sans bannière et sans donnée personnelle. Les événements s'appellent `partie-<langue>` et `partage-<langue>`. Les visites en local (`localhost`) ne sont pas comptées, et un bloqueur qui empêche le script ne gêne pas le jeu. Le lien partagé porte `?ref=partage` (#24) : GoatCounter compte ainsi les visites venues d'un score partagé, même quand la messagerie ne transmet pas la provenance.
+- **R-53 [S]** Une petite ligne au bas de l'accueil, « Fait par Marc · Code source », avec le logo GitHub, mène au dépôt public (https://github.com/mgagp/whack-a-mute) dans un nouvel onglet (#33). Elle reste discrète : petite taille, couleur du texte secondaire, rien sur l'écran de jeu ni de bandeau en coin d'écran.
 
 ### Langues
 - **R-60 [M]** Le jeu existe en **français et en anglais** (anglais neutre et international ; les prénoms des personnages ne changent pas).
@@ -411,3 +412,4 @@ Cette idée généralise le duo « annonce du boss → réplique signature ». I
 | 0.12 | 2026-11-11 | Le lien partagé en français porte `?lang=fr` : il s'ouvre en français même sur un appareil en anglais (R-60, #26) |
 | 0.13 | 2026-11-11 | Retour distinct « Bien vu ! » pour une interception sans clic, quand le collègue était déjà sur mute (R-30, #29) |
 | 0.14 | 2026-11-12 | Mode « Premier meeting » pour guider le nouveau joueur (section 6.3, R-15) et niveau de café Facile par défaut (#32) |
+| 0.15 | 2026-11-12 | Lien discret vers le code source au bas de l'accueil (R-53, #33) |
