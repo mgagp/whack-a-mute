@@ -20,18 +20,27 @@ const SPARKS = [
 ];
 
 /**
- * Flèches du guide (R-15), autour de la tuile, chacune tournée vers le centre.
- * Le bas est laissé libre pour l'étiquette « Coupe-le ! ».
+ * Flèches du guide (R-15, #36) : beaucoup, tout le tour de la tuile, chacune tournée vers l'intérieur.
+ * Elles sont rangées dans le sens des aiguilles d'une montre, pour qu'une vague fasse le tour.
+ * Le milieu du bas est laissé libre pour l'étiquette « Coupe-le ! ».
  */
-const GUIDE_ARROWS = [
-  { x: "6%", y: "6%", r: 45 },
-  { x: "50%", y: "0%", r: 90 },
-  { x: "94%", y: "6%", r: 135 },
-  { x: "100%", y: "50%", r: 180 },
-  { x: "94%", y: "94%", r: 225 },
-  { x: "6%", y: "94%", r: 315 },
-  { x: "0%", y: "50%", r: 0 },
-];
+const GUIDE_ARROWS = (() => {
+  const a: { x: number; y: number; r: number }[] = [];
+  const top = [5, 20, 35, 50, 65, 80, 95];
+  // Les côtés s'arrêtent avant la rangée du bas, posée au-dessus de la barre du nom.
+  const side = [14, 26, 38, 50, 62, 74];
+  const bottom = [95, 82, 70, 30, 18, 5];
+  top.forEach((x, i) => a.push({ x, y: 0, r: i === 0 ? 45 : i === top.length - 1 ? 135 : 90 }));
+  side.forEach((y) => a.push({ x: 100, y, r: 180 }));
+  bottom.forEach((x, i) => a.push({ x, y: 100, r: i === 0 ? 225 : i === bottom.length - 1 ? 315 : 270 }));
+  [...side].reverse().forEach((y) => a.push({ x: 0, y, r: 0 }));
+  // Les coins sont un peu rentrés, pour suivre l'arrondi de la tuile.
+  return a.map((p) => ({
+    ...p,
+    x: p.r === 45 || p.r === 315 ? 5 : p.r === 135 || p.r === 225 ? 95 : p.x,
+    y: p.r === 45 || p.r === 135 ? 4 : p.r === 225 || p.r === 315 ? 96 : p.y,
+  }));
+})();
 
 /** Palier du compte à rebours : l'anneau et le guide changent de couleur ensemble. */
 export type TimerLevel = "calm" | "warn" | "urgent";
@@ -127,7 +136,11 @@ export const Tile = memo(function Tile({ p, t, reacting, justJoined, debug, onTa
       {guiding && p.turn && (
         <span className={`guide-band lvl-${level}`} key={`g-${p.turn.line.id}`} data-testid={`guide-${p.id}`} aria-hidden="true">
           {GUIDE_ARROWS.map((a, i) => (
-            <span key={i} className="guide-arrow" style={{ left: a.x, top: a.y, rotate: `${a.r}deg` }}>
+            <span
+              key={i}
+              className={a.y > 90 ? "guide-arrow low" : "guide-arrow"}
+              style={{ left: `${a.x}%`, top: a.y > 90 ? undefined : `${a.y}%`, rotate: `${a.r}deg`, ["--i" as string]: i, ["--n" as string]: GUIDE_ARROWS.length }}
+            >
               <svg viewBox="0 0 28 24">
                 <path d="M2 2 L26 12 L2 22 L9 12 Z" />
               </svg>
