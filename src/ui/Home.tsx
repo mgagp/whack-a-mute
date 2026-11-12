@@ -1,4 +1,4 @@
-/** Accueil : logo, accroche, anecdote de Marc et choix du café (R-01, R-02). */
+/** Accueil : logo, accroche, anecdote de Marc, choix du café (R-01, R-02) et mode « Premier meeting » (R-15). */
 import { useState } from "react";
 import { isMuted, setMuted } from "../audio";
 import type { CafeLevel } from "../engine/config";
@@ -16,12 +16,16 @@ export const SOURCE_URL = "https://github.com/mgagp/whack-a-mute";
 export function Home({
   cafe,
   onCafe,
+  guided,
+  onGuided,
   onStart,
   lang,
   onLang,
 }: {
   cafe: CafeLevel;
   onCafe: (c: CafeLevel) => void;
+  guided: boolean;
+  onGuided: (guided: boolean) => void;
   onStart: () => void;
   lang: Lang;
   onLang: (lang: Lang) => void;
@@ -98,6 +102,14 @@ export function Home({
           );
         })}
       </div>
+      <label className={`guide-toggle${guided ? " on" : ""}`} data-testid="guide-toggle">
+        <input type="checkbox" checked={guided} onChange={(e) => onGuided(e.target.checked)} data-testid="guide" />
+        <span className="switch" aria-hidden="true" />
+        <span className="txt">
+          <b>{h.guide}</b>
+          {h.guideHint}
+        </span>
+      </label>
       <button type="button" className="btn start" data-testid="start" onClick={onStart}>
         {h.start}
       </button>

@@ -1,7 +1,7 @@
 /** Tuile d'un participant : avatar, micro, bulle d'annonce et retour visuel des résultats (R-30). */
 import { m as motion } from "motion/react";
 import { memo } from "react";
-import type { ParticipantId } from "../engine/config";
+import { CONFIG, type ParticipantId } from "../engine/config";
 import type { Outcome, Participant } from "../engine/state";
 import { turnProgress } from "../engine/step";
 import { Avatar, type Mood } from "./Avatar";
@@ -18,6 +18,27 @@ const SPARKS = [
   { dx: 4, dy: -60, c: "var(--violet)" },
   { dx: -14, dy: 58, c: "var(--sun)" },
 ];
+
+/**
+ * Flèches du guide (R-15), autour de la tuile, chacune tournée vers le centre.
+ * Le bas est laissé libre pour l'étiquette « Coupe-le ! ».
+ */
+const GUIDE_ARROWS = [
+  { x: "6%", y: "6%", r: 45 },
+  { x: "50%", y: "0%", r: 90 },
+  { x: "94%", y: "6%", r: 135 },
+  { x: "100%", y: "50%", r: 180 },
+  { x: "94%", y: "94%", r: 225 },
+  { x: "6%", y: "94%", r: 315 },
+  { x: "0%", y: "50%", r: 0 },
+];
+
+/** Palier du compte à rebours : l'anneau et le guide changent de couleur ensemble. */
+export type TimerLevel = "calm" | "warn" | "urgent";
+export function timerLevel(progress: number): TimerLevel {
+  return progress < CONFIG.ui.timerWarnAt ? "calm" : progress < CONFIG.ui.timerUrgentAt ? "warn" : "urgent";
+}
+const RING_COLOR: Record<TimerLevel, string> = { calm: "var(--turq)", warn: "var(--warn)", urgent: "var(--mute)" };
 
 export type TileState = "idle" | "announcing" | Outcome;
 
@@ -48,6 +69,9 @@ export const Tile = memo(function Tile({ p, t, reacting, justJoined, debug, onTa
   else if (reacting) mood = "shocked";
 
   const progress = p.turn ? turnProgress(p.turn, t) : 0;
+  const level = timerLevel(progress);
+  // Guide (R-15) : phrase déplacée annoncée pendant le premier meeting, tant que le micro est ouvert.
+  const guiding = !!p.turn?.guided && p.turn.mic === "open";
   const speaking = state === "normal" || state === "blunder";
   const micLabel = mic === "muted" ? STRINGS.game.micMuted : mic === "open" ? STRINGS.game.micOpen : STRINGS.game.micIdle;
 
@@ -60,6 +84,7 @@ export const Tile = memo(function Tile({ p, t, reacting, justJoined, debug, onTa
       data-self={result?.selfMuted ? "true" : undefined}
       data-mic={mic}
       data-type={debug && p.turn ? p.turn.line.type : undefined}
+      data-guide={guiding ? level : undefined}
       aria-label={STRINGS.game.tileLabel(s.name, micLabel)}
       onPointerDown={(e) => {
         e.preventDefault();
@@ -89,7 +114,7 @@ export const Tile = memo(function Tile({ p, t, reacting, justJoined, debug, onTa
                 style={{
                   strokeDasharray: TIMER_LEN,
                   strokeDashoffset: TIMER_LEN * progress,
-                  stroke: progress < 0.55 ? "var(--turq)" : progress < 0.8 ? "var(--warn)" : "var(--mute)",
+                  stroke: RING_COLOR[level],
                 }}
               />
             </svg>
@@ -97,6 +122,24 @@ export const Tile = memo(function Tile({ p, t, reacting, justJoined, debug, onTa
           </div>
           <q>{p.turn.line.text}</q>
         </div>
+      )}
+
+      {guiding && p.turn && (
+        <span className={`guide-band lvl-${level}`} key={`g-${p.turn.line.id}`} data-testid={`guide-${p.id}`} aria-hidden="true">
+          {GUIDE_ARROWS.map((a, i) => (
+            <span key={i} className="guide-arrow" style={{ left: a.x, top: a.y, rotate: `${a.r}deg` }}>
+              <svg viewBox="0 0 28 24">
+                <path d="M2 2 L26 12 L2 22 L9 12 Z" />
+              </svg>
+            </span>
+          ))}
+        </span>
+      )}
+      {guiding && p.turn && (
+        // Hors de la bande : l'étiquette passe au-dessus du nom, alors que les flèches passent dessous.
+        <span className={`guide-tag lvl-${level}`} key={`gt-${p.turn.line.id}`} aria-hidden="true">
+          {s.feminine ? STRINGS.game.guideTapF : STRINGS.game.guideTap}
+        </span>
       )}
 
       {result && (state === "normal" || state === "blunder") && (

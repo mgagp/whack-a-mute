@@ -32,6 +32,7 @@ export function Game(props: {
   speed: number;
   participants?: number;
   debug: boolean;
+  guided: boolean;
   onOver: (game: GameState) => void;
 }) {
   const STRINGS = useStrings();
@@ -72,7 +73,8 @@ export function Game(props: {
   const reactingTo: ParticipantId | null = lastBlunder && age(lastBlunder) < CONFIG.ui.reactionMs ? lastBlunder.participantId : null;
 
   const toastEvent = [...recent].reverse().find(
-    (e) => (e.type === "resolved" && e.outcome !== "normal") || (e.type === "participantJoined" && e.t > 0),
+    (e) =>
+      (e.type === "resolved" && e.outcome !== "normal") || (e.type === "participantJoined" && e.t > 0) || e.type === "guideEnded",
   );
   const toast = toastEvent && age(toastEvent) < CONFIG.ui.toastMs ? toastEvent : null;
 
@@ -144,8 +146,14 @@ export function Game(props: {
 
       <div className="toast-slot" aria-live="polite">
         {toast && (
-          <div className={`toast ${toast.type === "resolved" ? toast.outcome : "joined"}`} key={toast.id} data-testid="toast">
-            {toast.type === "participantJoined"
+          <div
+            className={`toast ${toast.type === "resolved" ? toast.outcome : toast.type === "guideEnded" ? "guide-ended" : "joined"}`}
+            key={toast.id}
+            data-testid="toast"
+          >
+            {toast.type === "guideEnded"
+              ? STRINGS.game.guideEnded
+              : toast.type === "participantJoined"
               ? STRINGS.game.joined(STRINGS.participants[toast.participantId].name)
               : toast.type === "resolved" && toast.outcome !== "normal"
                 ? STRINGS.game.toast[toast.selfMuted ? "selfMuted" : toast.outcome](toast.harmonyDelta)

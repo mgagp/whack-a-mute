@@ -28,6 +28,8 @@ export const STRINGS_EN: Strings = {
     storyMeta:
       "Inspired by a true story. Your job: read what your coworkers are about to say and mute them just in time.",
     cafeLabel: "Your coffee level",
+    guide: "🎓 First meeting",
+    guideHint: "I'll point out who to mute for the first 30 seconds",
     start: "Join the meeting →",
     fine: "90-second game · best with sound 🔊",
   },
@@ -57,6 +59,9 @@ export const STRINGS_EN: Strings = {
     boom: "WHACK!",
     oops: "😬",
     waiting: "Waiting…",
+    guideTap: "👆 Mute him!",
+    guideTapF: "👆 Mute her!",
+    guideEnded: "🎓 Guide over: you're on your own!",
     joined: (name) => `👋 ${name} joined the meeting`,
     toast: {
       intercepted: (d) => `🔇 Intercepted! +${d} harmony`,

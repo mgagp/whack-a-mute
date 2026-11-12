@@ -1420,6 +1420,185 @@ q {
   }
 }
 
+/* ===== Mode « Premier meeting » (R-15, #32) ===== */
+/* Accueil : interrupteur du guide */
+.guide-toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: -8px 0 22px;
+  padding: 10px 14px;
+  background: var(--panel);
+  color: var(--cream);
+  border: var(--line) solid var(--ink);
+  border-radius: 16px;
+  box-shadow: 0 4px 0 var(--ink);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.3;
+  cursor: pointer;
+  transition: background var(--fast);
+}
+.guide-toggle input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.guide-toggle .switch {
+  flex: none;
+  position: relative;
+  width: 46px;
+  height: 26px;
+  border-radius: var(--r-pill);
+  background: var(--track);
+  border: var(--line) solid var(--ink);
+  transition: background var(--fast);
+}
+.guide-toggle .switch::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--cream);
+  border: 2px solid var(--ink);
+  transition: translate var(--fast) var(--spring);
+}
+.guide-toggle.on .switch {
+  background: var(--sun);
+}
+.guide-toggle.on .switch::after {
+  translate: 20px 0;
+}
+.guide-toggle .txt b {
+  display: block;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 16px;
+  letter-spacing: 0.3px;
+}
+.guide-toggle:has(input:focus-visible) {
+  outline: var(--line) solid var(--sun);
+  outline-offset: 3px;
+}
+
+/* Réunion : bande cartoon autour de la tuile à couper, couleur selon le compte à rebours */
+.guide-band,
+.guide-tag {
+  --g: var(--cream);
+}
+.guide-band.lvl-warn,
+.guide-tag.lvl-warn {
+  --g: var(--warn);
+}
+.guide-band.lvl-urgent,
+.guide-tag.lvl-urgent {
+  --g: var(--mute);
+}
+.guide-band {
+  position: absolute;
+  inset: -7px;
+  z-index: 1; /* sous la bulle (z-index 2) : les flèches ne cachent jamais la phrase à lire */
+  pointer-events: none;
+  border: 6px solid var(--g);
+  border-radius: calc(var(--r-xl) + 7px);
+  box-shadow:
+    0 0 0 3px var(--ink),
+    inset 0 0 0 3px var(--ink),
+    0 0 24px 6px var(--g);
+  animation:
+    guidein 0.4s var(--spring) both,
+    guideglow 0.8s ease-in-out infinite alternate;
+  transition: border-color var(--fast), box-shadow var(--fast);
+}
+.guide-band.lvl-urgent {
+  animation:
+    guidein 0.4s var(--spring) both,
+    guideglow 0.3s ease-in-out infinite alternate;
+}
+@keyframes guidein {
+  0% {
+    scale: 1.25;
+    opacity: 0;
+  }
+  100% {
+    scale: 1;
+    opacity: 1;
+  }
+}
+@keyframes guideglow {
+  100% {
+    box-shadow:
+      0 0 0 3px var(--ink),
+      inset 0 0 0 3px var(--ink),
+      0 0 34px 12px var(--g);
+  }
+}
+.guide-arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+.guide-arrow svg {
+  position: absolute;
+  left: 2px;
+  top: 0;
+  transform: translateY(-50%);
+  width: clamp(28px, 12cqw, 46px);
+  height: auto;
+  overflow: visible;
+  animation: guidepoke 0.55s ease-in-out infinite alternate;
+}
+.lvl-urgent .guide-arrow svg {
+  animation-duration: 0.25s;
+}
+.guide-arrow path {
+  fill: var(--g);
+  stroke: var(--ink);
+  stroke-width: 3.5;
+  stroke-linejoin: round;
+  transition: fill var(--fast);
+}
+@keyframes guidepoke {
+  100% {
+    translate: 9px 0;
+  }
+}
+.guide-tag {
+  position: absolute;
+  z-index: 3;
+  pointer-events: none;
+  animation: guidein 0.4s var(--spring) both;
+  left: 50%;
+  bottom: -24px;
+  translate: -50% 0;
+  rotate: -3deg;
+  white-space: nowrap;
+  background: var(--g);
+  color: var(--ink);
+  border: var(--line) solid var(--ink);
+  border-radius: var(--r-pill);
+  box-shadow: var(--shadow-sm);
+  padding: 3px 12px;
+  font-family: var(--display);
+  font-size: clamp(13px, 5cqw, 18px);
+  letter-spacing: 0.4px;
+  transition: background var(--fast);
+}
+/* Le micro et le nom restent toujours au-dessus des flèches. */
+.tile .mic {
+  z-index: 2;
+}
+.tile .name {
+  position: relative;
+  z-index: 2;
+}
+.toast.guide-ended {
+  background: var(--sun);
+}
+
 /* Réduire les animations si le système le demande (R-33) */
 @media (prefers-reduced-motion: reduce) {
   *,
