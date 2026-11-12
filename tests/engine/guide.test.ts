@@ -55,12 +55,20 @@ describe("Mode « Premier meeting » (#32)", () => {
     expect(mutedAfterGuide).toBeGreaterThan(0);
   });
 
-  it("R-15 : le guide ne change pas la réunion du jour (mêmes répliques, mêmes collègues)", () => {
-    for (const seed of SEEDS.slice(0, 10)) {
-      const sequence = (guided: boolean) =>
-        announced(play(newGame({ seed, cafe: 1, guided }), perfect, 16).events).map((e) => `${e.participantId}:${e.line.id}`);
-      expect(sequence(true)).toEqual(sequence(false));
+  it("R-15 : la première prise de parole d'une partie guidée est toujours une phrase déplacée, guidée", () => {
+    for (const seed of SEEDS) {
+      const { snapshots, events } = play(newGame({ seed, cafe: 1, guided: true }), perfect, 16);
+      const first = announced(events)[0]!;
+      expect(first.line.type).toBe("deplacee");
+      expect(first.mic).toBe("open");
+      const turn = snapshots.flatMap((s) => s.participants).find((p) => p.turn?.line.id === first.line.id)!.turn!;
+      expect(turn.guided).toBe(true);
     }
+  });
+
+  it("R-15 : sans guide, la première prise de parole reste tirée au hasard", () => {
+    const types = new Set(SEEDS.map((seed) => announced(play(newGame({ seed, cafe: 1 }), perfect, 16).events)[0]!.line.type));
+    expect(types).toEqual(new Set(["correcte", "deplacee"]));
   });
 
   it("R-02 : le niveau de café proposé par défaut est le plus calme (#32)", () => {

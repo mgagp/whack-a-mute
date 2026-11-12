@@ -142,7 +142,7 @@ Un joueur qui arrive par un lien ne sait pas encore où regarder : il lit les bu
 - **Combien de temps.** Les 30 premières secondes de la partie seulement (la phase à 1 ou 2 participants). Un message annonce ensuite la fin du guide, et la partie continue normalement. Le jeu ne devient donc pas « tape sur ce qui clignote », et le score partagé garde son sens.
 - **Quoi.** Chaque phrase déplacée annoncée pendant le guide encercle sa tuile d'une bande cartoon, avec des flèches tournées vers le collègue et l'étiquette « Coupe-le ! ». L'insistance monte avec le compte à rebours : blanc, puis jaune, puis rouge, aux mêmes paliers que l'anneau de la bulle. La bande disparaît dès que le micro est coupé.
 - **Pas de piège.** Personne n'est annoncé déjà sur mute (R-08) pendant le guide : on encerclerait un collègue sur qui il ne faut surtout pas taper.
-- **Même réunion.** Le guide ne change ni les répliques ni l'ordre des prises de parole du stand-up du jour.
+- **Toujours un exemple.** La toute première prise de parole d'une partie guidée est une phrase déplacée : chaque premier meeting montre au moins une tuile guidée. En contrepartie, la réunion d'un joueur guidé diffère un peu du stand-up du jour des autres joueurs.
 
 ---
 
@@ -255,7 +255,7 @@ Chaque exigence [M] doit être couverte par au moins un test automatisé (voir l
 ### Difficulté et participants
 - **R-13 [M]** Les participants arrivent selon le calendrier de la section 6.1, avec une notification.
 - **R-14 [M]** Le rythme (temps de lecture, pause, simultanéité) suit la section 6.2.
-- **R-15 [M]** Mode « Premier meeting » (section 6.3) : actif par défaut jusqu'à la fin d'une première partie guidée, réglable sur l'accueil (`?guide=0|1` l'impose). Pendant les 30 premières secondes, chaque phrase déplacée est signalée sur sa tuile, sans annonce déjà sur mute, puis un message annonce la fin du guide.
+- **R-15 [M]** Mode « Premier meeting » (section 6.3) : actif par défaut jusqu'à la fin d'une première partie guidée, réglable sur l'accueil (`?guide=0|1` l'impose). Pendant les 30 premières secondes, chaque phrase déplacée est signalée sur sa tuile, sans annonce déjà sur mute, et la première prise de parole est toujours une phrase déplacée. Un message annonce ensuite la fin du guide.
 
 ### Contenu
 - **R-20 [M]** Les répliques sont chargées depuis un fichier de données validé au démarrage. Chacune a un identifiant, un texte, un type (correcte ou déplacée) et une langue.

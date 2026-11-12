@@ -189,7 +189,11 @@ function announce(s: GameState, rng: Rng, emit: Emit) {
     const able = candidates.filter((p) => canSpeak(s, p.id));
     if (able.length === 0) return;
     speaker = rng.pick(able);
-    const wanted: LineType = rng.chance(CONFIG.deplaceeRatio) ? "deplacee" : "correcte";
+    const drawn: LineType = rng.chance(CONFIG.deplaceeRatio) ? "deplacee" : "correcte";
+    // R-15 : la toute première prise de parole d'une partie guidée est une phrase déplacée,
+    // pour que chaque premier meeting montre au moins un exemple guidé.
+    const firstGuided = s.guideActive && s.usedLineIds.length === 0;
+    const wanted: LineType = firstGuided ? "deplacee" : drawn;
     const id = speaker.id;
     line = pickLine(s, rng, wanted, id) ?? pickLine(s, rng, wanted === "deplacee" ? "correcte" : "deplacee", id);
   }

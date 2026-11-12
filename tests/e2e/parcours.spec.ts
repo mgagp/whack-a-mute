@@ -144,7 +144,8 @@ test("R-30 : le clic sur une tuile qui va parler change le micro en moins de 100
 
 test("R-30 : chaque résultat a son retour visuel distinct", async ({ page }) => {
   test.setTimeout(60_000);
-  await page.goto("./?seed=retours&vitesse=3&participants=4");
+  // Sans guide : ce test suit le déroulé exact de sa graine, que le premier meeting modifie (R-15).
+  await page.goto("./?seed=retours&vitesse=3&participants=4&guide=0");
   await start(page);
   const seen = new Set<string>();
   // Politique mixte : on coupe toujours Ginette, jamais Kevin, et les autres seulement s'ils vont déraper.
