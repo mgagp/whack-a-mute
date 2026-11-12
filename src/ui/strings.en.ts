@@ -34,9 +34,9 @@ export const STRINGS_EN: Strings = {
     fine: "90-second game · best with sound 🔊",
   },
   cafe: {
-    1: { cups: "☕", line1: "Monday 9 a.m.,", line2: "no coffee", short: "no coffee" },
-    2: { cups: "☕☕", line1: "After the", line2: "1st coffee", short: "after the 1st coffee" },
-    3: { cups: "☕☕☕", line1: "4th", line2: "espresso", short: "4th espresso" },
+    1: { cups: "☕", level: "Easy", line1: "Monday 9 a.m.,", line2: "no coffee", short: "no coffee" },
+    2: { cups: "☕☕", level: "Normal", line1: "After the", line2: "1st coffee", short: "after the 1st coffee" },
+    3: { cups: "☕☕☕", level: "Strong", line1: "4th", line2: "espresso", short: "4th espresso" },
   },
   participants: {
     ginette: { name: "Ginette", role: "accounting", feminine: true },
