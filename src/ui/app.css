@@ -1411,6 +1411,29 @@ q {
   cursor: pointer;
   padding: 6px;
 }
+/* Suggestion de niveau (R-16) : bouton secondaire, plus petit que « Rejouer ». */
+.btn.suggest {
+  font-size: 16px;
+  padding: 10px 12px;
+  box-shadow: 0 4px 0 var(--ink);
+  animation: suggestin 0.5s var(--spring) 0.6s both;
+}
+.btn.suggest .cups {
+  white-space: nowrap;
+  letter-spacing: -3px;
+}
+.btn.suggest.less {
+  background: var(--coral);
+}
+.btn.suggest.more {
+  background: var(--lime);
+}
+@keyframes suggestin {
+  from {
+    transform: scale(0.6) rotate(-4deg);
+    opacity: 0;
+  }
+}
 .confetti-box {
   position: fixed;
 }

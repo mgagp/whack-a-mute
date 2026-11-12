@@ -97,6 +97,12 @@ export const CONFIG = {
     { min: 0, key: "ecourtee" },
   ] as const,
 
+  /**
+   * Suggestion de niveau en fin de partie (R-16, #39) : moins de café sous `lessBelow` % d'harmonie,
+   * plus de café à partir de `moreFrom` %. Mêmes seuils que les titres « RH » et « Champion·ne ».
+   */
+  cafeSuggestion: { lessBelow: 40, moreFrom: 90 },
+
   /** Durées d'affichage côté interface, en ms de jeu (elles suivent donc `?vitesse=`). */
   ui: {
     /**

@@ -332,6 +332,17 @@ export function endTitleKey(harmony: number) {
   return (found ?? CONFIG.endTitleThresholds[CONFIG.endTitleThresholds.length - 1]!).key;
 }
 
+/**
+ * Niveau de café à proposer en fin de partie (R-16) : un de moins après une partie difficile,
+ * un de plus après une très bonne partie, sinon null (ou si on est déjà au niveau extrême).
+ */
+export function suggestedCafe(harmony: number, cafe: CafeLevel): CafeLevel | null {
+  const { lessBelow, moreFrom } = CONFIG.cafeSuggestion;
+  if (harmony < lessBelow && cafe > 1) return (cafe - 1) as CafeLevel;
+  if (harmony >= moreFrom && cafe < 3) return (cafe + 1) as CafeLevel;
+  return null;
+}
+
 /** Horloge de réunion accélérée (section 4) : minutes écoulées depuis minuit. */
 export function meetingMinutes(s: Pick<GameState, "t" | "durationMs">): number {
   const { startMinutes, durationMinutes } = CONFIG.meetingClock;

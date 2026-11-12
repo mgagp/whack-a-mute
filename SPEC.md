@@ -1,6 +1,6 @@
 # Whack-a-Mute — Spécification (PRD)
 
-> **Version** 0.17 · **Date** 2026-11-12 · **Auteur** Marc
+> **Version** 0.18 · **Date** 2026-11-12 · **Auteur** Marc
 > Source d'origine : [VERBATIM.md](VERBATIM.md). En cas de doute sur l'intention, c'est le verbatim qui fait foi.
 > Les sections marquées **⚠️ Hypothèse** sont des propositions à valider. Elles sont reprises dans la section 13, « Questions ouvertes ».
 
@@ -256,6 +256,7 @@ Chaque exigence [M] doit être couverte par au moins un test automatisé (voir l
 - **R-13 [M]** Les participants arrivent selon le calendrier de la section 6.1, avec une notification.
 - **R-14 [M]** Le rythme (temps de lecture, pause, simultanéité) suit la section 6.2.
 - **R-15 [M]** Mode « Premier meeting » (section 6.3) : actif par défaut jusqu'à la fin d'une première partie guidée, réglable sur l'accueil (`?guide=0|1` l'impose). Pendant les 30 premières secondes, chaque phrase déplacée est signalée sur sa tuile, sans annonce déjà sur mute, et la première prise de parole est toujours une phrase déplacée. Un message annonce ensuite la fin du guide.
+- **R-16 [S]** En fin de partie, le jeu propose un autre niveau de café selon le score (#39) : un café de moins sous 40 % d'harmonie, un café de plus à partir de 90 % (mêmes seuils que les titres de fin, dans `config.ts`). Rien n'est proposé entre les deux, ni au-delà des niveaux extrêmes. La proposition remplace le lien « Changer le niveau de café », lance la partie en un toucher, et le niveau proposé devient le niveau choisi.
 
 ### Contenu
 - **R-20 [M]** Les répliques sont chargées depuis un fichier de données validé au démarrage. Chacune a un identifiant, un texte, un type (correcte ou déplacée) et une langue.
@@ -415,3 +416,4 @@ Cette idée généralise le duo « annonce du boss → réplique signature ». I
 | 0.15 | 2026-11-12 | Lien discret vers le code source au bas de l'accueil (R-53, #33) |
 | 0.16 | 2026-11-12 | Guide du premier meeting plus insistant : environ 25 flèches tout le tour de la tuile, avec une vague qui circule (#36) |
 | 0.17 | 2026-11-12 | Choix du café plus visible sur l'accueil : titre en jaune, mot de difficulté, vapeur animée (R-02, #38) |
+| 0.18 | 2026-11-12 | En fin de partie, proposition de moins ou de plus de café selon le score (R-16, #39) |

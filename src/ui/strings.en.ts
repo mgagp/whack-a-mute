@@ -90,6 +90,8 @@ export const STRINGS_EN: Strings = {
     share: "Share my score",
     copied: "Copied! Paste it anywhere 📋",
     changeCafe: "Change coffee level ☕",
+    suggestLess: (short: string) => `Too strong? Try “${short}”`,
+    suggestMore: (short: string) => `Too easy? Try “${short}”`,
     titles: {
       champion: "Synergy champion",
       modele: "Model coworker (almost)",

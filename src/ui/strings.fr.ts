@@ -98,6 +98,9 @@ export const STRINGS = {
     share: "Partager mon score",
     copied: "Copié ! Colle-le où tu veux 📋",
     changeCafe: "Changer le niveau de café ☕",
+    /** Suggestion de niveau en fin de partie (R-16) : `short` décrit le niveau proposé ; ses tasses suivent. */
+    suggestLess: (short: string) => `Trop corsé ? Essaie « ${short} »`,
+    suggestMore: (short: string) => `Trop facile ? Essaie « ${short} »`,
     titles: {
       champion: "Champion·ne de la synergie",
       modele: "Collègue modèle (ou presque)",
