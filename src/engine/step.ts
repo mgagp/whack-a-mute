@@ -8,6 +8,7 @@
 import { CONFIG, type CafeLevel, type ParticipantId } from "./config";
 import { Rng, seedFrom } from "./rng";
 import type {
+  Explain,
   GameEvent,
   GameState,
   Input,
@@ -66,6 +67,7 @@ export function createGame(opts: NewGameOptions): GameState {
     guideUntil: opts.guided ? (opts.guideMs ?? CONFIG.guide.durationMs) : 0,
     guideActive: !!opts.guided,
     script: opts.script ? opts.script.map((x) => ({ ...x })) : null,
+    guideErrors: 0,
   };
 }
 
@@ -268,7 +270,15 @@ function resolveTurn(s: GameState, p: Participant, emit: Emit) {
 
   p.turn = null;
   const selfMuted = outcome === "intercepted" && turn.initiallyMuted && !turn.touched;
-  p.lastResult = { line: turn.line, outcome, at: s.t, selfMuted };
+  // #43 : pendant le guide, une erreur s'explique sur la tuile ; la première arrête le jeu un instant.
+  // Le tutoriel (scénario) a ses propres explications.
+  const error = outcome === "blunder" || outcome === "wrongMute";
+  let explain: Explain = null;
+  if (error && !s.script && s.guideActive && s.t <= s.guideUntil) {
+    explain = s.guideErrors === 0 ? "pause" : "note";
+    s.guideErrors++;
+  }
+  p.lastResult = { line: turn.line, outcome, at: s.t, selfMuted, explain: explain !== null };
   p.restUntil = s.t + CONFIG.resultDisplayMs;
 
   // La place se libère, mais ne resservira qu'après la pause du niveau (R-14).
@@ -291,6 +301,7 @@ function resolveTurn(s: GameState, p: Participant, emit: Emit) {
     selfMuted,
     harmonyDelta: delta,
     harmony: s.harmony,
+    explain,
   });
 
   if (s.harmony <= CONFIG.harmony.min) endGame(s, "harmonie", emit); // R-11

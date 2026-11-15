@@ -70,6 +70,9 @@ export const STRINGS = {
     guideTap: "👆 Coupe-le !",
     guideTapF: "👆 Coupe-la !",
     guideEnded: "🎓 Fin du guide : à toi de jouer !",
+    /** Erreur pendant le guide (#43), expliquée sur la tuile. */
+    explainBlunder: (name: string) => `Déplacé : il fallait couper ${name} !`,
+    explainWrongMute: (name: string) => `Correct : pas besoin de couper ${name}`,
     joined: (name: string) => `👋 ${name} a rejoint la réunion`,
     toast: {
       intercepted: (d: number) => `🔇 Intercepté ! +${d} harmonie`,

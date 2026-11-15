@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { CONFIG } from "../../src/engine/config";
 import type { GameEvent } from "../../src/engine/state";
-import { newGame, ofType, perfect, play } from "./helpers";
+import { muteEverything, newGame, ofType, perfect, play } from "./helpers";
 
 const SEEDS = Array.from({ length: 40 }, (_, i) => `guide-${i}`);
 const announced = (events: GameEvent[]) => ofType(events, "announced");
@@ -73,5 +73,36 @@ describe("Mode « Premier meeting » (#32)", () => {
 
   it("R-02 : le niveau de café proposé par défaut est le plus calme (#32)", () => {
     expect(CONFIG.defaultCafe).toBe(1);
+  });
+
+  it("R-18 : pendant le guide, la première erreur arrête le jeu, les suivantes s'expliquent sans arrêt", () => {
+    let checked = 0;
+    for (const seed of SEEDS) {
+      // Le joueur qui coupe tout le monde : des malaises évités, mais des « coupé à tort ».
+      for (const policy of [() => [], muteEverything]) {
+        const { events } = play(newGame({ seed, cafe: 2, guided: true }), policy, 16);
+        const errors = ofType(events, "resolved").filter((e) => e.outcome === "blunder" || e.outcome === "wrongMute");
+        const inGuide = errors.filter((e) => e.t <= CONFIG.guide.durationMs);
+        expect(inGuide.map((e) => e.explain)).toEqual(inGuide.map((_, i) => (i === 0 ? "pause" : "note")));
+        for (const e of errors.filter((x) => x.t > CONFIG.guide.durationMs)) expect(e.explain).toBeNull();
+        checked += inGuide.length;
+      }
+    }
+    expect(checked).toBeGreaterThan(0);
+  });
+
+  it("R-18 : sans guide, ni arrêt ni explication ; les bons coups ne s'expliquent jamais", () => {
+    const { events, snapshots } = play(newGame({ seed: "sans-guide", cafe: 2 }), () => [], 16);
+    expect(ofType(events, "resolved").every((e) => e.explain === null)).toBe(true);
+    expect(snapshots.every((s) => s.participants.every((p) => !p.lastResult?.explain))).toBe(true);
+    const guided = play(newGame({ seed: "guide-0", cafe: 1, guided: true }), perfect, 16).events;
+    expect(ofType(guided, "resolved").every((e) => e.explain === null)).toBe(true);
+  });
+
+  it("R-18 : la tuile garde l'explication avec le résultat de l'erreur", () => {
+    const { snapshots } = play(newGame({ seed: "guide-1", cafe: 1, guided: true }), () => [], 16);
+    const shown = snapshots.flatMap((s) => s.participants.map((p) => p.lastResult)).filter((r) => r?.explain);
+    expect(shown.length).toBeGreaterThan(0);
+    for (const r of shown) expect(["blunder", "wrongMute"]).toContain(r!.outcome);
   });
 });

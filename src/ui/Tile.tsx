@@ -189,6 +189,13 @@ export const Tile = memo(function Tile({ p, t, reacting, justJoined, debug, onTa
         {s.name} <em>{s.role}</em>
       </span>
 
+      {result?.explain && (state === "blunder" || state === "wrongMute") && (
+        // #43 : erreur pendant le guide du premier meeting, expliquée sur la tuile.
+        <span className={`explain-tag ${state}`} key={`ex-${result.line.id}`} data-testid={`explain-${p.id}`}>
+          {state === "blunder" ? STRINGS.game.explainBlunder(s.name) : STRINGS.game.explainWrongMute(s.name)}
+        </span>
+      )}
+
       {result && state === "intercepted" && (
         <span className="fx" key={`fx-${result.line.id}`}>
           <span className={result.selfMuted ? "stamp self" : "stamp"}>{result.selfMuted ? STRINGS.game.stampSelf : STRINGS.game.stamp}</span>

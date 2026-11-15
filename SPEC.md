@@ -1,6 +1,6 @@
 # Whack-a-Mute — Spécification (PRD)
 
-> **Version** 0.19 · **Date** 2026-11-15 · **Auteur** Marc
+> **Version** 0.20 · **Date** 2026-11-15 · **Auteur** Marc
 > Source d'origine : [VERBATIM.md](VERBATIM.md). En cas de doute sur l'intention, c'est le verbatim qui fait foi.
 > Les sections marquées **⚠️ Hypothèse** sont des propositions à valider. Elles sont reprises dans la section 13, « Questions ouvertes ».
 
@@ -143,6 +143,7 @@ Un joueur qui arrive par un lien ne sait pas encore où regarder : il lit les bu
 - **Combien de temps.** Les 30 premières secondes de la partie seulement (la phase à 1 ou 2 participants). Un message annonce ensuite la fin du guide, et la partie continue normalement. Le jeu ne devient donc pas « tape sur ce qui clignote », et le score partagé garde son sens.
 - **Quoi.** Chaque phrase déplacée annoncée pendant le guide encercle sa tuile d'une bande cartoon, avec une ribambelle de flèches tournées vers le collègue (environ 25, parcourues par une vague, #36) et l'étiquette « Coupe-le ! ». L'insistance monte avec le compte à rebours : blanc, puis jaune, puis rouge, aux mêmes paliers que l'anneau de la bulle. La bande disparaît dès que le micro est coupé.
 - **Pas de piège.** Personne n'est annoncé déjà sur mute (R-08) pendant le guide : on encerclerait un collègue sur qui il ne faut surtout pas taper.
+- **Comprendre ses erreurs (#43).** Pendant le guide, un malaise ou un « coupé à tort » s'explique sur la tuile, là où apparaît « Coupe-le ! » : « Déplacé : il fallait couper Kevin ! » ou « Correct : pas besoin de couper Ginette ». La **première** erreur arrête aussi le jeu environ 1,5 s, le temps de lire ; les suivantes s'affichent sans arrêt. Après le guide, rien ne change.
 - **Toujours un exemple.** La toute première prise de parole d'une partie guidée est une phrase déplacée : chaque premier meeting montre au moins une tuile guidée. En contrepartie, la réunion d'un joueur guidé diffère un peu du stand-up du jour des autres joueurs.
 
 ### 6.4 Le tutoriel du premier meeting (#42)
@@ -271,6 +272,7 @@ Chaque exigence [M] doit être couverte par au moins un test automatisé (voir l
 - **R-15 [M]** Mode « Premier meeting » (section 6.3) : actif par défaut jusqu'à la fin d'une première partie guidée, réglable sur l'accueil (`?guide=0|1` l'impose). Pendant les 30 premières secondes, chaque phrase déplacée est signalée sur sa tuile, sans annonce déjà sur mute, et la première prise de parole est toujours une phrase déplacée. Un message annonce ensuite la fin du guide.
 - **R-16 [S]** En fin de partie, le jeu propose un autre niveau de café selon le score (#39) : un café de moins sous 40 % d'harmonie, un café de plus à partir de 90 % (mêmes seuils que les titres de fin, dans `config.ts`). Rien n'est proposé entre les deux, ni au-delà des niveaux extrêmes. La proposition remplace le lien « Changer le niveau de café », lance la partie en un toucher, et le niveau proposé devient le niveau choisi.
 - **R-17 [M]** Tutoriel du premier meeting (section 6.4, #42) : avant la première réunion guidée, trois étapes à l'arrêt, animées par Josée (lire le nuage et l'anneau, couper une phrase déplacée en touchant la tuile, réussir seul une mini-réunion sans flèches). Une erreur à l'étape 3 arrête le temps, s'explique, et on réessaie. Un lien permet toujours de passer. Mémorisé comme fait une fois terminé ou passé ; réactiver « Premier meeting » le propose de nouveau, et `?tuto=0|1` l'impose.
+- **R-18 [S]** Pendant le guide du premier meeting (#43), chaque erreur (malaise ou coupé à tort) s'explique sur la tuile en une ligne, et la première arrête le jeu un instant (`CONFIG.guide.explainPauseMs`). Hors du guide et dans le tutoriel, pas d'explication de ce type.
 
 ### Contenu
 - **R-20 [M]** Les répliques sont chargées depuis un fichier de données validé au démarrage. Chacune a un identifiant, un texte, un type (correcte ou déplacée) et une langue.
@@ -432,3 +434,4 @@ Cette idée généralise le duo « annonce du boss → réplique signature ». I
 | 0.17 | 2026-11-12 | Choix du café plus visible sur l'accueil : titre en jaune, mot de difficulté, vapeur animée (R-02, #38) |
 | 0.18 | 2026-11-12 | En fin de partie, proposition de moins ou de plus de café selon le score (R-16, #39) |
 | 0.19 | 2026-11-15 | Tutoriel du premier meeting en trois étapes, animé par Josée (section 6.4, R-17, #42) |
+| 0.20 | 2026-11-15 | Pendant le guide, les erreurs s'expliquent sur la tuile ; la première arrête le jeu un instant (R-18, #43) |

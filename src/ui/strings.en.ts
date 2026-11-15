@@ -62,6 +62,8 @@ export const STRINGS_EN: Strings = {
     guideTap: "👆 Mute him!",
     guideTapF: "👆 Mute her!",
     guideEnded: "🎓 Guide over: you're on your own!",
+    explainBlunder: (name: string) => `Out of line: you had to mute ${name}!`,
+    explainWrongMute: (name: string) => `That was fine: no need to mute ${name}`,
     joined: (name) => `👋 ${name} joined the meeting`,
     toast: {
       intercepted: (d) => `🔇 Intercepted! +${d} harmony`,
