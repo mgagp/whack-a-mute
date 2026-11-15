@@ -28,7 +28,7 @@ export function readParams(search: string): DebugParams {
     ? Math.min(CONFIG.speed.max, Math.max(CONFIG.speed.min, rawSpeed))
     : CONFIG.speed.default;
   const rawP = Number(q.get("participants"));
-  const participants = Number.isInteger(rawP) && rawP >= 1 ? Math.min(rawP, CONFIG.arrivals.length) : undefined;
+  const participants = Number.isInteger(rawP) && rawP >= 1 ? Math.min(rawP, CONFIG.cast.length) : undefined;
   const rawCafe = Number(q.get("cafe"));
   const cafe = rawCafe === 1 || rawCafe === 2 || rawCafe === 3 ? (rawCafe as CafeLevel) : null;
   const debug = ["seed", "vitesse", "participants", "cafe"].some((k) => q.has(k));

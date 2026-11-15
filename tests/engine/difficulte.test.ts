@@ -3,11 +3,29 @@ import { CONFIG, type CafeLevel } from "../../src/engine/config";
 import { newGame, ofType, perfect, play } from "./helpers";
 
 describe("Difficulté et participants", () => {
-  it("R-13 : les participants arrivent à 0, 15, 35 et 55 s, avec une notification", () => {
-    const { events } = play(newGame({ seed: 2 }), perfect, 10);
-    const joins = ofType(events, "participantJoined");
-    expect(joins.map((e) => e.participantId)).toEqual(["ginette", "kevin", "josee", "boss"]);
-    expect(joins.map((e) => e.t)).toEqual([0, 15_000, 35_000, 55_000]);
+  it("R-13 : les participants arrivent selon le calendrier de leur café, avec une notification", () => {
+    const expected: Record<CafeLevel, number[]> = {
+      1: [0, 15_000, 35_000, 55_000],
+      2: [0, 10_000, 25_000, 45_000],
+      3: [0, 6_000, 15_000, 25_000],
+    };
+    for (const cafe of [1, 2, 3] as CafeLevel[]) {
+      const { events } = play(newGame({ seed: 2, cafe }), perfect, 10);
+      const joins = ofType(events, "participantJoined");
+      expect(joins.map((e) => e.participantId)).toEqual(["ginette", "kevin", "josee", "boss"]);
+      expect(joins.map((e) => e.t)).toEqual(expected[cafe]);
+    }
+  });
+
+  it("R-13, #46 : plus il y a de café, plus la réunion se remplit tôt", () => {
+    const at = (cafe: CafeLevel) => CONFIG.cafe[cafe].arrivalsMs;
+    for (let i = 1; i < CONFIG.cast.length; i++) {
+      expect(at(3)[i]).toBeLessThan(at(2)[i]!);
+      expect(at(2)[i]).toBeLessThan(at(1)[i]!);
+    }
+    // Au Corsé, la deuxième collègue arrive avant la deuxième prise de parole possible de Ginette.
+    const { readMs, pauseMs } = CONFIG.cafe[3];
+    expect(at(3)[1]).toBeLessThanOrEqual(CONFIG.firstAnnounceDelayMs + 2 * (readMs + CONFIG.resultDisplayMs + pauseMs));
   });
 
   it("R-13 : personne ne parle avant d'avoir rejoint la réunion", () => {

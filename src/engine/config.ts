@@ -19,6 +19,13 @@ export interface CafeConfig {
   pauseMs: number;
   /** Nombre maximal d'annonces en même temps (R-09). */
   maxSimultaneous: number;
+  /**
+   * Moment d'arrivée de chaque participant, dans l'ordre de `cast`, en ms (section 6.1, R-13, #46).
+   * Plus il y a de café, plus la réunion se remplit tôt : la simultanéité sert dès le début.
+   */
+  arrivalsMs: readonly [number, number, number, number];
+  /** Proportion de phrases déplacées annoncées avec le participant déjà sur mute (R-08, #46). */
+  alreadyMutedRatio: number;
 }
 
 export const CONFIG = {
@@ -38,9 +45,9 @@ export const CONFIG = {
 
   /** Rythme selon le niveau de café (section 6.2, R-14). */
   cafe: {
-    1: { readMs: 4_000, pauseMs: 2_500, maxSimultaneous: 1 },
-    2: { readMs: 3_000, pauseMs: 1_800, maxSimultaneous: 2 },
-    3: { readMs: 2_000, pauseMs: 1_000, maxSimultaneous: 3 },
+    1: { readMs: 4_000, pauseMs: 2_500, maxSimultaneous: 1, arrivalsMs: [0, 15_000, 35_000, 55_000], alreadyMutedRatio: 0 },
+    2: { readMs: 3_000, pauseMs: 1_800, maxSimultaneous: 2, arrivalsMs: [0, 10_000, 25_000, 45_000], alreadyMutedRatio: 0.25 },
+    3: { readMs: 2_000, pauseMs: 1_000, maxSimultaneous: 3, arrivalsMs: [0, 6_000, 15_000, 25_000], alreadyMutedRatio: 0.4 },
   } satisfies Record<CafeLevel, CafeConfig>,
 
   /** Niveau de café proposé par défaut sur l'accueil (#32 : le plus calme, pour la première impression). */
@@ -56,13 +63,8 @@ export const CONFIG = {
    */
   guide: { durationMs: 30_000, explainPauseMs: 1_500 },
 
-  /** Ordre d'arrivée des participants et moment d'arrivée, en ms (section 6.1, R-13). */
-  arrivals: [
-    { id: "ginette", atMs: 0 },
-    { id: "kevin", atMs: 15_000 },
-    { id: "josee", atMs: 35_000 },
-    { id: "boss", atMs: 55_000 },
-  ] satisfies { id: ParticipantId; atMs: number }[],
+  /** Ordre d'arrivée des participants (section 6.1, R-13). Les moments dépendent du café (`arrivalsMs`). */
+  cast: ["ginette", "kevin", "josee", "boss"] satisfies ParticipantId[],
 
   /** Écart minimal entre deux débuts d'annonce, pour que deux bulles n'apparaissent pas en même temps, en ms. */
   minStartGapMs: 600,
@@ -75,9 +77,6 @@ export const CONFIG = {
 
   /** Proportion de phrases déplacées (section 6.2). */
   deplaceeRatio: 0.35,
-
-  /** Proportion de phrases déplacées annoncées avec le participant déjà sur mute (R-08). */
-  alreadyMutedRatio: 0.25,
 
   /** Réaction au boss (R-24, R-25). */
   bossReaction: {
