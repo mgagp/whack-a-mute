@@ -18,6 +18,8 @@ export const LineSchema = z.object({
   declencheur: z.optional(participantId),
   pasDitePar: z.optional(z.array(participantId)),
   note: z.optional(z.string()),
+  /** Réplique du tutoriel (R-17) : jouée par son scénario, jamais tirée dans une vraie partie. */
+  tuto: z.optional(z.boolean()),
 });
 
 export const LineBankSchema = z.object({
@@ -28,8 +30,11 @@ export const LineBankSchema = z.object({
 
 export type LineBank = z.infer<typeof LineBankSchema>;
 
-/** Valide une banque brute et renvoie les répliques utilisables par le moteur. Lève une erreur sinon. */
-export function parseLineBank(raw: unknown): Line[] {
+/**
+ * Valide une banque brute et renvoie les répliques utilisables par le moteur. Lève une erreur sinon.
+ * Les répliques du tutoriel (R-17) sont exclues, sauf avec `tuto` : on n'obtient alors qu'elles.
+ */
+export function parseLineBank(raw: unknown, tuto = false): Line[] {
   const bank = LineBankSchema.parse(raw);
   const seen = new Set<string>();
   for (const l of bank.lines) {
@@ -37,7 +42,7 @@ export function parseLineBank(raw: unknown): Line[] {
     if (l.lang !== bank.lang) throw new Error(`${l.id} : langue ${l.lang} ≠ ${bank.lang}`);
     seen.add(l.id);
   }
-  return bank.lines.map(({ note: _note, ...line }) => line);
+  return bank.lines.filter((l) => !!l.tuto === tuto).map(({ note: _note, tuto: _tuto, ...line }) => line);
 }
 
 export const BANKS = { fr: frRaw, en: enRaw } as const;
@@ -45,4 +50,9 @@ export type Lang = keyof typeof BANKS;
 
 export function loadLines(lang: Lang = "fr"): Line[] {
   return parseLineBank(BANKS[lang]);
+}
+
+/** Répliques du tutoriel (R-17), pour son scénario seulement. */
+export function loadTutoLines(lang: Lang = "fr"): Line[] {
+  return parseLineBank(BANKS[lang], true);
 }

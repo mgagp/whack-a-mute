@@ -16,6 +16,12 @@ export interface Line {
 
 export type Mic = "open" | "muted";
 
+/** Prise de parole imposée par un scénario (tutoriel, R-17) : qui parle, et quelle réplique. */
+export interface ScriptedTurn {
+  participantId: ParticipantId;
+  lineId: string;
+}
+
 export type Outcome = "intercepted" | "blunder" | "normal" | "wrongMute";
 
 /** Une prise de parole en cours d'annonce (section 3.2). */
@@ -93,6 +99,11 @@ export interface GameState {
   guideUntil: number;
   /** Vrai tant que le guide n'a pas pris fin (l'événement `guideEnded` n'est émis qu'une fois). */
   guideActive: boolean;
+  /**
+   * Scénario imposé (tutoriel, R-17) : prises de parole restantes, dans l'ordre, sans hasard.
+   * Null pour une vraie partie.
+   */
+  script: ScriptedTurn[] | null;
 }
 
 export type Input = { type: "tap"; participantId: ParticipantId };

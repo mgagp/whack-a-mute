@@ -1,7 +1,7 @@
 /**
  * Paramètres de debug dans l'adresse (R-42) : ?seed=, ?vitesse=, ?participants=, ?cafe=.
- * `?lang=` (R-60) choisit la langue et `?guide=0|1` (R-15) impose le mode « Premier meeting » ;
- * ce ne sont pas des paramètres de debug.
+ * `?lang=` (R-60) choisit la langue, `?guide=0|1` (R-15) impose le mode « Premier meeting »
+ * et `?tuto=0|1` (R-17) son tutoriel ; ce ne sont pas des paramètres de debug.
  */
 import { CONFIG, type CafeLevel } from "../engine/config";
 
@@ -14,6 +14,8 @@ export interface DebugParams {
   lang: string | null;
   /** Mode « Premier meeting » imposé par `?guide=1` ou `?guide=0`, sinon null (R-15). */
   guide: boolean | null;
+  /** Tutoriel imposé par `?tuto=1` ou `?tuto=0`, sinon null (R-17). */
+  tuto: boolean | null;
   /** Vrai dès qu'un paramètre de debug est présent. */
   debug: boolean;
 }
@@ -32,5 +34,7 @@ export function readParams(search: string): DebugParams {
   const debug = ["seed", "vitesse", "participants", "cafe"].some((k) => q.has(k));
   const rawGuide = q.get("guide");
   const guide = rawGuide === "1" ? true : rawGuide === "0" ? false : null;
-  return { seed, speed, participants, cafe, lang: q.get("lang"), guide, debug };
+  const rawTuto = q.get("tuto");
+  const tuto = rawTuto === "1" ? true : rawTuto === "0" ? false : null;
+  return { seed, speed, participants, cafe, lang: q.get("lang"), guide, tuto, debug };
 }

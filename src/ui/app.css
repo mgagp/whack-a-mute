@@ -1185,6 +1185,144 @@ q {
   margin-left: auto;
 }
 
+/* ===== Tutoriel du premier meeting (R-17, #42) ===== */
+/* Temps arrêté : le décor s'efface, la tuile qui parle reste en pleine lumière. */
+.game.frozen .topbar,
+.game.frozen .harmony {
+  opacity: 0.45;
+  transition: opacity var(--fast);
+}
+.game.frozen .tile.state-idle {
+  filter: brightness(0.55) saturate(0.6);
+}
+.game.frozen .tile.tile:not(.state-idle) {
+  z-index: 2;
+  box-shadow:
+    0 0 0 6px var(--sun),
+    0 0 40px 10px rgba(255, 210, 63, 0.45),
+    var(--shadow-offset);
+}
+/* L'anneau du compte à rebours bat pendant l'arrêt, pour qu'on le remarque (étape 1). */
+.game.frozen .bubble.think .timer {
+  animation: ringpulse 0.9s ease-in-out infinite;
+}
+@keyframes ringpulse {
+  0%,
+  100% {
+    transform: rotate(-90deg) scale(1);
+  }
+  50% {
+    transform: rotate(-90deg) scale(1.35);
+  }
+}
+.game.tuto .meeting .clock {
+  font-size: 15px;
+}
+.coach {
+  position: relative;
+  z-index: 3;
+  flex: none;
+  width: 100%;
+  max-width: 560px;
+  align-self: center;
+  background: var(--cream);
+  color: var(--ink);
+  border: var(--line-thick) solid var(--ink);
+  border-radius: 20px;
+  box-shadow: var(--shadow-card);
+  padding: 10px 14px 10px;
+  transform: rotate(-1deg);
+  animation: coachin 0.35s var(--spring) both;
+}
+.coach-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.coach-avatar {
+  width: 38px;
+  height: 38px;
+  flex: none;
+  border-radius: 50%;
+  border: var(--line) solid var(--ink);
+  background: var(--sun);
+}
+.coach-who {
+  font-weight: 900;
+  font-size: 12px;
+  color: var(--label-text);
+}
+.coach-who em {
+  font-style: normal;
+  font-weight: 700;
+  opacity: 0.75;
+}
+.coach-step {
+  margin-left: auto;
+  background: var(--violet);
+  color: var(--cream);
+  border: var(--line) solid var(--ink);
+  border-radius: var(--r-pill);
+  padding: 2px 10px;
+  font-family: var(--display);
+  font-size: 13px;
+  letter-spacing: 0.3px;
+  transform: rotate(3deg);
+}
+.coach.step-2 .coach-step {
+  background: var(--mute);
+}
+.coach.step-3 .coach-step {
+  background: var(--turq);
+  color: var(--ink);
+}
+.coach h3 {
+  margin: 8px 0 2px;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 21px;
+  letter-spacing: 0.3px;
+  line-height: 1.1;
+}
+.coach p {
+  margin: 0;
+  font-size: 14.5px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+.coach-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+.coach .coach-ok {
+  width: auto;
+  flex: 1;
+  font-size: 19px;
+  padding: 9px 14px;
+  box-shadow: 0 4px 0 var(--ink);
+}
+.coach .coach-skip {
+  margin-left: auto;
+  background: none;
+  border: 0;
+  font-size: 12.5px;
+  font-weight: 900;
+  color: var(--label-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  padding: 6px 2px;
+  white-space: nowrap;
+}
+@keyframes coachin {
+  from {
+    transform: translateY(14px) rotate(-1deg) scale(0.96);
+    opacity: 0;
+  }
+}
+
 /* Marteau à l'endroit touché (R-32) */
 .tap-flash {
   position: fixed;
