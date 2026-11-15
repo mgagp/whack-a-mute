@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { loadLines, loadTutoLines } from "../../src/content/lines";
 import { CONFIG } from "../../src/engine/config";
 import type { GameEvent, GameState } from "../../src/engine/state";
-import { step } from "../../src/engine/step";
+import { readMsFor, step } from "../../src/engine/step";
 import { createTutorialGame, sceneLength } from "../../src/engine/tutorial";
 import { newGame, ofType, perfect, play } from "./helpers";
 
@@ -79,7 +79,7 @@ describe("Tutoriel du premier meeting", () => {
     expect(a).toEqual(b);
     const first = ofType(a, "announced")[0]!;
     const end = ofType(a, "resolved")[0]!;
-    expect(end.t - first.t).toBe(CONFIG.cafe[CONFIG.tutorial.cafe].readMs);
+    expect(end.t - first.t).toBe(readMsFor(CONFIG.tutorial.cafe, first.line.text));
   });
 
   it("R-17 et R-60 : les répliques du tutoriel existent dans les deux langues et ne sortent jamais dans une vraie partie", () => {
