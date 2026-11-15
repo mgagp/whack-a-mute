@@ -3,6 +3,10 @@ import { expect, test, type Page } from "@playwright/test";
 // R-52 : aucun test ne contacte le vrai compteur ; le script bloqué montre aussi que le jeu s'en passe.
 test.beforeEach(async ({ page }) => {
   await page.route("https://gc.zgo.at/**", (route) => route.abort());
+  // R-17 : le tutoriel est marqué comme fait, sauf dans les tests qui le visent (adresse contenant « tuto »).
+  await page.addInitScript(() => {
+    if (!location.search.includes("tuto")) localStorage.setItem("whack-a-mute:tutoriel-fait", "1");
+  });
 });
 
 /** Le bouton « Rejoindre » pulse sans arrêt : on clique sans attendre qu'il soit immobile. */
@@ -68,6 +72,85 @@ test("R-15 : le premier meeting guide le joueur, puis les parties suivantes se j
   // On peut le réactiver soi-même.
   await page.getByTestId("guide-toggle").click();
   await expect(page.getByTestId("guide")).toBeChecked();
+});
+
+test("R-17 : le tutoriel montre le nuage, fait couper Ginette, puis fait réussir seul avant la réunion", async ({ page }) => {
+  test.setTimeout(90_000);
+  await page.goto("./?lang=fr&tuto=1&guide=1&vitesse=3");
+  await start(page);
+  const coach = page.getByTestId("coach");
+  const step = page.getByTestId("coach-step");
+
+  // Étape 1 : temps arrêté sur le nuage de Ginette ; toucher sa tuile ne fait rien.
+  await expect(coach).toHaveAttribute("data-phase", "think", { timeout: 20_000 });
+  await expect(step).toHaveText("Étape 1/3");
+  await expect(page.getByTestId("tutorial")).toHaveClass(/frozen/);
+  await page.getByTestId("tile-ginette").dispatchEvent("pointerdown");
+  await expect(page.getByTestId("tile-ginette")).toHaveAttribute("data-mic", "open");
+  await page.getByTestId("coach-ok").click();
+  await expect(coach).toHaveAttribute("data-phase", "normal", { timeout: 20_000 });
+
+  // Étape 2 : la phrase déplacée attend le geste, encerclée par le guide.
+  await expect(coach).toHaveAttribute("data-phase", "mute", { timeout: 20_000 });
+  await expect(step).toHaveText("Étape 2/3");
+  await expect(page.getByTestId("guide-ginette")).toBeVisible();
+  await expect(page.getByTestId("coach-ok")).toHaveCount(0);
+  await page.getByTestId("tile-ginette").dispatchEvent("pointerdown");
+  await expect(coach).toHaveAttribute("data-phase", "intercepted", { timeout: 20_000 });
+  await page.getByTestId("coach-ok").click();
+
+  // Étape 3 : sans geste, malaise, arrêt et explication ; on réessaie.
+  await expect(step).toHaveText("Étape 3/3");
+  await page.getByTestId("coach-ok").click();
+  await expect(coach).toHaveAttribute("data-phase", "fail", { timeout: 30_000 });
+  await expect(coach).toContainText("Kevin l'a dit tout haut");
+  await page.getByTestId("coach-ok").click();
+  await expect(page.getByTestId("tile-kevin")).toHaveCount(0);
+  await page.getByTestId("coach-ok").click();
+  // Pas de flèches à l'étape 3 : on coupe Kevin soi-même.
+  const kevin = page.locator('[data-testid="tile-kevin"][data-state="announcing"]');
+  await expect(kevin).toBeVisible({ timeout: 30_000 });
+  await expect(page.locator(".guide-band")).toHaveCount(0);
+  await kevin.dispatchEvent("pointerdown");
+  await expect(coach).toHaveAttribute("data-phase", "done", { timeout: 30_000 });
+  await expect(page.getByTestId("tuto-skip")).toHaveCount(0);
+
+  // La vraie réunion commence, avec le guide des 30 premières secondes.
+  await page.getByTestId("coach-ok").click();
+  await expect(page.getByTestId("game")).toBeVisible();
+  await expect(page.getByTestId("clock")).toBeVisible();
+});
+
+test("R-17 : on peut passer le tutoriel ; il ne revient pas, sauf si on réactive le premier meeting", async ({ page }) => {
+  test.setTimeout(60_000);
+  // Première visite (« e2e-tuto » garde le stockage vide) : le tutoriel s'ouvre avant la réunion.
+  await page.goto("./?lang=fr&e2e-tuto");
+  await start(page);
+  await expect(page.getByTestId("tutorial")).toBeVisible();
+  await page.getByTestId("tuto-skip").click();
+  await expect(page.getByTestId("game")).toBeVisible();
+
+  await page.goto("./?lang=fr&e2e-tuto");
+  await expect(page.getByTestId("guide")).toBeChecked();
+  await start(page);
+  await expect(page.getByTestId("game")).toBeVisible();
+
+  // Réactiver le premier meeting relance le tutoriel.
+  await page.goto("./?lang=fr&e2e-tuto");
+  await page.getByTestId("guide-toggle").click();
+  await page.getByTestId("guide-toggle").click();
+  await expect(page.getByTestId("guide")).toBeChecked();
+  await start(page);
+  await expect(page.getByTestId("tutorial")).toBeVisible();
+});
+
+test("R-17, R-60 : le tutoriel existe en anglais", async ({ page }) => {
+  await page.goto("./?lang=en&tuto=1&guide=1&vitesse=3");
+  await start(page);
+  await expect(page.getByTestId("coach")).toHaveAttribute("data-phase", "think", { timeout: 20_000 });
+  await expect(page.getByTestId("coach-step")).toHaveText("Step 1/3");
+  await expect(page.getByTestId("coach")).toContainText("Take a deep breath");
+  await expect(page.getByTestId("tuto-skip")).toHaveText("Skip tutorial ⏭");
 });
 
 test("R-53 : un lien discret au bas de l'accueil mène au code source, dans un nouvel onglet", async ({ page }) => {

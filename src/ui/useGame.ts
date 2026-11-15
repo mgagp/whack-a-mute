@@ -29,12 +29,20 @@ export function useGame(opts: {
   speed: number;
   participants?: number;
   guided: boolean;
+  /** Tutoriel (R-17) : partie de départ imposée (scénario), à la place d'une vraie partie. */
+  create?: () => GameState;
+  /** Tutoriel (R-17) : temps arrêté. Les clics restent possibles. */
+  paused?: boolean;
   onEvents: (events: GameEvent[]) => void;
 }) {
   const [view, setView] = useState<GameView>(() => ({
-    game: createGame({ lines: opts.lines, cafe: opts.cafe, seed: opts.seed, participants: opts.participants, guided: opts.guided }),
+    game:
+      opts.create?.() ??
+      createGame({ lines: opts.lines, cafe: opts.cafe, seed: opts.seed, participants: opts.participants, guided: opts.guided }),
     recent: [],
   }));
+  const pausedRef = useRef(!!opts.paused);
+  pausedRef.current = !!opts.paused;
   const viewRef = useRef(view);
   const onEventsRef = useRef(opts.onEvents);
   onEventsRef.current = opts.onEvents;
@@ -53,6 +61,10 @@ export function useGame(opts: {
     const frame = (now: number) => {
       const dt = Math.min(now - last, CONFIG.maxFrameMs) * opts.speed;
       last = now;
+      if (pausedRef.current) {
+        raf = requestAnimationFrame(frame);
+        return;
+      }
       const r = step(viewRef.current.game, dt);
       commit(r.state, r.events);
       if (!r.state.over) raf = requestAnimationFrame(frame);

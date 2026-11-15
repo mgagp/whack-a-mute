@@ -1,6 +1,6 @@
 /** Écran de la réunion : barre du haut, jauge d'harmonie, grille de 1 à 4 tuiles, notifications. */
 import { m as motion } from "motion/react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { soundForEvent, play, isMuted, setMuted } from "../audio";
 import { CONFIG, type CafeLevel, type ParticipantId } from "../engine/config";
 import type { GameEvent, GameState, Line } from "../engine/state";
@@ -25,6 +25,18 @@ interface Flash {
   y: number;
 }
 
+/** Mode tutoriel (R-17) : scénario imposé, temps arrêtable, clics filtrés et carte de l'animatrice. */
+export interface TutorialMode {
+  create: () => GameState;
+  paused: boolean;
+  allowTap: boolean;
+  /** Nom de la réunion dans la barre du haut. */
+  label: string;
+  /** Carte de l'animatrice, à la place des notifications et de la barre du bas. */
+  coach: ReactNode;
+  onEvents: (events: GameEvent[]) => void;
+}
+
 export function Game(props: {
   lines: readonly Line[];
   cafe: CafeLevel;
@@ -34,19 +46,29 @@ export function Game(props: {
   debug: boolean;
   guided: boolean;
   onOver: (game: GameState) => void;
+  tutorial?: TutorialMode;
 }) {
   const STRINGS = useStrings();
   const [muted, setMutedState] = useState(isMuted);
   const overSent = useRef(false);
 
+  const tutoEventsRef = useRef(props.tutorial?.onEvents);
+  tutoEventsRef.current = props.tutorial?.onEvents;
   const onEvents = useCallback((events: GameEvent[]) => {
     for (const e of events) {
       const sound = soundForEvent(e);
       if (sound) play(sound);
     }
+    tutoEventsRef.current?.(events);
   }, []);
 
-  const { view, tap } = useGame({ ...props, onEvents });
+  const tuto = props.tutorial;
+  const { view, tap: rawTap } = useGame({ ...props, create: tuto?.create, paused: tuto?.paused, onEvents });
+  const allowTapRef = useRef(true);
+  allowTapRef.current = tuto ? tuto.allowTap : true;
+  const tap = useCallback((id: ParticipantId) => {
+    if (allowTapRef.current) rawTap(id);
+  }, [rawTap]);
   const { game, recent } = view;
 
   useEffect(() => {
@@ -87,21 +109,33 @@ export function Game(props: {
   const titleKey = endTitleKey(game.harmony);
 
   return (
-    <div className={`screen game${blunderActive ? " shake" : ""}`} data-testid="game" onPointerDownCapture={onPointerDown}>
+    <div
+      className={`screen game${blunderActive ? " shake" : ""}${tuto ? " tuto" : ""}${tuto?.paused ? " frozen" : ""}`}
+      data-testid={tuto ? "tutorial" : "game"}
+      onPointerDownCapture={onPointerDown}
+    >
       <Deco items={["☕", "📎", "📈", "🗒️"]} />
       <header className="topbar">
         <div className="brand">
           <i aria-hidden="true" />
           {STRINGS.appName}
         </div>
-        <div className="meeting">
-          {STRINGS.meetingName} · {STRINGS.cafe[props.cafe].cups}
-          <br />
-          <span className="clock" data-testid="clock">
-            {clock(meetingMinutes(game))}
-          </span>{" "}
-          / {clock(CONFIG.meetingClock.startMinutes + CONFIG.meetingClock.durationMinutes)}
-        </div>
+        {tuto ? (
+          <div className="meeting">
+            {tuto.label}
+            <br />
+            <span className="clock">{tuto.paused ? "⏸" : "▶"}</span>
+          </div>
+        ) : (
+          <div className="meeting">
+            {STRINGS.meetingName} · {STRINGS.cafe[props.cafe].cups}
+            <br />
+            <span className="clock" data-testid="clock">
+              {clock(meetingMinutes(game))}
+            </span>{" "}
+            / {clock(CONFIG.meetingClock.startMinutes + CONFIG.meetingClock.durationMinutes)}
+          </div>
+        )}
       </header>
 
       <motion.div
@@ -144,6 +178,8 @@ export function Game(props: {
         )}
       </div>
 
+      {tuto ? tuto.coach : (
+      <>
       <div className="toast-slot" aria-live="polite">
         {toast && (
           <div
@@ -169,6 +205,8 @@ export function Game(props: {
         <div className="chip">{STRINGS.game.chipBlunders(game.stats.blunders)}</div>
         <SoundButton muted={muted} onChange={(m) => (setMuted(m), setMutedState(m))} />
       </footer>
+      </>
+      )}
 
       {flashes.map((f) => (
         <span key={f.id} className="tap-flash" style={{ left: f.x, top: f.y }} aria-hidden="true">

@@ -83,6 +83,10 @@
     { "id": "fr-d-34", "lang": "fr", "type": "deplacee", "text": "Une autre réorganisation ? Mon horoscope l'avait dit." },
     { "id": "fr-d-35", "lang": "fr", "type": "deplacee", "text": "Je compte les jours avant ma retraite. Il m'en reste 32." },
     { "id": "fr-d-36", "lang": "fr", "type": "deplacee", "text": "J'ai deux écrans : un pour la réunion, un pour mes séries." },
-    { "id": "fr-d-37", "lang": "fr", "type": "deplacee", "text": "Je vais faire un « suivi ». Traduction : je vais oublier." }
+    { "id": "fr-d-37", "lang": "fr", "type": "deplacee", "text": "Je vais faire un « suivi ». Traduction : je vais oublier." },
+    { "id": "fr-t-01", "lang": "fr", "type": "correcte", "text": "Bonjour tout le monde ! Je présente le budget à 10 h.", "tuto": true },
+    { "id": "fr-t-02", "lang": "fr", "type": "deplacee", "text": "Honnêtement, ce budget-là, je l'ai fait au pif.", "tuto": true },
+    { "id": "fr-t-03", "lang": "fr", "type": "correcte", "text": "Kevin, bienvenue dans l'équipe !", "tuto": true },
+    { "id": "fr-t-04", "lang": "fr", "type": "deplacee", "text": "Moi, j'ai pris la job juste pour le café gratuit.", "tuto": true }
   ]
 }

@@ -24,3 +24,31 @@ export function storeGuideDone() {
 export function initialGuided(param: boolean | null, done: boolean): boolean {
   return param ?? !done;
 }
+
+/**
+ * Tutoriel du premier meeting (R-17, #42) : joué avant la première partie guidée, puis mémorisé
+ * comme fait (terminé ou passé). Réactiver « Premier meeting » sur l'accueil le propose de nouveau.
+ * `?tuto=0` ou `?tuto=1` impose le choix (tests, démonstration).
+ */
+const TUTO_KEY = "whack-a-mute:tutoriel-fait";
+
+export function readTutoDone(): boolean {
+  try {
+    return localStorage.getItem(TUTO_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+export function storeTutoDone() {
+  try {
+    localStorage.setItem(TUTO_KEY, "1");
+  } catch {
+    // Stockage indisponible : le tutoriel sera proposé de nouveau à la prochaine visite.
+  }
+}
+
+/** Tutoriel en attente : le paramètre d'adresse d'abord, sinon seulement s'il n'a jamais été fait ou passé. */
+export function initialTuto(param: boolean | null, done: boolean): boolean {
+  return param ?? !done;
+}

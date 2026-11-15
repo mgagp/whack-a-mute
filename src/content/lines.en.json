@@ -83,6 +83,10 @@
     { "id": "en-d-34", "lang": "en", "type": "deplacee", "text": "Another reorg? My horoscope saw it coming." },
     { "id": "en-d-35", "lang": "en", "type": "deplacee", "text": "I'm counting the days to retirement. 32 left." },
     { "id": "en-d-36", "lang": "en", "type": "deplacee", "text": "I have two screens: one for the meeting, one for my shows." },
-    { "id": "en-d-37", "lang": "en", "type": "deplacee", "text": "I'll “follow up.” Translation: I'll forget." }
+    { "id": "en-d-37", "lang": "en", "type": "deplacee", "text": "I'll “follow up.” Translation: I'll forget." },
+    { "id": "en-t-01", "lang": "en", "type": "correcte", "text": "Morning, everyone! I'm presenting the budget at 10.", "tuto": true },
+    { "id": "en-t-02", "lang": "en", "type": "deplacee", "text": "Honestly, I made up this budget on the drive in.", "tuto": true },
+    { "id": "en-t-03", "lang": "en", "type": "correcte", "text": "Kevin, welcome to the team!", "tuto": true },
+    { "id": "en-t-04", "lang": "en", "type": "deplacee", "text": "I only took this job for the free coffee.", "tuto": true }
   ]
 }

@@ -86,6 +86,35 @@ export const STRINGS = {
     micMuted: "sur mute",
     micIdle: "inactif",
   },
+  /** Tutoriel du premier meeting (R-17, #42) : Josée, la scrum master, accueille le nouvel employé. */
+  tuto: {
+    label: "Accueil du nouvel employé",
+    step: (n: number) => `Étape ${n}/3`,
+    skip: "Passer le tutoriel ⏭",
+    wait: { title: "Bienvenue dans l'équipe ! 👋", body: "Je suis Josée, la scrum master. Avant le stand-up, je te montre comment ça marche. Regarde Ginette…" },
+    think: {
+      title: "Respire par le nez 😌",
+      body: "Avant de parler, on pense. Ce nuage, c'est ce que Ginette s'apprête à dire. L'anneau, c'est le temps qu'il te reste.",
+      ok: "Compris 👍",
+    },
+    watch: { title: "Regarde bien 👀", body: "L'anneau se remplit… puis elle le dit." },
+    normal: { title: "C'était correct ✅", body: "Rien de déplacé : on la laisse parler." },
+    mute: { title: "Ça, faut pas que ça sorte 😬", body: "Ginette s'apprête à dire une phrase déplacée. Touche sa tuile pour la mettre sur mute." },
+    muted: { title: "Bien joué ! 🔇", body: "Son micro est coupé. Voyons ce qui arrive…" },
+    intercepted: { title: "Intercepté ! 🎉", body: "Personne n'a rien entendu : l'harmonie de l'équipe est sauve.", ok: "À moi ! →" },
+    live: { title: "À toi de jouer 🎯", body: "Kevin arrive. Cette fois, pas de flèches : coupe seulement ce qui est déplacé.", ok: "Go !" },
+    play: { title: "À toi 🎯", body: "Coupe seulement ce qui est déplacé." },
+    blunder: {
+      title: "Oups, malaise 😬",
+      body: (name: string, feminine: boolean) => `${name} l'a dit tout haut. Il fallait ${feminine ? "la" : "le"} couper avant que l'anneau soit plein.`,
+    },
+    wrongMute: {
+      title: "Euh… pourquoi ? 🙊",
+      body: (name: string) => `C'était correct : pas besoin de couper ${name}. On coupe seulement ce qui est déplacé.`,
+    },
+    retry: "On réessaie ↻",
+    done: { title: "T'es prêt·e ! 🎉", body: "Le stand-up commence. Les 30 premières secondes, je te montre encore qui couper.", ok: "Rejoindre la réunion →" },
+  },
   end: {
     titleTime: "Réunion terminée !",
     titleCut: "Réunion écourtée !",

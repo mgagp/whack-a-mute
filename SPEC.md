@@ -1,6 +1,6 @@
 # Whack-a-Mute — Spécification (PRD)
 
-> **Version** 0.18 · **Date** 2026-11-12 · **Auteur** Marc
+> **Version** 0.19 · **Date** 2026-11-15 · **Auteur** Marc
 > Source d'origine : [VERBATIM.md](VERBATIM.md). En cas de doute sur l'intention, c'est le verbatim qui fait foi.
 > Les sections marquées **⚠️ Hypothèse** sont des propositions à valider. Elles sont reprises dans la section 13, « Questions ouvertes ».
 
@@ -35,12 +35,13 @@ Chaque nouvelle idée doit respecter ces quatre piliers.
 ## 2. Parcours du joueur
 
 ```
-Accueil (intro + choix du café)  →  Réunion (partie)  →  Écran de fin  →  Rejouer / Partager
+Accueil (intro + choix du café)  →  (Tutoriel, premier meeting)  →  Réunion (partie)  →  Écran de fin  →  Rejouer / Partager
 ```
 
-1. **Accueil.** Titre, une phrase d'accroche, l'anecdote de Marc racontée comme un message de collègue, le **choix du niveau de café** (trois boutons, voir la section 6), l'interrupteur **« 🎓 Premier meeting »** (section 6.3) et le bouton « Rejoindre la réunion ». Il n'y a qu'un seul écran avant de jouer.
-2. **Réunion.** La partie de 90 secondes.
-3. **Fin.** Harmonie finale, titre humoristique, statistiques, boutons « Rejouer », « Partager » et « Changer de café ».
+1. **Accueil.** Titre, une phrase d'accroche, l'anecdote de Marc racontée comme un message de collègue, le **choix du niveau de café** (trois boutons, voir la section 6), l'interrupteur **« 🎓 Premier meeting »** (section 6.3) et le bouton « Rejoindre la réunion ». Il n'y a qu'un seul écran avant de jouer, sauf au premier meeting.
+2. **Tutoriel** (premier meeting seulement, section 6.4). Trois étapes courtes, à l'arrêt, avant la réunion.
+3. **Réunion.** La partie de 90 secondes.
+4. **Fin.** Harmonie finale, titre humoristique, statistiques, boutons « Rejouer », « Partager » et « Changer de café ».
 
 La référence visuelle de ces trois écrans est la maquette validée [design/maquette-v1.html](design/maquette-v1.html).
 
@@ -136,13 +137,25 @@ La difficulté repose sur **deux axes seulement**.
 
 ### 6.3 Premier meeting : le guide du nouveau joueur (#32)
 
-Un joueur qui arrive par un lien ne sait pas encore où regarder : il lit les bulles, hésite, et 20 à 30 secondes passent dans les « schlac » et les « boop ». Le mode « Premier meeting » lui montre, sans tutoriel à lire, quelle tuile couper.
+Un joueur qui arrive par un lien ne sait pas encore où regarder : il lit les bulles, hésite, et 20 à 30 secondes passent dans les « schlac » et les « boop ». Le mode « Premier meeting » commence par un court tutoriel (section 6.4), puis lui montre, pendant les premières secondes de la réunion, quelle tuile couper.
 
 - **Quand.** Actif par défaut tant que le joueur n'a pas terminé une partie guidée sur cet appareil, puis désactivé. Un interrupteur sur l'accueil permet de le réactiver ou de le couper. Pas de bouton pendant la partie.
 - **Combien de temps.** Les 30 premières secondes de la partie seulement (la phase à 1 ou 2 participants). Un message annonce ensuite la fin du guide, et la partie continue normalement. Le jeu ne devient donc pas « tape sur ce qui clignote », et le score partagé garde son sens.
 - **Quoi.** Chaque phrase déplacée annoncée pendant le guide encercle sa tuile d'une bande cartoon, avec une ribambelle de flèches tournées vers le collègue (environ 25, parcourues par une vague, #36) et l'étiquette « Coupe-le ! ». L'insistance monte avec le compte à rebours : blanc, puis jaune, puis rouge, aux mêmes paliers que l'anneau de la bulle. La bande disparaît dès que le micro est coupé.
 - **Pas de piège.** Personne n'est annoncé déjà sur mute (R-08) pendant le guide : on encerclerait un collègue sur qui il ne faut surtout pas taper.
 - **Toujours un exemple.** La toute première prise de parole d'une partie guidée est une phrase déplacée : chaque premier meeting montre au moins une tuile guidée. En contrepartie, la réunion d'un joueur guidé diffère un peu du stand-up du jour des autres joueurs.
+
+### 6.4 Le tutoriel du premier meeting (#42)
+
+Même avec le guide, la charge mentale arrive trop vite pour quelqu'un qui découvre le jeu à froid : on ne sait pas encore lire une bulle, et quand une erreur s'affiche, le jeu a déjà continué. Avant la première réunion guidée, un tutoriel fait comprendre les codes du jeu **à l'arrêt, avec un geste pour avancer**. L'esprit : « Respire par le nez. »
+
+- **Le décor.** Une parodie d'accueil du nouvel employé (« Accueil du nouvel employé »). Josée, la scrum master, anime : elle parle dans une carte cartoon qui affiche « Étape 1/3 », etc. On voit les mêmes tuiles, bulles, flèches et retours que dans le jeu. Le temps arrêté se voit : le décor s'efface et la tuile qui parle est en pleine lumière.
+- **Étape 1, lire.** Ginette, seule, pense une phrase correcte ; le temps est arrêté et l'anneau bat. La carte explique le nuage et l'anneau ; un bouton « Compris 👍 » fait repartir le temps. Ginette dit sa phrase : on la laisse parler.
+- **Étape 2, couper.** Ginette pense une phrase déplacée, encerclée par le guide (section 6.3), toujours à l'arrêt. Toucher sa tuile la met sur mute et fait avancer : le geste sert de confirmation. On voit le vrai retour « Intercepté ! ».
+- **Étape 3, à toi.** Kevin rejoint Ginette pour une mini-réunion en direct au rythme du café 1, sans flèches : elle dit une phrase correcte, puis lui pense une phrase déplacée. Une erreur arrête le temps sur le résultat, et la carte explique ce qui s'est passé (malaise ou coupé à tort). On réessaie jusqu'à réussir. Une fois l'étape réussie, la réunion commence, avec le guide des premières secondes.
+- **Toujours possible de passer.** Un lien « Passer le tutoriel » reste visible jusqu'à la dernière carte.
+- **Une seule fois.** Le tutoriel est mémorisé comme fait, qu'il soit terminé ou passé. Réactiver « Premier meeting » sur l'accueil le propose de nouveau. `?tuto=0|1` l'impose.
+- **Contenu.** Les quatre répliques du tutoriel sont marquées `tuto` dans les banques de répliques : elles ne sont jamais tirées dans une vraie partie.
 
 ---
 
@@ -257,6 +270,7 @@ Chaque exigence [M] doit être couverte par au moins un test automatisé (voir l
 - **R-14 [M]** Le rythme (temps de lecture, pause, simultanéité) suit la section 6.2.
 - **R-15 [M]** Mode « Premier meeting » (section 6.3) : actif par défaut jusqu'à la fin d'une première partie guidée, réglable sur l'accueil (`?guide=0|1` l'impose). Pendant les 30 premières secondes, chaque phrase déplacée est signalée sur sa tuile, sans annonce déjà sur mute, et la première prise de parole est toujours une phrase déplacée. Un message annonce ensuite la fin du guide.
 - **R-16 [S]** En fin de partie, le jeu propose un autre niveau de café selon le score (#39) : un café de moins sous 40 % d'harmonie, un café de plus à partir de 90 % (mêmes seuils que les titres de fin, dans `config.ts`). Rien n'est proposé entre les deux, ni au-delà des niveaux extrêmes. La proposition remplace le lien « Changer le niveau de café », lance la partie en un toucher, et le niveau proposé devient le niveau choisi.
+- **R-17 [M]** Tutoriel du premier meeting (section 6.4, #42) : avant la première réunion guidée, trois étapes à l'arrêt, animées par Josée (lire le nuage et l'anneau, couper une phrase déplacée en touchant la tuile, réussir seul une mini-réunion sans flèches). Une erreur à l'étape 3 arrête le temps, s'explique, et on réessaie. Un lien permet toujours de passer. Mémorisé comme fait une fois terminé ou passé ; réactiver « Premier meeting » le propose de nouveau, et `?tuto=0|1` l'impose.
 
 ### Contenu
 - **R-20 [M]** Les répliques sont chargées depuis un fichier de données validé au démarrage. Chacune a un identifiant, un texte, un type (correcte ou déplacée) et une langue.
@@ -417,3 +431,4 @@ Cette idée généralise le duo « annonce du boss → réplique signature ». I
 | 0.16 | 2026-11-12 | Guide du premier meeting plus insistant : environ 25 flèches tout le tour de la tuile, avec une vague qui circule (#36) |
 | 0.17 | 2026-11-12 | Choix du café plus visible sur l'accueil : titre en jaune, mot de difficulté, vapeur animée (R-02, #38) |
 | 0.18 | 2026-11-12 | En fin de partie, proposition de moins ou de plus de café selon le score (R-16, #39) |
+| 0.19 | 2026-11-15 | Tutoriel du premier meeting en trois étapes, animé par Josée (section 6.4, R-17, #42) |

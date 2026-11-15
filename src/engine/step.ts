@@ -15,6 +15,7 @@ import type {
   LineType,
   Outcome,
   Participant,
+  ScriptedTurn,
   StepResult,
   Turn,
 } from "./state";
@@ -26,13 +27,19 @@ export interface NewGameOptions {
   /** Debug (R-42) : nombre fixe de participants présents dès le départ. */
   participants?: number;
   durationMs?: number;
-  /** Mode « Premier meeting » (R-15) : partie guidée pendant `CONFIG.guide.durationMs`. */
+  /** Mode « Premier meeting » (R-15) : partie guidée pendant `guideMs` (par défaut `CONFIG.guide.durationMs`). */
   guided?: boolean;
+  guideMs?: number;
+  /** Tutoriel (R-17) : arrivées imposées, à la place de celles de la section 6.1. */
+  arrivals?: { id: ParticipantId; atMs: number }[];
+  /** Tutoriel (R-17) : prises de parole imposées, dans l'ordre. Plus rien n'est annoncé ensuite. */
+  script?: ScriptedTurn[];
 }
 
 export function createGame(opts: NewGameOptions): GameState {
-  const arrivals =
-    opts.participants === undefined
+  const arrivals = opts.arrivals
+    ? opts.arrivals.map((a) => ({ ...a }))
+    : opts.participants === undefined
       ? CONFIG.arrivals.map((a) => ({ ...a }))
       : CONFIG.arrivals
           .slice(0, clampInt(opts.participants, 1, CONFIG.arrivals.length))
@@ -56,8 +63,9 @@ export function createGame(opts: NewGameOptions): GameState {
     over: false,
     endReason: null,
     eventSeq: 0,
-    guideUntil: opts.guided ? CONFIG.guide.durationMs : 0,
+    guideUntil: opts.guided ? (opts.guideMs ?? CONFIG.guide.durationMs) : 0,
     guideActive: !!opts.guided,
+    script: opts.script ? opts.script.map((x) => ({ ...x })) : null,
   };
 }
 
@@ -146,6 +154,14 @@ function nextDeadline(s: GameState): Deadline | null {
 function nextAnnounceTime(s: GameState): number | null {
   const { readMs } = CONFIG.cafe[s.cafe];
   if (s.slotsFreeAt.length === 0) return null; // R-09 : toutes les places sont prises
+  if (s.script) {
+    // Tutoriel (R-17) : on attend que la personne prévue soit là et libre.
+    const next = s.script[0];
+    const speaker = next && s.participants.find((p) => p.id === next.participantId);
+    if (!speaker || speaker.turn) return null;
+    const at = Math.max(Math.min(...s.slotsFreeAt), speaker.restUntil, s.lastAnnounceAt + CONFIG.minStartGapMs, s.t);
+    return at + readMs > s.durationMs ? null : at;
+  }
   if (!hasAnyLineLeft(s)) return null; // R-21 : jamais de répétition
   // Seuls ceux qui ont encore une réplique permise comptent (R-26), sinon le moteur attendrait sans fin.
   const idle = s.participants.filter((p) => !p.turn && (s.bossReactionPending || canSpeak(s, p.id)));
@@ -166,12 +182,21 @@ function arrive(s: GameState, emit: Emit) {
 }
 
 function announce(s: GameState, rng: Rng, emit: Emit) {
-  const cafe = CONFIG.cafe[s.cafe];
   const candidates = s.participants.filter((p) => !p.turn && p.restUntil <= s.t);
   if (candidates.length === 0) return;
 
   let speaker: Participant | undefined;
   let line: Line | undefined;
+
+  if (s.script) {
+    // Tutoriel (R-17) : la prise de parole prévue, sans hasard ni piège « déjà sur mute ».
+    const next = s.script.shift();
+    speaker = next && candidates.find((p) => p.id === next.participantId);
+    line = next && s.lines.find((l) => l.id === next.lineId);
+    if (!speaker || !line) throw new Error(`Scénario impossible : ${next?.participantId} / ${next?.lineId}`);
+    startTurn(s, speaker, line, false, emit);
+    return;
+  }
 
   // Réaction au boss (R-24) : seulement juste après le boss, et par quelqu'un d'autre.
   const reacting = s.bossReactionPending && s.t <= s.bossReactionUntil;
@@ -203,7 +228,12 @@ function announce(s: GameState, rng: Rng, emit: Emit) {
   const drawnMuted = line.type === "deplacee" && !line.declencheur && rng.chance(CONFIG.alreadyMutedRatio);
   const inGuide = s.guideActive && s.t < s.guideUntil;
   const alreadyMuted = drawnMuted && !inGuide; // R-15 : pas de piège R-08 pendant le guide
-  const guided = inGuide && line.type === "deplacee";
+  startTurn(s, speaker, line, alreadyMuted, emit);
+}
+
+function startTurn(s: GameState, speaker: Participant, line: Line, alreadyMuted: boolean, emit: Emit) {
+  const cafe = CONFIG.cafe[s.cafe];
+  const guided = s.guideActive && s.t < s.guideUntil && line.type === "deplacee";
   s.usedLineIds.push(line.id);
   speaker.turn = {
     line,
@@ -304,6 +334,7 @@ function cloneState(s: GameState): GameState {
     slotsFreeAt: [...s.slotsFreeAt],
     stats: { ...s.stats },
     outcomes: [...s.outcomes],
+    script: s.script ? [...s.script] : null,
   };
 }
 

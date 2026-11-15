@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { initialGuided } from "../../src/ui/guide";
+import { initialGuided, initialTuto } from "../../src/ui/guide";
 import { readParams } from "../../src/ui/params";
 
 describe("Mode « Premier meeting » à l'accueil", () => {
@@ -15,5 +15,18 @@ describe("Mode « Premier meeting » à l'accueil", () => {
     expect(initialGuided(true, true)).toBe(true);
     expect(initialGuided(false, false)).toBe(false);
     expect(readParams("?guide=1").debug).toBe(false);
+  });
+});
+
+describe("Tutoriel du premier meeting", () => {
+  it("R-17 : proposé tant qu'il n'a été ni terminé ni passé ; ?tuto=0|1 impose le choix, sans debug", () => {
+    expect(initialTuto(null, false)).toBe(true);
+    expect(initialTuto(null, true)).toBe(false);
+    expect(readParams("?tuto=1").tuto).toBe(true);
+    expect(readParams("?tuto=0").tuto).toBe(false);
+    expect(readParams("").tuto).toBe(null);
+    expect(initialTuto(true, true)).toBe(true);
+    expect(initialTuto(false, false)).toBe(false);
+    expect(readParams("?tuto=1").debug).toBe(false);
   });
 });

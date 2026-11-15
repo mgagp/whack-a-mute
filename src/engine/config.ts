@@ -103,6 +103,13 @@ export const CONFIG = {
    */
   cafeSuggestion: { lessBelow: 40, moreFrom: 90 },
 
+  /**
+   * Tutoriel du premier meeting (R-17, #42). Les étapes se jouent au café 1, avec une réunion
+   * assez longue pour ne jamais finir pendant le tutoriel. Les vitesses multiplient `?vitesse=` :
+   * `watchSpeed` quand on regarde une phrase se dérouler, `fastForward` après le bon geste.
+   */
+  tutorial: { cafe: 1 as CafeLevel, durationMs: 600_000, watchSpeed: 1.5, fastForward: 3 },
+
   /** Durées d'affichage côté interface, en ms de jeu (elles suivent donc `?vitesse=`). */
   ui: {
     /**
