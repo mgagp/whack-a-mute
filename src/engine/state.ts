@@ -44,7 +44,12 @@ export interface LastResult {
   at: number;
   /** Interception sans clic : le participant s'était mis sur mute lui-même (R-08, #29). */
   selfMuted: boolean;
+  /** Erreur pendant le guide du premier meeting (#43) : la tuile explique ce qu'il fallait faire. */
+  explain: boolean;
 }
+
+/** Explication d'une erreur pendant le guide (#43) : arrêt sur la première, simple note ensuite. */
+export type Explain = "pause" | "note" | null;
 
 export interface Participant {
   id: ParticipantId;
@@ -104,6 +109,8 @@ export interface GameState {
    * Null pour une vraie partie.
    */
   script: ScriptedTurn[] | null;
+  /** Erreurs commises pendant le guide (#43) : seule la première arrête le jeu. */
+  guideErrors: number;
 }
 
 export type Input = { type: "tap"; participantId: ParticipantId };
@@ -126,6 +133,7 @@ export type GameEvent =
       selfMuted: boolean;
       harmonyDelta: number;
       harmony: number;
+      explain: Explain;
     })
   | (EventBase & { type: "guideEnded" })
   | (EventBase & { type: "gameOver"; reason: EndReason; harmony: number });

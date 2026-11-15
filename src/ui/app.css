@@ -1832,6 +1832,35 @@ q {
   letter-spacing: 0.4px;
   transition: background var(--fast);
 }
+/* #43 : erreur pendant le guide, expliquée sur la tuile, au même endroit que « Coupe-le ! ». */
+.explain-tag {
+  position: absolute;
+  z-index: 3;
+  pointer-events: none;
+  left: 50%;
+  /* Juste au-dessus de la barre du nom, pour ne pas déborder sur les notifications. */
+  bottom: calc(clamp(12px, 4.5cqw, 17px) * 1.25 + 30px);
+  translate: -50% 0;
+  rotate: -3deg;
+  width: max-content;
+  max-width: calc(100% - 24px);
+  text-align: center;
+  background: var(--mute);
+  color: var(--cream);
+  border: var(--line) solid var(--ink);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 3px 12px;
+  font-family: var(--display);
+  font-size: clamp(12px, 4.4cqw, 17px);
+  letter-spacing: 0.3px;
+  line-height: 1.15;
+  animation: guidein 0.4s var(--spring) both;
+}
+.explain-tag.wrongMute {
+  background: var(--warn);
+  color: var(--ink);
+}
 /* Le micro et le nom restent toujours au-dessus des flèches. */
 .tile .mic {
   z-index: 2;

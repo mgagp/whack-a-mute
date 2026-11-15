@@ -153,6 +153,22 @@ test("R-17, R-60 : le tutoriel existe en anglais", async ({ page }) => {
   await expect(page.getByTestId("tuto-skip")).toHaveText("Skip tutorial ⏭");
 });
 
+test("R-18 : pendant le guide, la première erreur arrête le jeu et s'explique sur la tuile", async ({ page }) => {
+  test.setTimeout(60_000);
+  await page.goto("./?lang=fr&seed=explication&guide=1&vitesse=3");
+  await start(page);
+  // Sans geste, la première phrase (toujours déplacée en premier meeting) devient un malaise.
+  const explain = page.getByTestId("explain-ginette");
+  await expect(explain).toBeVisible({ timeout: 20_000 });
+  await expect(explain).toHaveText("Déplacé : il fallait couper Ginette !");
+  await expect(page.getByTestId("game")).toHaveClass(/frozen/);
+  const clock = await page.getByTestId("clock").innerText();
+  await page.waitForTimeout(250);
+  await expect(page.getByTestId("clock")).toHaveText(clock);
+  // Puis le jeu repart de lui-même.
+  await expect(page.getByTestId("game")).not.toHaveClass(/frozen/, { timeout: 5_000 });
+});
+
 test("R-53 : un lien discret au bas de l'accueil mène au code source, dans un nouvel onglet", async ({ page }) => {
   await page.goto("./");
   const link = page.getByTestId("source-link");

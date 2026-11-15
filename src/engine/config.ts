@@ -50,7 +50,11 @@ export const CONFIG = {
    * Mode « Premier meeting » (R-15, #32) : pendant ce temps au début d'une partie guidée,
    * chaque phrase déplacée est signalée sur sa tuile, et personne n'est annoncé déjà sur mute (R-08).
    */
-  guide: { durationMs: 30_000 },
+  /**
+   * `explainPauseMs` (#43) : arrêt sur la première erreur pendant le guide, pour lire l'explication,
+   * en ms réelles (divisées par `?vitesse=`).
+   */
+  guide: { durationMs: 30_000, explainPauseMs: 1_500 },
 
   /** Ordre d'arrivée des participants et moment d'arrivée, en ms (section 6.1, R-13). */
   arrivals: [

@@ -54,16 +54,25 @@ export function Game(props: {
 
   const tutoEventsRef = useRef(props.tutorial?.onEvents);
   tutoEventsRef.current = props.tutorial?.onEvents;
+  // #43 : la première erreur pendant le guide arrête le jeu un instant, le temps de lire l'explication.
+  const [explaining, setExplaining] = useState(false);
+  const speedRef = useRef(props.speed);
+  speedRef.current = props.speed;
   const onEvents = useCallback((events: GameEvent[]) => {
     for (const e of events) {
       const sound = soundForEvent(e);
       if (sound) play(sound);
+      if (e.type === "resolved" && e.explain === "pause") {
+        setExplaining(true);
+        setTimeout(() => setExplaining(false), CONFIG.guide.explainPauseMs / speedRef.current);
+      }
     }
     tutoEventsRef.current?.(events);
   }, []);
 
   const tuto = props.tutorial;
-  const { view, tap: rawTap } = useGame({ ...props, create: tuto?.create, paused: tuto?.paused, onEvents });
+  const paused = tuto ? tuto.paused : explaining;
+  const { view, tap: rawTap } = useGame({ ...props, create: tuto?.create, paused, onEvents });
   const allowTapRef = useRef(true);
   allowTapRef.current = tuto ? tuto.allowTap : true;
   const tap = useCallback((id: ParticipantId) => {
@@ -110,7 +119,7 @@ export function Game(props: {
 
   return (
     <div
-      className={`screen game${blunderActive ? " shake" : ""}${tuto ? " tuto" : ""}${tuto?.paused ? " frozen" : ""}`}
+      className={`screen game${blunderActive ? " shake" : ""}${tuto ? " tuto" : ""}${paused ? " frozen" : ""}`}
       data-testid={tuto ? "tutorial" : "game"}
       onPointerDownCapture={onPointerDown}
     >
