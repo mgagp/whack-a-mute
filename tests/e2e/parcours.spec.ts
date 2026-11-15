@@ -323,7 +323,8 @@ test("R-30 : chaque résultat a son retour visuel distinct", async ({ page }) =>
 test("R-08, #29 : déjà sur mute et sans clic, le retour dit « Bien vu ! », pas « MUTE ! »", async ({ page }) => {
   test.setTimeout(60_000);
   // Sans guide : le piège R-08 est absent des 30 premières secondes d'une partie guidée (R-15).
-  await page.goto("./?seed=deja&vitesse=2&participants=4&guide=0");
+  // Au Normal : le café Facile n'a pas de piège R-08 (#46).
+  await page.goto("./?seed=deja&vitesse=2&participants=4&guide=0&cafe=2");
   await start(page);
   // On ne touche à rien : la première interception ne peut venir que d'un collègue déjà sur mute.
   const tile = page.locator('.tile[data-state="intercepted"]').first();

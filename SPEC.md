@@ -1,6 +1,6 @@
 # Whack-a-Mute — Spécification (PRD)
 
-> **Version** 0.20 · **Date** 2026-11-15 · **Auteur** Marc
+> **Version** 0.21 · **Date** 2026-11-15 · **Auteur** Marc
 > Source d'origine : [VERBATIM.md](VERBATIM.md). En cas de doute sur l'intention, c'est le verbatim qui fait foi.
 > Les sections marquées **⚠️ Hypothèse** sont des propositions à valider. Elles sont reprises dans la section 13, « Questions ouvertes ».
 
@@ -110,26 +110,31 @@ Le joueur est implicitement l'animateur de la réunion. Il n'a pas de tuile à l
 
 ## 6. Difficulté
 
-La difficulté repose sur **deux axes seulement**.
+La difficulté repose sur **deux axes seulement** : le nombre de participants au fil de la partie, et le niveau de café. Le café règle les deux : plus il y a de café, plus la réunion se remplit tôt (#46).
 
 ### 6.1 Nombre de participants, au fil de la partie
 
-| Temps écoulé | Participants |
-|---|---|
-| 0 s | 1 |
-| 15 s | 2 |
-| 35 s | 3 |
-| 55 s | 4 |
+Les participants arrivent toujours dans le même ordre : Ginette, Kevin, Josée, puis le boss.
+
+| Participants | ☕ Facile | ☕☕ Moyen | ☕☕☕ Difficile |
+|---|---|---|---|
+| 1 | 0 s | 0 s | 0 s |
+| 2 | 15 s | 10 s | 6 s |
+| 3 | 35 s | 25 s | 15 s |
+| 4 | 55 s | 45 s | 25 s |
+
+Au Difficile, le plafond de trois prises de parole simultanées ne sert à rien tant que Ginette est seule. Les arrivées rapprochées évitent un début lent suivi d'une accélération brutale (#46).
 
 ### 6.2 Rythme, selon le niveau de café choisi
 
-| Niveau | Nom affiché | Temps de lecture (annonce) | Pause entre deux prises de parole | Prises de parole simultanées max. |
-|---|---|---|---|---|
-| Facile (par défaut) | ☕ Lundi 9 h, pas de café | 4,0 s | 2,5 s | 1 |
-| Moyen | ☕☕ Après le premier café | 3,0 s | 1,8 s | 2 |
-| Difficile | ☕☕☕ Quatrième espresso | 2,0 s | 1,0 s | 3 |
+| Niveau | Nom affiché | Temps de lecture (annonce) | Pause entre deux prises de parole | Prises de parole simultanées max. | Déplacées déjà sur mute (R-08) |
+|---|---|---|---|---|---|
+| Facile (par défaut) | ☕ Lundi 9 h, pas de café | 4,0 s | 2,5 s | 1 | 0 % |
+| Moyen | ☕☕ Après le premier café | 3,0 s | 1,8 s | 2 | 25 % |
+| Difficile | ☕☕☕ Quatrième espresso | 2,0 s | 1,0 s | 3 | 40 % |
 
 - La proportion de phrases déplacées est d'environ 35 %.
+- Le piège « déjà sur mute » (R-08) demande de l'attention plutôt que de la vitesse : il grandit avec le café (#46). Il est absent du Facile, que le tutoriel ne présente pas. On s'arrête à 40 % au Difficile, parce que chaque phrase piégée est une phrase où l'on ne fait rien.
 - Le niveau Facile est proposé par défaut (#32) : un nouveau joueur ne voit qu'une bulle à la fois, ce qui laisse le temps de comprendre et rend le guide lisible.
 - Toutes ces valeurs vivent dans **un seul fichier de configuration** (voir R-40), pour pouvoir ajuster la jouabilité.
 
@@ -258,7 +263,7 @@ Chaque exigence [M] doit être couverte par au moins un test automatisé (voir l
 - **R-05 [M]** Un clic ou une touche sur la tuile d'un participant bascule son micro (mute ↔ ouvert), seulement pendant son annonce.
 - **R-06 [M]** À la fin de l'annonce, le résultat suit la table de la section 3.3.
 - **R-07 [M]** Un clic en dehors d'une annonce active ne change rien et ne pénalise pas.
-- **R-08 [M]** Environ 25 % des phrases déplacées sont annoncées avec le participant **déjà sur mute**. Ne rien faire donne une interception. Cliquer réouvre le micro, ce qui est un piège.
+- **R-08 [M]** Une part des phrases déplacées, selon le niveau de café (section 6.2 : 0 %, 25 % ou 40 %), est annoncée avec le participant **déjà sur mute**. Ne rien faire donne une interception. Cliquer réouvre le micro, ce qui est un piège.
 - **R-09 [M]** Les annonces se chevauchent au plus selon le maximum de prises de parole simultanées du niveau.
 
 ### Harmonie et fin
@@ -267,7 +272,7 @@ Chaque exigence [M] doit être couverte par au moins un test automatisé (voir l
 - **R-12 [M]** L'écran de fin affiche l'harmonie finale, le titre correspondant (section 4) et le nombre de commentaires interceptés sur le total des commentaires déplacés.
 
 ### Difficulté et participants
-- **R-13 [M]** Les participants arrivent selon le calendrier de la section 6.1, avec une notification.
+- **R-13 [M]** Les participants arrivent selon le calendrier de la section 6.1, propre au niveau de café, avec une notification.
 - **R-14 [M]** Le rythme (temps de lecture, pause, simultanéité) suit la section 6.2.
 - **R-15 [M]** Mode « Premier meeting » (section 6.3) : actif par défaut jusqu'à la fin d'une première partie guidée, réglable sur l'accueil (`?guide=0|1` l'impose). Pendant les 30 premières secondes, chaque phrase déplacée est signalée sur sa tuile, sans annonce déjà sur mute, et la première prise de parole est toujours une phrase déplacée. Un message annonce ensuite la fin du guide.
 - **R-16 [S]** En fin de partie, le jeu propose un autre niveau de café selon le score (#39) : un café de moins sous 40 % d'harmonie, un café de plus à partir de 90 % (mêmes seuils que les titres de fin, dans `config.ts`). Rien n'est proposé entre les deux, ni au-delà des niveaux extrêmes. La proposition remplace le lien « Changer le niveau de café », lance la partie en un toucher, et le niveau proposé devient le niveau choisi.
@@ -435,3 +440,4 @@ Cette idée généralise le duo « annonce du boss → réplique signature ». I
 | 0.18 | 2026-11-12 | En fin de partie, proposition de moins ou de plus de café selon le score (R-16, #39) |
 | 0.19 | 2026-11-15 | Tutoriel du premier meeting en trois étapes, animé par Josée (section 6.4, R-17, #42) |
 | 0.20 | 2026-11-15 | Pendant le guide, les erreurs s'expliquent sur la tuile ; la première arrête le jeu un instant (R-18, #43) |
+| 0.21 | 2026-11-15 | Courbe de difficulté : arrivées et piège « déjà sur mute » selon le café (sections 6.1 et 6.2, R-08, R-13, #46) |

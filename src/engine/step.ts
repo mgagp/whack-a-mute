@@ -38,13 +38,13 @@ export interface NewGameOptions {
 }
 
 export function createGame(opts: NewGameOptions): GameState {
+  const { cast } = CONFIG;
+  const { arrivalsMs } = CONFIG.cafe[opts.cafe];
   const arrivals = opts.arrivals
     ? opts.arrivals.map((a) => ({ ...a }))
     : opts.participants === undefined
-      ? CONFIG.arrivals.map((a) => ({ ...a }))
-      : CONFIG.arrivals
-          .slice(0, clampInt(opts.participants, 1, CONFIG.arrivals.length))
-          .map((a) => ({ id: a.id, atMs: 0 }));
+      ? cast.map((id, i) => ({ id, atMs: arrivalsMs[i]! }))
+      : cast.slice(0, clampInt(opts.participants, 1, cast.length)).map((id) => ({ id, atMs: 0 }));
   return {
     t: 0,
     durationMs: opts.durationMs ?? CONFIG.gameDurationMs,
@@ -227,7 +227,7 @@ function announce(s: GameState, rng: Rng, emit: Emit) {
   if (!line) return;
 
   // Le tirage a lieu même pendant le guide : la suite de la réunion reste la même pour tous (stand-up du jour).
-  const drawnMuted = line.type === "deplacee" && !line.declencheur && rng.chance(CONFIG.alreadyMutedRatio);
+  const drawnMuted = line.type === "deplacee" && !line.declencheur && rng.chance(CONFIG.cafe[s.cafe].alreadyMutedRatio);
   const inGuide = s.guideActive && s.t < s.guideUntil;
   const alreadyMuted = drawnMuted && !inGuide; // R-15 : pas de piège R-08 pendant le guide
   startTurn(s, speaker, line, alreadyMuted, emit);
@@ -392,5 +392,5 @@ export function meetingMinutes(s: Pick<GameState, "t" | "durationMs">): number {
 }
 
 export function isParticipantId(x: string): x is ParticipantId {
-  return CONFIG.arrivals.some((a) => a.id === x);
+  return (CONFIG.cast as readonly string[]).includes(x);
 }

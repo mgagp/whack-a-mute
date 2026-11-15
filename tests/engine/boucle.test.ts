@@ -102,20 +102,25 @@ describe("Boucle de jeu", () => {
     throw new Error("aucune déplacée au micro ouvert trouvée");
   });
 
-  it("R-08 : environ 25 % des déplacées arrivent déjà sur mute ; ne rien faire intercepte, cliquer est un piège", () => {
-    let deplacees = 0;
-    let muted = 0;
-    for (let seed = 0; seed < 60; seed++) {
-      const { events } = play(newGame({ seed, cafe: 3 }));
-      for (const e of ofType(events, "announced")) {
-        if (e.line.type !== "deplacee" || e.line.declencheur) continue;
-        deplacees++;
-        if (e.mic === "muted") muted++;
+  it("R-08, #46 : la part de déplacées déjà sur mute dépend du café (0 %, 25 %, 40 %) ; ne rien faire intercepte, cliquer est un piège", () => {
+    const ratio = (cafe: CafeLevel) => {
+      let deplacees = 0;
+      let muted = 0;
+      for (let seed = 0; seed < 60; seed++) {
+        const { events } = play(newGame({ seed, cafe }));
+        for (const e of ofType(events, "announced")) {
+          if (e.line.type !== "deplacee" || e.line.declencheur) continue;
+          deplacees++;
+          if (e.mic === "muted") muted++;
+        }
       }
-    }
-    const ratio = muted / deplacees;
-    expect(ratio).toBeGreaterThan(0.18);
-    expect(ratio).toBeLessThan(0.32);
+      return muted / deplacees;
+    };
+    expect(ratio(1)).toBe(0);
+    expect(ratio(2)).toBeGreaterThan(0.18);
+    expect(ratio(2)).toBeLessThan(0.32);
+    expect(ratio(3)).toBeGreaterThan(0.33);
+    expect(ratio(3)).toBeLessThan(0.47);
     // Aucune phrase correcte n'est annoncée déjà sur mute.
     const { events } = play(newGame({ seed: 3, cafe: 3 }));
     expect(ofType(events, "announced").filter((e) => e.line.type === "correcte" && e.mic === "muted")).toHaveLength(0);
