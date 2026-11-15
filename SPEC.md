@@ -1,6 +1,6 @@
 # Whack-a-Mute — Spécification (PRD)
 
-> **Version** 0.21 · **Date** 2026-11-15 · **Auteur** Marc
+> **Version** 0.22 · **Date** 2026-11-15 · **Auteur** Marc
 > Source d'origine : [VERBATIM.md](VERBATIM.md). En cas de doute sur l'intention, c'est le verbatim qui fait foi.
 > Les sections marquées **⚠️ Hypothèse** sont des propositions à valider. Elles sont reprises dans la section 13, « Questions ouvertes ».
 
@@ -56,7 +56,7 @@ Chaque participant prend la parole tour à tour. Avant qu'il parle, le joueur **
 - la phrase est **déplacée** → il clique sur le participant pour **le mettre sur mute** avant la fin du compte à rebours.
 
 ### 3.2 Cycle d'une prise de parole
-1. **Annonce.** Une bulle « va dire… » apparaît sur la tuile avec le texte complet et un compte à rebours visuel (anneau ou barre qui se vide).
+1. **Annonce.** Une bulle « va dire… » apparaît sur la tuile avec le texte complet et un compte à rebours visuel : un trait épais fait le tour du nuage et se vide (#48).
 2. **État du micro au départ.** La plupart du temps, le participant **enlève lui-même son mute** pour parler, et son micro est visible comme ouvert. Parfois, il est **déjà sur mute** de lui-même, et il n'y a alors rien à faire (voir R-08).
 3. **Fenêtre d'action.** Tant que le compte à rebours tourne, chaque clic sur la tuile **bascule** le micro (mute ↔ ouvert). Le joueur peut donc corriger une erreur.
 4. **Prise de parole.** À la fin du compte à rebours, la phrase est « dite » et le résultat est appliqué (voir 3.3).
@@ -146,7 +146,7 @@ Un joueur qui arrive par un lien ne sait pas encore où regarder : il lit les bu
 
 - **Quand.** Actif par défaut tant que le joueur n'a pas terminé une partie guidée sur cet appareil, puis désactivé. Un interrupteur sur l'accueil permet de le réactiver ou de le couper. Pas de bouton pendant la partie.
 - **Combien de temps.** Les 30 premières secondes de la partie seulement (la phase à 1 ou 2 participants). Un message annonce ensuite la fin du guide, et la partie continue normalement. Le jeu ne devient donc pas « tape sur ce qui clignote », et le score partagé garde son sens.
-- **Quoi.** Chaque phrase déplacée annoncée pendant le guide encercle sa tuile d'une bande cartoon, avec une ribambelle de flèches tournées vers le collègue (environ 25, parcourues par une vague, #36) et l'étiquette « Coupe-le ! ». L'insistance monte avec le compte à rebours : blanc, puis jaune, puis rouge, aux mêmes paliers que l'anneau de la bulle. La bande disparaît dès que le micro est coupé.
+- **Quoi.** Chaque phrase déplacée annoncée pendant le guide encercle sa tuile d'une bande cartoon, avec une ribambelle de flèches tournées vers le collègue (environ 25, parcourues par une vague, #36) et l'étiquette « Coupe-le ! ». L'insistance monte avec le compte à rebours : blanc, puis jaune, puis rouge, aux mêmes paliers que le contour du nuage. La bande disparaît dès que le micro est coupé.
 - **Pas de piège.** Personne n'est annoncé déjà sur mute (R-08) pendant le guide : on encerclerait un collègue sur qui il ne faut surtout pas taper.
 - **Comprendre ses erreurs (#43).** Pendant le guide, un malaise ou un « coupé à tort » s'explique sur la tuile, là où apparaît « Coupe-le ! » : « Déplacé : il fallait couper Kevin ! » ou « Correct : pas besoin de couper Ginette ». La **première** erreur arrête aussi le jeu environ 1,5 s, le temps de lire ; les suivantes s'affichent sans arrêt. Après le guide, rien ne change.
 - **Toujours un exemple.** La toute première prise de parole d'une partie guidée est une phrase déplacée : chaque premier meeting montre au moins une tuile guidée. En contrepartie, la réunion d'un joueur guidé diffère un peu du stand-up du jour des autres joueurs.
@@ -156,7 +156,7 @@ Un joueur qui arrive par un lien ne sait pas encore où regarder : il lit les bu
 Même avec le guide, la charge mentale arrive trop vite pour quelqu'un qui découvre le jeu à froid : on ne sait pas encore lire une bulle, et quand une erreur s'affiche, le jeu a déjà continué. Avant la première réunion guidée, un tutoriel fait comprendre les codes du jeu **à l'arrêt, avec un geste pour avancer**. L'esprit : « Respire par le nez. »
 
 - **Le décor.** Une parodie d'accueil du nouvel employé (« Accueil du nouvel employé »). Josée, la scrum master, anime : elle parle dans une carte cartoon qui affiche « Étape 1/3 », etc. On voit les mêmes tuiles, bulles, flèches et retours que dans le jeu. Le temps arrêté se voit : le décor s'efface et la tuile qui parle est en pleine lumière.
-- **Étape 1, lire.** Ginette, seule, pense une phrase correcte ; le temps est arrêté et l'anneau bat. La carte explique le nuage et l'anneau ; un bouton « Compris 👍 » fait repartir le temps. Ginette dit sa phrase : on la laisse parler.
+- **Étape 1, lire.** Ginette, seule, pense une phrase correcte ; le temps est arrêté et le contour du nuage bat. La carte explique le nuage et son contour ; un bouton « Compris 👍 » fait repartir le temps. Ginette dit sa phrase : on la laisse parler.
 - **Étape 2, couper.** Ginette pense une phrase déplacée, encerclée par le guide (section 6.3), toujours à l'arrêt. Toucher sa tuile la met sur mute et fait avancer : le geste sert de confirmation. On voit le vrai retour « Intercepté ! ».
 - **Étape 3, à toi.** Kevin rejoint Ginette pour une mini-réunion en direct au rythme du café 1, sans flèches : elle dit une phrase correcte, puis lui pense une phrase déplacée. Une erreur arrête le temps sur le résultat, et la carte explique ce qui s'est passé (malaise ou coupé à tort). On réessaie jusqu'à réussir. Une fois l'étape réussie, la réunion commence, avec le guide des premières secondes.
 - **Toujours possible de passer.** Un lien « Passer le tutoriel » reste visible jusqu'à la dernière carte.
@@ -221,7 +221,7 @@ Au moins 40 phrases correctes et 25 phrases déplacées pour la première versio
 La référence est [design/maquette-v1.html](design/maquette-v1.html) : sa palette, ses variables de thème, ses formes et ses animations sont le point de départ de l'interface. Les avatars de la maquette sont des ébauches, et les illustrations finales pourront aller plus loin dans le même esprit.
 - **Palette** : saturée et contrastée, avec un fond profond (par exemple un violet indigo) sur lequel les couleurs éclatent.
   - Chaque participant a sa **couleur signature** vive : corail, turquoise, jaune soleil, vert lime.
-  - Les états ont un code couleur constant : micro ouvert = vert néon qui pulse, mute = rose ou rouge vif, compte à rebours qui passe au jaune puis au rouge en fin de course.
+  - Les états ont un code couleur constant : micro ouvert = vert néon qui pulse, mute = rose ou rouge vif, compte à rebours autour du nuage, violet, puis jaune, puis rouge en fin de course (#48).
   - La couleur ne doit jamais révéler si une phrase est déplacée : c'est au joueur de lire.
 - **Formes** : coins très arrondis, contours épais foncés façon autocollant ou dessin animé, ombres portées décalées et franches.
 - **Typographie** : une police d'affichage ronde et grasse pour le titre, les scores et les onomatopées, et une police très lisible pour les répliques. Seulement des polices sous licence libre (par exemple Google Fonts, licence OFL).
@@ -259,7 +259,7 @@ Chaque exigence [M] doit être couverte par au moins un test automatisé (voir l
 - **R-03 [M]** À la fin, le joueur peut rejouer en un seul clic, au même niveau ou en changeant de niveau.
 
 ### Boucle de jeu
-- **R-04 [M]** Chaque prise de parole est annoncée par une bulle qui montre le texte complet et un compte à rebours visuel. Sa durée correspond au temps de lecture du niveau choisi.
+- **R-04 [M]** Chaque prise de parole est annoncée par une bulle qui montre le texte complet et un compte à rebours visuel sur le contour du nuage (#48). Sa durée correspond au temps de lecture du niveau choisi.
 - **R-05 [M]** Un clic ou une touche sur la tuile d'un participant bascule son micro (mute ↔ ouvert), seulement pendant son annonce.
 - **R-06 [M]** À la fin de l'annonce, le résultat suit la table de la section 3.3.
 - **R-07 [M]** Un clic en dehors d'une annonce active ne change rien et ne pénalise pas.
@@ -276,7 +276,7 @@ Chaque exigence [M] doit être couverte par au moins un test automatisé (voir l
 - **R-14 [M]** Le rythme (temps de lecture, pause, simultanéité) suit la section 6.2.
 - **R-15 [M]** Mode « Premier meeting » (section 6.3) : actif par défaut jusqu'à la fin d'une première partie guidée, réglable sur l'accueil (`?guide=0|1` l'impose). Pendant les 30 premières secondes, chaque phrase déplacée est signalée sur sa tuile, sans annonce déjà sur mute, et la première prise de parole est toujours une phrase déplacée. Un message annonce ensuite la fin du guide.
 - **R-16 [S]** En fin de partie, le jeu propose un autre niveau de café selon le score (#39) : un café de moins sous 40 % d'harmonie, un café de plus à partir de 90 % (mêmes seuils que les titres de fin, dans `config.ts`). Rien n'est proposé entre les deux, ni au-delà des niveaux extrêmes. La proposition remplace le lien « Changer le niveau de café », lance la partie en un toucher, et le niveau proposé devient le niveau choisi.
-- **R-17 [M]** Tutoriel du premier meeting (section 6.4, #42) : avant la première réunion guidée, trois étapes à l'arrêt, animées par Josée (lire le nuage et l'anneau, couper une phrase déplacée en touchant la tuile, réussir seul une mini-réunion sans flèches). Une erreur à l'étape 3 arrête le temps, s'explique, et on réessaie. Un lien permet toujours de passer. Mémorisé comme fait une fois terminé ou passé ; réactiver « Premier meeting » le propose de nouveau, et `?tuto=0|1` l'impose.
+- **R-17 [M]** Tutoriel du premier meeting (section 6.4, #42) : avant la première réunion guidée, trois étapes à l'arrêt, animées par Josée (lire le nuage et son contour, couper une phrase déplacée en touchant la tuile, réussir seul une mini-réunion sans flèches). Une erreur à l'étape 3 arrête le temps, s'explique, et on réessaie. Un lien permet toujours de passer. Mémorisé comme fait une fois terminé ou passé ; réactiver « Premier meeting » le propose de nouveau, et `?tuto=0|1` l'impose.
 - **R-18 [S]** Pendant le guide du premier meeting (#43), chaque erreur (malaise ou coupé à tort) s'explique sur la tuile en une ligne, et la première arrête le jeu un instant (`CONFIG.guide.explainPauseMs`). Hors du guide et dans le tutoriel, pas d'explication de ce type.
 
 ### Contenu
@@ -441,3 +441,4 @@ Cette idée généralise le duo « annonce du boss → réplique signature ». I
 | 0.19 | 2026-11-15 | Tutoriel du premier meeting en trois étapes, animé par Josée (section 6.4, R-17, #42) |
 | 0.20 | 2026-11-15 | Pendant le guide, les erreurs s'expliquent sur la tuile ; la première arrête le jeu un instant (R-18, #43) |
 | 0.21 | 2026-11-15 | Courbe de difficulté : arrivées et piège « déjà sur mute » selon le café (sections 6.1 et 6.2, R-08, R-13, #46) |
+| 0.22 | 2026-11-15 | Compte à rebours sur le contour du nuage, à la place du petit anneau (sections 3.2, 6.3, 6.4 et 8, R-04, R-17, #48) |

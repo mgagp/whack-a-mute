@@ -87,10 +87,10 @@ export const STRINGS_EN: Strings = {
     wait: { title: "Welcome to the team! 👋", body: "I'm Josée, the scrum master. Before the stand-up, let me show you how it works. Watch Ginette…" },
     think: {
       title: "Take a deep breath 😌",
-      body: "People think before they talk. This cloud is what Ginette is about to say. The ring is the time you have left.",
+      body: "People think before they talk. This cloud is what Ginette is about to say. Its outline runs down: that's the time you have left.",
       ok: "Got it 👍",
     },
-    watch: { title: "Watch closely 👀", body: "The ring fills up… then she says it." },
+    watch: { title: "Watch closely 👀", body: "The outline runs down… then she says it." },
     normal: { title: "That was fine ✅", body: "Nothing out of line: let her talk." },
     mute: { title: "That can't come out 😬", body: "Ginette is about to say something out of line. Tap her tile to mute her." },
     muted: { title: "Nice! 🔇", body: "Her mic is off. Let's see what happens…" },
@@ -99,7 +99,7 @@ export const STRINGS_EN: Strings = {
     play: { title: "Your turn 🎯", body: "Only mute what's out of line." },
     blunder: {
       title: "Oops, awkward 😬",
-      body: (name: string, feminine: boolean) => `${name} said it out loud. You had to mute ${feminine ? "her" : "him"} before the ring filled up.`,
+      body: (name: string, feminine: boolean) => `${name} said it out loud. You had to mute ${feminine ? "her" : "him"} before the outline ran out.`,
     },
     wrongMute: {
       title: "Wait… why? 🙊",

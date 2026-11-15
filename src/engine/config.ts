@@ -116,7 +116,7 @@ export const CONFIG = {
   /** Durées d'affichage côté interface, en ms de jeu (elles suivent donc `?vitesse=`). */
   ui: {
     /**
-     * Paliers du compte à rebours, en part de l'annonce écoulée : l'anneau de la bulle
+     * Paliers du compte à rebours, en part de l'annonce écoulée : le contour du nuage (#48)
      * et les flèches du guide (#32) passent au jaune puis au rouge aux mêmes moments.
      */
     timerWarnAt: 0.55,
