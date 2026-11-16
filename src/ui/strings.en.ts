@@ -130,6 +130,9 @@ export const STRINGS_EN: Strings = {
       ecourtee: "Meeting ended by the organizer",
     },
     dailyMeeting: (date) => `${date} stand-up`,
+    freeMeeting: "Free play",
+    officialScore: (harmony) => `Today's stand-up: ${harmony}. That's the one you share.`,
+    shareDaily: "Share today's stand-up",
     shareText: (harmony, cups, intercepted, total, daily) =>
       `I kept ${harmony}% harmony at ${daily ? "today's" : "the"} stand-up ${cups} (${intercepted}/${total} comments intercepted)`,
   },

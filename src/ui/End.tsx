@@ -6,6 +6,7 @@ import { endTitleKey, suggestedCafe } from "../engine/step";
 import { Avatar, type Mood } from "./Avatar";
 import type { Lang } from "../content/lines";
 import { useStrings } from "./i18n";
+import type { DailyResult, PlayKind } from "./daily";
 import { shareUrl } from "./lang";
 import { shareText } from "./share";
 import { countEvent } from "./stats";
@@ -20,7 +21,9 @@ const CONFETTI = Array.from({ length: 24 }, (_, i) => ({
 
 export function End({
   game,
+  kind,
   day,
+  official,
   cafe,
   lang,
   onReplay,
@@ -28,8 +31,11 @@ export function End({
   onPlayCafe,
 }: {
   game: GameState;
-  /** Date du stand-up du jour, ou null pour une partie de debug (`?seed=`). */
-  day: Date | null;
+  /** Stand-up du jour, partie libre (#49) ou partie de debug (`?seed=`). */
+  kind: PlayKind;
+  day: Date;
+  /** Pendant une partie libre : le stand-up du jour déjà joué, le seul qu'on partage (#49). */
+  official: DailyResult | null;
   cafe: CafeLevel;
   lang: Lang;
   onReplay: () => void;
@@ -50,16 +56,26 @@ export function End({
     return () => clearTimeout(id);
   }, [copied]);
 
-  const meeting = day
-    ? e.dailyMeeting(day.toLocaleDateString(STRINGS.dateLocale, { day: "numeric", month: "long" }))
-    : STRINGS.meetingName;
+  const meeting =
+    kind === "daily"
+      ? e.dailyMeeting(day.toLocaleDateString(STRINGS.dateLocale, { day: "numeric", month: "long" }))
+      : kind === "free"
+        ? e.freeMeeting
+        : STRINGS.meetingName;
+  // Seul le premier essai du jour compte pour le partage (#49) : une partie libre partage le stand-up du jour.
+  const shared: DailyResult = official ?? {
+    harmony: game.harmony,
+    intercepted: game.stats.intercepted,
+    deplacees: game.stats.deplacees,
+    outcomes: game.outcomes,
+  };
   const mood: Mood = good ? "happy" : cut ? "shocked" : "oops";
   const deg = (game.harmony / 100) * 360;
 
   const share = async () => {
     countEvent("partage", lang);
-    const headline = e.shareText(game.harmony, STRINGS.cafe[cafe].cups, game.stats.intercepted, game.stats.deplacees, day !== null);
-    const text = shareText(headline, game.outcomes);
+    const headline = e.shareText(shared.harmony, STRINGS.cafe[cafe].cups, shared.intercepted, shared.deplacees, kind !== "debug");
+    const text = shareText(headline, shared.outcomes);
     // La page anglaise a son propre aperçu de lien : on partage l'adresse de la langue jouée.
     const url = shareUrl(location.origin, location.pathname, lang);
     const touch = matchMedia("(pointer: coarse)").matches;
@@ -81,7 +97,7 @@ export function End({
   };
 
   return (
-    <div className="screen end" data-testid="end">
+    <div className="screen end" data-testid="end" data-kind={kind}>
       {game.harmony >= CONFIG.endTitleThresholds[2].min && (
         <div className="deco confetti-box" aria-hidden="true">
           {CONFETTI.map((c, i) => (
@@ -124,12 +140,17 @@ export function End({
           {e.statBlunders(game.stats.blunders)}
         </div>
       </div>
+      {official && (
+        <p className="official" data-testid="official">
+          {e.officialScore(STRINGS.percent(official.harmony))}
+        </p>
+      )}
       <div className="actions">
         <button type="button" className="btn" data-testid="replay" onClick={onReplay}>
           {e.replay}
         </button>
         <button type="button" className="btn turq" data-testid="share" onClick={share}>
-          {copied ? e.copied : e.share}
+          {copied ? e.copied : official ? e.shareDaily : e.share}
         </button>
         {suggestion === null ? (
           <button type="button" className="link" data-testid="change-cafe" onClick={onChangeCafe}>

@@ -418,6 +418,34 @@ test("R-50, #19 : sur ordinateur, « Partager » copie le stand-up du jour, ses 
   expectShareLayout(copied, /^J'ai gardé \d+ % d'harmonie au stand-up du jour /, `${new URL("./", page.url().replace(/\?.*$/, "")).href}?lang=fr&ref=partage`);
 });
 
+test("R-54, #49 : après le stand-up du jour, « Rejouer » lance une partie libre, et on partage toujours le stand-up du jour", async ({ page, context, isMobile }) => {
+  test.skip(isMobile, "sur téléphone, c'est le partage natif");
+  test.setTimeout(60_000);
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  await page.goto("./?vitesse=20");
+  await start(page);
+  await expect(page.getByTestId("end")).toBeVisible({ timeout: 20_000 });
+  await expect(page.getByTestId("end")).toHaveAttribute("data-kind", "daily");
+  await expect(page.getByTestId("official")).toHaveCount(0);
+  const first = (await page.getByTestId("final-harmony").innerText()).match(/\d+/)![0];
+
+  // Deuxième essai : partie libre, avec le rappel du stand-up du jour.
+  await page.getByTestId("replay").click();
+  await expect(page.getByTestId("end")).toBeVisible({ timeout: 20_000 });
+  await expect(page.getByTestId("end")).toHaveAttribute("data-kind", "free");
+  await expect(page.getByTestId("official")).toContainText(`Ton stand-up du jour : ${first} %`);
+  await expect(page.getByTestId("share")).toHaveText("Partager mon stand-up du jour");
+  await page.getByTestId("share").click({ force: true });
+  const copied = await page.evaluate(() => navigator.clipboard.readText());
+  expect(copied).toMatch(new RegExp(`^J'ai gardé ${first} % d'harmonie au stand-up du jour `));
+
+  // Au retour sur la page, le stand-up du jour reste joué.
+  await page.reload();
+  await start(page);
+  await expect(page.getByTestId("end")).toBeVisible({ timeout: 20_000 });
+  await expect(page.getByTestId("end")).toHaveAttribute("data-kind", "free");
+});
+
 test("R-52, #20 : les parties lancées et les partages sont comptés, avec leur langue", async ({ page, context, isMobile }) => {
   test.skip(isMobile, "sur téléphone, c'est le partage natif");
   test.setTimeout(60_000);

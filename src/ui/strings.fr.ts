@@ -142,6 +142,9 @@ export const STRINGS = {
     } satisfies Record<EndTitleKey, string>,
     /** Nom de la réunion du jour sur l'écran de fin ; `date` est déjà écrite (ex. : « 11 novembre »). */
     dailyMeeting: (date: string) => `Stand-up du ${date}`,
+    freeMeeting: "Partie libre",
+    officialScore: (harmony: string) => `Ton stand-up du jour : ${harmony}. C'est lui qu'on partage.`,
+    shareDaily: "Partager mon stand-up du jour",
     shareText: (harmony: number, cups: string, intercepted: number, total: number, daily: boolean) =>
       `J'ai gardé ${harmony} % d'harmonie au stand-up${daily ? " du jour" : ""} ${cups} (${intercepted}/${total} commentaires interceptés)`,
   },
