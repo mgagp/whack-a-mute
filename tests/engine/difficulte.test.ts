@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { CONFIG, type CafeLevel } from "../../src/engine/config";
+import { readMsFor } from "../../src/engine/step";
 import { newGame, ofType, perfect, play } from "./helpers";
 
 describe("Difficulté et participants", () => {
@@ -24,7 +25,8 @@ describe("Difficulté et participants", () => {
       expect(at(2)[i]).toBeLessThan(at(1)[i]!);
     }
     // Au Corsé, la deuxième collègue arrive avant la deuxième prise de parole possible de Ginette.
-    const { readMs, pauseMs } = CONFIG.cafe[3];
+    const { pauseMs } = CONFIG.cafe[3];
+    const readMs = readMsFor(3, "x".repeat(CONFIG.maxLineLength));
     expect(at(3)[1]).toBeLessThanOrEqual(CONFIG.firstAnnounceDelayMs + 2 * (readMs + CONFIG.resultDisplayMs + pauseMs));
   });
 
@@ -38,7 +40,7 @@ describe("Difficulté et participants", () => {
 
   it("R-14 : le temps de lecture et la pause suivent le niveau de café", () => {
     for (const cafe of [1, 2, 3] as CafeLevel[]) {
-      const { readMs, pauseMs } = CONFIG.cafe[cafe];
+      const { pauseMs } = CONFIG.cafe[cafe];
       for (let seed = 0; seed < 5; seed++) {
         const { events } = play(newGame({ seed, cafe }), perfect, 10);
         const ann = ofType(events, "announced");
@@ -47,7 +49,7 @@ describe("Difficulté et participants", () => {
         // Chaque annonce se résout exactement après le temps de lecture.
         for (const r of res) {
           const a = [...ann].reverse().find((x) => x.participantId === r.participantId && x.t < r.t + 1)!;
-          expect(r.t - a.t).toBeCloseTo(readMs, 6);
+          expect(r.t - a.t).toBeCloseTo(readMsFor(cafe, a.line.text), 6);
         }
         // Une place libérée ne resert qu'après la pause : au début de chaque annonce,
         // les annonces en cours plus les places encore « en pause » restent sous le maximum.
@@ -68,6 +70,25 @@ describe("Difficulté et participants", () => {
         }
       }
     }
+  });
+
+  it("R-04, R-14, #47 : le temps de lecture grandit avec la longueur de la phrase et baisse avec le café", () => {
+    const court = "Bonjour à tous !";
+    const long = "x".repeat(CONFIG.maxLineLength);
+    for (const cafe of [1, 2, 3] as CafeLevel[]) {
+      const { baseMs, perCharMs } = CONFIG.cafe[cafe].read;
+      expect(readMsFor(cafe, court)).toBe(baseMs + perCharMs * [...court].length);
+      expect(readMsFor(cafe, long)).toBeGreaterThan(readMsFor(cafe, court));
+    }
+    for (const text of [court, long]) {
+      expect(readMsFor(3, text)).toBeLessThan(readMsFor(2, text));
+      expect(readMsFor(2, text)).toBeLessThan(readMsFor(1, text));
+    }
+    // Une phrase moyenne (environ 45 caractères) garde à peu près le temps d'avant : 4 s, 3 s et 2 s.
+    const moyenne = "x".repeat(45);
+    expect(readMsFor(1, moyenne)).toBeCloseTo(4_000, -2);
+    expect(readMsFor(2, moyenne)).toBeCloseTo(3_000, -2);
+    expect(readMsFor(3, moyenne)).toBeCloseTo(2_000, -2);
   });
 
   it("R-14 : plus il y a de café, plus il y a de prises de parole", () => {
