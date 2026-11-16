@@ -1,6 +1,6 @@
 # Whack-a-Mute — Spécification (PRD)
 
-> **Version** 0.22 · **Date** 2026-11-15 · **Auteur** Marc
+> **Version** 0.23 · **Date** 2026-11-15 · **Auteur** Marc
 > Source d'origine : [VERBATIM.md](VERBATIM.md). En cas de doute sur l'intention, c'est le verbatim qui fait foi.
 > Les sections marquées **⚠️ Hypothèse** sont des propositions à valider. Elles sont reprises dans la section 13, « Questions ouvertes ».
 
@@ -129,11 +129,12 @@ Au Difficile, le plafond de trois prises de parole simultanées ne sert à rien 
 
 | Niveau | Nom affiché | Temps de lecture (annonce) | Pause entre deux prises de parole | Prises de parole simultanées max. | Déplacées déjà sur mute (R-08) |
 |---|---|---|---|---|---|
-| Facile (par défaut) | ☕ Lundi 9 h, pas de café | 4,0 s | 2,5 s | 1 | 0 % |
-| Moyen | ☕☕ Après le premier café | 3,0 s | 1,8 s | 2 | 25 % |
-| Difficile | ☕☕☕ Quatrième espresso | 2,0 s | 1,0 s | 3 | 40 % |
+| Facile (par défaut) | ☕ Lundi 9 h, pas de café | 2,4 s + 35 ms par caractère | 2,5 s | 1 | 0 % |
+| Moyen | ☕☕ Après le premier café | 1,8 s + 27 ms par caractère | 1,8 s | 2 | 25 % |
+| Difficile | ☕☕☕ Quatrième espresso | 1,2 s + 18 ms par caractère | 1,0 s | 3 | 40 % |
 
 - La proportion de phrases déplacées est d'environ 35 %.
+- Le temps de lecture dépend de la longueur de la phrase (#47) : une phrase longue laisse plus de temps qu'une courte. Pour une phrase moyenne (environ 45 caractères), on retrouve environ 4 s, 3 s et 2 s. Au Difficile, une phrase de 20 caractères dure environ 1,6 s, et une de 60 caractères environ 2,3 s.
 - Le piège « déjà sur mute » (R-08) demande de l'attention plutôt que de la vitesse : il grandit avec le café (#46). Il est absent du Facile, que le tutoriel ne présente pas. On s'arrête à 40 % au Difficile, parce que chaque phrase piégée est une phrase où l'on ne fait rien.
 - Le niveau Facile est proposé par défaut (#32) : un nouveau joueur ne voit qu'une bulle à la fois, ce qui laisse le temps de comprendre et rend le guide lisible.
 - Toutes ces valeurs vivent dans **un seul fichier de configuration** (voir R-40), pour pouvoir ajuster la jouabilité.
@@ -259,7 +260,7 @@ Chaque exigence [M] doit être couverte par au moins un test automatisé (voir l
 - **R-03 [M]** À la fin, le joueur peut rejouer en un seul clic, au même niveau ou en changeant de niveau.
 
 ### Boucle de jeu
-- **R-04 [M]** Chaque prise de parole est annoncée par une bulle qui montre le texte complet et un compte à rebours visuel sur le contour du nuage (#48). Sa durée correspond au temps de lecture du niveau choisi.
+- **R-04 [M]** Chaque prise de parole est annoncée par une bulle qui montre le texte complet et un compte à rebours visuel sur le contour du nuage (#48). Sa durée correspond au temps de lecture du niveau choisi, qui grandit avec la longueur de la phrase (section 6.2).
 - **R-05 [M]** Un clic ou une touche sur la tuile d'un participant bascule son micro (mute ↔ ouvert), seulement pendant son annonce.
 - **R-06 [M]** À la fin de l'annonce, le résultat suit la table de la section 3.3.
 - **R-07 [M]** Un clic en dehors d'une annonce active ne change rien et ne pénalise pas.
@@ -441,4 +442,5 @@ Cette idée généralise le duo « annonce du boss → réplique signature ». I
 | 0.19 | 2026-11-15 | Tutoriel du premier meeting en trois étapes, animé par Josée (section 6.4, R-17, #42) |
 | 0.20 | 2026-11-15 | Pendant le guide, les erreurs s'expliquent sur la tuile ; la première arrête le jeu un instant (R-18, #43) |
 | 0.21 | 2026-11-15 | Courbe de difficulté : arrivées et piège « déjà sur mute » selon le café (sections 6.1 et 6.2, R-08, R-13, #46) |
-| 0.22 | 2026-11-15 | Compte à rebours sur le contour du nuage, à la place du petit anneau (sections 3.2, 6.3, 6.4 et 8, R-04, R-17, #48) |
+| 0.22 | 2026-11-15 | Temps de lecture selon la longueur de la phrase (section 6.2, R-04, R-14, #47) |
+| 0.23 | 2026-11-15 | Compte à rebours sur le contour du nuage, à la place du petit anneau (sections 3.2, 6.3, 6.4 et 8, R-04, R-17, #48) |

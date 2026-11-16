@@ -153,8 +153,16 @@ function nextDeadline(s: GameState): Deadline | null {
   return list[0] ?? null;
 }
 
+/** Temps de lecture d'une réplique au niveau de café donné (R-04, R-14, #47). */
+export function readMsFor(cafe: CafeLevel, text: string): number {
+  const { baseMs, perCharMs } = CONFIG.cafe[cafe].read;
+  return baseMs + perCharMs * [...text].length;
+}
+
 function nextAnnounceTime(s: GameState): number | null {
-  const { readMs } = CONFIG.cafe[s.cafe];
+  // La réplique n'est pas encore choisie : on réserve le temps de la plus longue possible,
+  // pour que toute annonce finisse avant la fin de la réunion.
+  const readMs = readMsFor(s.cafe, "x".repeat(CONFIG.maxLineLength));
   if (s.slotsFreeAt.length === 0) return null; // R-09 : toutes les places sont prises
   if (s.script) {
     // Tutoriel (R-17) : on attend que la personne prévue soit là et libre.
@@ -213,6 +221,8 @@ function announce(s: GameState, rng: Rng, emit: Emit) {
   }
 
   if (!speaker || !line) {
+    // Pas de réaction au boss finalement : une annonce ordinaire respecte l'écart minimal.
+    if (s.t < s.lastAnnounceAt + CONFIG.minStartGapMs) return;
     const able = candidates.filter((p) => canSpeak(s, p.id));
     if (able.length === 0) return;
     speaker = rng.pick(able);
@@ -234,13 +244,12 @@ function announce(s: GameState, rng: Rng, emit: Emit) {
 }
 
 function startTurn(s: GameState, speaker: Participant, line: Line, alreadyMuted: boolean, emit: Emit) {
-  const cafe = CONFIG.cafe[s.cafe];
   const guided = s.guideActive && s.t < s.guideUntil && line.type === "deplacee";
   s.usedLineIds.push(line.id);
   speaker.turn = {
     line,
     startAt: s.t,
-    endAt: s.t + cafe.readMs,
+    endAt: s.t + readMsFor(s.cafe, line.text),
     mic: alreadyMuted ? "muted" : "open",
     initiallyMuted: alreadyMuted,
     touched: false,
