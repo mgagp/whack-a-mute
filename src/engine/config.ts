@@ -9,8 +9,12 @@ export type CafeLevel = 1 | 2 | 3;
 export type ParticipantId = "ginette" | "kevin" | "josee" | "boss";
 
 export interface CafeConfig {
-  /** Durée de l'annonce (temps de lecture), en ms (R-04, R-14). */
-  readMs: number;
+  /**
+   * Durée de l'annonce (temps de lecture), en ms (R-04, R-14, #47) :
+   * `baseMs` plus `perCharMs` par caractère de la réplique, pour laisser lire les phrases longues.
+   * Les valeurs gardent la durée d'avant pour une phrase moyenne (environ 45 caractères).
+   */
+  read: { baseMs: number; perCharMs: number };
   /**
    * Pause entre deux prises de parole, en ms (R-14) : quand une prise de parole se termine,
    * sa « place » ne resert qu'après ce délai. Avec plusieurs places (simultanéité),
@@ -45,9 +49,9 @@ export const CONFIG = {
 
   /** Rythme selon le niveau de café (section 6.2, R-14). */
   cafe: {
-    1: { readMs: 4_000, pauseMs: 2_500, maxSimultaneous: 1, arrivalsMs: [0, 15_000, 35_000, 55_000], alreadyMutedRatio: 0 },
-    2: { readMs: 3_000, pauseMs: 1_800, maxSimultaneous: 2, arrivalsMs: [0, 10_000, 25_000, 45_000], alreadyMutedRatio: 0.25 },
-    3: { readMs: 2_000, pauseMs: 1_000, maxSimultaneous: 3, arrivalsMs: [0, 6_000, 15_000, 25_000], alreadyMutedRatio: 0.4 },
+    1: { read: { baseMs: 2_400, perCharMs: 35 }, pauseMs: 2_500, maxSimultaneous: 1, arrivalsMs: [0, 15_000, 35_000, 55_000], alreadyMutedRatio: 0 },
+    2: { read: { baseMs: 1_800, perCharMs: 27 }, pauseMs: 1_800, maxSimultaneous: 2, arrivalsMs: [0, 10_000, 25_000, 45_000], alreadyMutedRatio: 0.25 },
+    3: { read: { baseMs: 1_200, perCharMs: 18 }, pauseMs: 1_000, maxSimultaneous: 3, arrivalsMs: [0, 6_000, 15_000, 25_000], alreadyMutedRatio: 0.4 },
   } satisfies Record<CafeLevel, CafeConfig>,
 
   /** Niveau de café proposé par défaut sur l'accueil (#32 : le plus calme, pour la première impression). */
@@ -116,7 +120,7 @@ export const CONFIG = {
   /** Durées d'affichage côté interface, en ms de jeu (elles suivent donc `?vitesse=`). */
   ui: {
     /**
-     * Paliers du compte à rebours, en part de l'annonce écoulée : l'anneau de la bulle
+     * Paliers du compte à rebours, en part de l'annonce écoulée : le contour du nuage (#48)
      * et les flèches du guide (#32) passent au jaune puis au rouge aux mêmes moments.
      */
     timerWarnAt: 0.55,

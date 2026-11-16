@@ -97,10 +97,10 @@ export const STRINGS = {
     wait: { title: "Bienvenue dans l'équipe ! 👋", body: "Je suis Josée, la scrum master. Avant le stand-up, je te montre comment ça marche. Regarde Ginette…" },
     think: {
       title: "Respire par le nez 😌",
-      body: "Avant de parler, on pense. Ce nuage, c'est ce que Ginette s'apprête à dire. L'anneau, c'est le temps qu'il te reste.",
+      body: "Avant de parler, on pense. Ce nuage, c'est ce que Ginette s'apprête à dire. Son contour qui se vide, c'est le temps qu'il te reste.",
       ok: "Compris 👍",
     },
-    watch: { title: "Regarde bien 👀", body: "L'anneau se remplit… puis elle le dit." },
+    watch: { title: "Regarde bien 👀", body: "Le contour se vide… puis elle le dit." },
     normal: { title: "C'était correct ✅", body: "Rien de déplacé : on la laisse parler." },
     mute: { title: "Ça, faut pas que ça sorte 😬", body: "Ginette s'apprête à dire une phrase déplacée. Touche sa tuile pour la mettre sur mute." },
     muted: { title: "Bien joué ! 🔇", body: "Son micro est coupé. Voyons ce qui arrive…" },
@@ -109,7 +109,7 @@ export const STRINGS = {
     play: { title: "À toi 🎯", body: "Coupe seulement ce qui est déplacé." },
     blunder: {
       title: "Oups, malaise 😬",
-      body: (name: string, feminine: boolean) => `${name} l'a dit tout haut. Il fallait ${feminine ? "la" : "le"} couper avant que l'anneau soit plein.`,
+      body: (name: string, feminine: boolean) => `${name} l'a dit tout haut. Il fallait ${feminine ? "la" : "le"} couper avant que le contour soit vide.`,
     },
     wrongMute: {
       title: "Euh… pourquoi ? 🙊",

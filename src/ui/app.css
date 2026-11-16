@@ -833,7 +833,7 @@ q {
   border: 0;
   box-shadow: none;
   border-radius: 0;
-  padding: 10px clamp(11px, 5cqw, 18px) 12px;
+  padding: 13px clamp(13px, 5.5cqw, 20px) 13px;
 }
 .bubble.think .cloud {
   position: absolute;
@@ -882,21 +882,14 @@ q {
   color: var(--label-text);
   margin-bottom: 2px;
 }
-.bubble .timer {
-  width: 1.5em;
-  height: 1.5em;
-  min-width: 18px;
-  min-height: 18px;
-  transform: rotate(-90deg);
-}
-.timer-track {
+/* Compte à rebours (#48) : un trait épais fait le tour du nuage et se vide, du turquoise au rouge. */
+.bubble.think .cloud path.cloud-ink {
   fill: none;
-  stroke: var(--timer-track);
-  stroke-width: 4;
 }
-.bubble .timer .prog {
+.bubble.think .cloud .cloud-timer {
   fill: none;
-  stroke-width: 4;
+  stroke-width: var(--cloud-timer);
+  stroke-linecap: round;
 }
 .bubble.said.blunder {
   background: var(--mute);
@@ -1202,17 +1195,17 @@ q {
     0 0 40px 10px rgba(255, 210, 63, 0.45),
     var(--shadow-offset);
 }
-/* L'anneau du compte à rebours bat pendant l'arrêt, pour qu'on le remarque (étape 1). */
-.game.frozen .bubble.think .timer {
-  animation: ringpulse 0.9s ease-in-out infinite;
+/* Le contour du compte à rebours bat pendant l'arrêt, pour qu'on le remarque (étape 1). */
+.game.frozen .bubble.think .cloud .cloud-timer {
+  animation: timerpulse 0.9s ease-in-out infinite;
 }
-@keyframes ringpulse {
+@keyframes timerpulse {
   0%,
   100% {
-    transform: rotate(-90deg) scale(1);
+    opacity: 1;
   }
   50% {
-    transform: rotate(-90deg) scale(1.35);
+    opacity: 0.35;
   }
 }
 .game.tuto .meeting .clock {

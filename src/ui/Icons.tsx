@@ -60,11 +60,27 @@ export function Boom({ text, className }: { text: string; className?: string }) 
 /**
  * Contour festonné de la bulle-pensée (#10) : convention de bande dessinée pour « ce qu'il s'apprête à dire ».
  * Étiré à la taille de la bulle ; le trait garde son épaisseur grâce à `non-scaling-stroke`.
+ * Avec `progress` (0 à 1), un trait de couleur fait le tour du nuage et se vide : c'est le compte à rebours (#48).
  */
-export function ThoughtCloud({ className }: { className?: string }) {
+const CLOUD_PATH =
+  "M16 14A20.8 20.8 0 0 1 50.7 14A20.8 20.8 0 0 1 85.3 14A20.8 20.8 0 0 1 120 14A20.8 20.8 0 0 1 154.7 14A20.8 20.8 0 0 1 189.3 14A20.8 20.8 0 0 1 224 14A21.6 21.6 0 0 1 224 50A21.6 21.6 0 0 1 224 86A20.8 20.8 0 0 1 189.3 86A20.8 20.8 0 0 1 154.7 86A20.8 20.8 0 0 1 120 86A20.8 20.8 0 0 1 85.3 86A20.8 20.8 0 0 1 50.7 86A20.8 20.8 0 0 1 16 86A21.6 21.6 0 0 1 16 50A21.6 21.6 0 0 1 16 14Z";
+
+export function ThoughtCloud({ className, progress, color }: { className?: string; progress?: number; color?: string }) {
   return (
     <svg className={className} viewBox="0 0 240 100" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M16 14A20.8 20.8 0 0 1 50.7 14A20.8 20.8 0 0 1 85.3 14A20.8 20.8 0 0 1 120 14A20.8 20.8 0 0 1 154.7 14A20.8 20.8 0 0 1 189.3 14A20.8 20.8 0 0 1 224 14A21.6 21.6 0 0 1 224 50A21.6 21.6 0 0 1 224 86A20.8 20.8 0 0 1 189.3 86A20.8 20.8 0 0 1 154.7 86A20.8 20.8 0 0 1 120 86A20.8 20.8 0 0 1 85.3 86A20.8 20.8 0 0 1 50.7 86A20.8 20.8 0 0 1 16 86A21.6 21.6 0 0 1 16 50A21.6 21.6 0 0 1 16 14Z" vectorEffect="non-scaling-stroke" />
+      <path d={CLOUD_PATH} vectorEffect="non-scaling-stroke" />
+      {progress !== undefined && (
+        <path
+          d={CLOUD_PATH}
+          className="cloud-timer"
+          data-testid="cloud-timer"
+          vectorEffect="non-scaling-stroke"
+          pathLength={1}
+          style={{ strokeDasharray: "1 1", strokeDashoffset: -progress, stroke: color }}
+        />
+      )}
+      {/* Le trait noir repasse par-dessus : il reste lisible au milieu de la bande de couleur. */}
+      {progress !== undefined && <path d={CLOUD_PATH} className="cloud-ink" vectorEffect="non-scaling-stroke" />}
     </svg>
   );
 }

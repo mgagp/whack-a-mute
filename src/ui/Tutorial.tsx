@@ -1,6 +1,6 @@
 /**
  * Tutoriel du premier meeting (R-17, #42) : trois étapes à l'arrêt, avec un geste pour avancer.
- * 1. Lire : le nuage et l'anneau (bouton « Compris »), puis une phrase correcte qu'on laisse passer.
+ * 1. Lire : le nuage et son contour (bouton « Compris »), puis une phrase correcte qu'on laisse passer.
  * 2. Couper : une phrase déplacée, figée, encerclée par le guide ; toucher la tuile fait avancer.
  * 3. À toi : une mini-réunion en direct, sans flèches. Une erreur arrête le temps et s'explique ; on réessaie.
  * Le moteur joue les scénarios de `engine/tutorial.ts` ; l'interface ne fait qu'arrêter le temps et choisir la carte.

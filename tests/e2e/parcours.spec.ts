@@ -516,6 +516,22 @@ test("#4 : icônes d'onglet et d'écran d'accueil, avec un manifeste", async ({ 
   }
 });
 
+test("R-04, #48 : le compte à rebours fait le tour du nuage et se vide, du violet au rouge", async ({ page }) => {
+  test.setTimeout(30_000);
+  await page.goto("./?seed=nuage&participants=1&cafe=1&vitesse=0.5&guide=0");
+  await start(page);
+  const timer = page.getByTestId("tile-ginette").getByTestId("cloud-timer");
+  await expect(timer).toHaveCount(1, { timeout: 10_000 });
+  // Plus d'ancien petit anneau dans l'étiquette.
+  await expect(page.locator(".bubble .timer")).toHaveCount(0);
+  const read = () =>
+    timer.evaluate((el) => ({ offset: -parseFloat((el as SVGPathElement).style.strokeDashoffset), stroke: (el as SVGPathElement).style.stroke }));
+  const first = await read();
+  expect(first.stroke).toBe("var(--violet)");
+  await expect.poll(async () => (await read()).stroke, { timeout: 10_000 }).toBe("var(--mute)");
+  expect((await read()).offset).toBeGreaterThan(first.offset);
+});
+
 test("#10 : ce qui va être dit est une bulle-pensée ; ce qui est dit, une bulle de parole", async ({ page }) => {
   test.setTimeout(30_000);
   await page.goto("./?seed=pensee&participants=4&cafe=3&vitesse=2");

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { CONFIG, type CafeLevel } from "../../src/engine/config";
-import { step, turnProgress } from "../../src/engine/step";
+import { readMsFor, step, turnProgress } from "../../src/engine/step";
 import { advanceUntil, fakeLines, newGame, ofType, perfect, play } from "./helpers";
 
 describe("Boucle de jeu", () => {
@@ -11,7 +11,7 @@ describe("Boucle de jeu", () => {
       const p = state.participants.find((x) => x.id === event.participantId)!;
       expect(p.turn!.line.text.length).toBeGreaterThan(0);
       expect(event.line.text).toBe(p.turn!.line.text);
-      expect(p.turn!.endAt - p.turn!.startAt).toBe(CONFIG.cafe[cafe].readMs);
+      expect(p.turn!.endAt - p.turn!.startAt).toBe(readMsFor(cafe, p.turn!.line.text));
       // Le compte à rebours visuel se calcule à partir de la progression.
       expect(turnProgress(p.turn!, p.turn!.startAt)).toBe(0);
       expect(turnProgress(p.turn!, p.turn!.endAt)).toBe(1);

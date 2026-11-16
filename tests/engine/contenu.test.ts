@@ -69,11 +69,11 @@ describe("Contenu : les répliques", () => {
           if (e.type !== "announced" || !e.line.declencheur) return;
           checked++;
           expect(e.participantId).not.toBe("boss");
-          // L'événement précédent de la chronologie est la fin d'une prise de parole du boss…
+          // Le boss vient de finir de parler (une autre prise de parole peut se terminer entre-temps)…
           const lastBossEnd = [...timeline.slice(0, i)].reverse().find(
-            (x): x is Extract<GameEvent, { type: "resolved" }> => x.type === "resolved",
+            (x): x is Extract<GameEvent, { type: "resolved" }> => x.type === "resolved" && x.participantId === "boss",
           );
-          expect(lastBossEnd?.participantId).toBe("boss");
+          expect(lastBossEnd).toBeDefined();
           // …et aucune autre annonce n'a eu lieu entre les deux.
           const between = timeline.slice(timeline.indexOf(lastBossEnd!) + 1, i);
           expect(between.filter((x) => x.type === "announced")).toHaveLength(0);
