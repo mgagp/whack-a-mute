@@ -1,6 +1,6 @@
 # Whack-a-Mute — Spécification (PRD)
 
-> **Version** 0.24 · **Date** 2026-11-15 · **Auteur** Marc
+> **Version** 0.25 · **Date** 2026-11-15 · **Auteur** Marc
 > Source d'origine : [VERBATIM.md](VERBATIM.md). En cas de doute sur l'intention, c'est le verbatim qui fait foi.
 > Les sections marquées **⚠️ Hypothèse** sont des propositions à valider. Elles sont reprises dans la section 13, « Questions ouvertes ».
 
@@ -175,14 +175,16 @@ Les répliques sont le cœur de l'humour. Elles sont stockées dans un fichier d
 - **Interdit** : viser un groupe (origine, genre, religion, orientation, âge, handicap), la vulgarité forte, le harcèlement, les vraies entreprises ou les vraies personnes.
 - Une phrase déplacée doit être reconnaissable comme telle **en moins de 2 secondes de lecture**.
 - Longueur maximale : environ 70 caractères, pour rester lisible sur téléphone.
+- **Personne ne parle de soi (#54).** Une réplique qui nomme un participant (son prénom, ou « le boss ») l'exclut avec `pasDitePar`. Un test le vérifie dans les deux langues.
+- **Pas d'accord au genre de la personne qui parle (#54).** En français, une réplique que peuvent dire des personnages féminins et masculins reste neutre : « J'ai un blocage sur l'API » plutôt que « Je suis bloqué ». L'anglais n'a pas ce problème.
 - **Langue : français québécois léger.** On utilise des expressions d'ici avec parcimonie (« ben voyons », « courriel », « on se reparle », « c'est correct »), mais tout doit rester compréhensible partout dans la francophonie. Pas de sacres ni de joual appuyé.
 
 ### Exemples de ton
 **Correctes**
 - « J'ai fini le ticket 42, il reste juste les tests. »
-- « Je suis bloqué sur l'API, quelqu'un peut m'aider après ? »
+- « J'ai un blocage sur l'API, quelqu'un peut m'aider après ? »
 - « Rien de neuf pour moi, je continue sur le rapport. »
-- « Je serai absent vendredi, c'est dans le calendrier. »
+- « Je ne serai pas là vendredi, c'est dans le calendrier. »
 
 **Déplacées**
 - « Encore une réunion qui aurait pu être un courriel. »
@@ -197,7 +199,7 @@ Les répliques sont le cœur de l'humour. Elles sont stockées dans un fichier d
 
 **Une réplique qui réagit au boss.** Hors contexte, « Ben oui, c'est ça. » n'a pas l'air déplacée : c'est le ton sarcastique en réaction au boss qui la rend gênante. Elle porte donc `"declencheur": "boss"` et n'est annoncée que **juste après une prise de parole du boss**, par un autre participant. Le joueur averti la voit venir, et c'est justement ce qui la rend drôle : le boss parle, quelqu'un s'apprête à répondre « Ben oui, c'est ça. »… vite, le mute !
 
-**Une réplique qui ne convient pas à tout le monde.** Certaines phrases n'ont pas de sens dans la bouche d'un participant précis : le boss qui se moque du boss, par exemple. Le champ facultatif `"pasDitePar": ["boss"]` l'exclut de cette réplique (R-26).
+**Une réplique qui ne convient pas à tout le monde.** Certaines phrases n'ont pas de sens dans la bouche d'un participant précis : le boss qui se moque du boss, Ginette qui parle de ses propres dossiers, ou Kevin, le stagiaire, qui annonce l'arrivée du nouveau stagiaire. Le champ facultatif `"pasDitePar": ["boss"]` exclut ce participant de la réplique (R-26).
 
 ### Volume visé
 Au moins 40 phrases correctes et 25 phrases déplacées pour la première version. Il n'y a jamais deux fois la même phrase dans une même partie.
@@ -287,7 +289,7 @@ Chaque exigence [M] doit être couverte par au moins un test automatisé (voir l
 - **R-23 [M]** La réplique signature « Ben oui, c'est ça. » est présente dans la banque, comme réplique déplacée marquée `signature`. Un test le vérifie.
 - **R-24 [M]** Une réplique avec `"declencheur": "boss"` n'est annoncée que juste après la fin d'une prise de parole du boss, et par un autre participant que le boss.
 - **R-25 [S]** Si le boss est présent dans la réunion, la réplique signature est annoncée au moins une fois par partie.
-- **R-26 [M]** Une réplique peut exclure des participants avec `"pasDitePar"`. Ces participants ne l'annoncent jamais. Exemple : le boss ne dit pas « Le boss a encore lu un article de motivation, hein ? » (`fr-d-14`).
+- **R-26 [M]** Une réplique peut exclure des participants avec `"pasDitePar"`. Ces participants ne l'annoncent jamais. Exemple : le boss ne dit pas « Le boss a encore lu un article de motivation, hein ? » (`fr-d-14`). Une réplique qui nomme un participant l'exclut toujours (#54).
 
 ### Retour visuel et sonore
 - **R-30 [M]** Chaque résultat de la table 3.3 a un retour visuel distinct, perceptible en moins de 100 ms après la fin de l'annonce ou le clic.
@@ -446,3 +448,4 @@ Cette idée généralise le duo « annonce du boss → réplique signature ». I
 | 0.22 | 2026-11-15 | Temps de lecture selon la longueur de la phrase (section 6.2, R-04, R-14, #47) |
 | 0.23 | 2026-11-15 | Compte à rebours sur le contour du nuage, à la place du petit anneau (sections 3.2, 6.3, 6.4 et 8, R-04, R-17, #48) |
 | 0.24 | 2026-11-15 | Seul le premier essai du jour compte pour le partage ; les suivants sont des parties libres (R-54, #49) |
+| 0.25 | 2026-11-15 | Cohérence des répliques : personne ne parle de soi, et pas d'accord au genre de la personne qui parle (section 7, R-26, #54) |

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CONFIG } from "../../src/engine/config";
+import { CONFIG, type ParticipantId } from "../../src/engine/config";
 import { createGame, step } from "../../src/engine/step";
 import type { GameEvent } from "../../src/engine/state";
 import { BANKS, loadLines, parseLineBank } from "../../src/content/lines";
@@ -133,6 +133,26 @@ describe("Contenu : les répliques", () => {
     }
     expect(fr14).toBeGreaterThan(0);
   }, 30_000);
+
+  it("R-26, #54 : une réplique qui nomme un participant ne peut pas être dite par lui, dans les deux langues", () => {
+    const MENTION: Record<ParticipantId, RegExp> = {
+      ginette: /\bginette\b/i,
+      kevin: /\bkevin\b/i,
+      josee: /\bjos[ée]e\b/i,
+      boss: /\bboss\b/i,
+    };
+    const problems: string[] = [];
+    let mentions = 0;
+    for (const line of [...loadLines("fr"), ...loadLines("en")]) {
+      for (const [id, re] of Object.entries(MENTION) as [ParticipantId, RegExp][]) {
+        if (!re.test(line.text)) continue;
+        mentions++;
+        if (!line.pasDitePar?.includes(id)) problems.push(`${line.id} nomme ${id} sans l'exclure`);
+      }
+    }
+    expect(problems).toEqual([]);
+    expect(mentions).toBeGreaterThanOrEqual(6); // c-07, c-18 et d-14, en français et en anglais
+  });
 
   it("R-26 : pasDitePar doit nommer des participants connus", () => {
     const bad = structuredClone(BANKS.fr) as { lines: Record<string, unknown>[] };
