@@ -1,6 +1,6 @@
 # Whack-a-Mute — Spécification (PRD)
 
-> **Version** 0.23 · **Date** 2026-11-15 · **Auteur** Marc
+> **Version** 0.24 · **Date** 2026-11-15 · **Auteur** Marc
 > Source d'origine : [VERBATIM.md](VERBATIM.md). En cas de doute sur l'intention, c'est le verbatim qui fait foi.
 > Les sections marquées **⚠️ Hypothèse** sont des propositions à valider. Elles sont reprises dans la section 13, « Questions ouvertes ».
 
@@ -314,10 +314,11 @@ Chaque exigence [M] doit être couverte par au moins un test automatisé (voir l
 ### Partage
 - **R-50 [S]** Un bouton « Partager » utilise le partage natif du téléphone. Sur ordinateur, il copie plutôt un texte du genre : « J'ai gardé 85 % d'harmonie au stand-up ☕☕ — whack-a-mute ».
   - **Récapitulatif en émojis (#19)** : sous la phrase du score, un émoji par moment décisif dans l'ordre de la partie (🔇 intercepté, 😬 malaise, 🤐 coupé à tort ; les répliques correctes laissées passer n'apparaissent pas), au plus 30, puis « whack-a-mute » et l'adresse.
-  - **Stand-up du jour (#19)** : par défaut, la graine est tirée de la date locale du joueur. Tout le monde joue la même réunion ce jour-là (par langue et par café), « Rejouer » la reprend, et le texte partagé dit « stand-up du jour ». L'écran de fin affiche « Stand-up du 11 novembre ». `?seed=` reste une partie de debug, hors stand-up du jour.
+  - **Stand-up du jour (#19)** : par défaut, la graine est tirée de la date locale du joueur. Tout le monde joue la même réunion ce jour-là (par langue et par café), et le texte partagé dit « stand-up du jour ». Seul le premier essai compte (R-54). L'écran de fin affiche « Stand-up du 11 novembre ». `?seed=` reste une partie de debug, hors stand-up du jour.
 - **R-51 [S]** La page a une image d'aperçu et une description pour un bel affichage quand on partage le lien.
 - **R-52 [S]** Les visites, les parties lancées et les partages sont comptés par GoatCounter (whack-a-mute.goatcounter.com), sans cookies, sans bannière et sans donnée personnelle. Les événements s'appellent `partie-<langue>` et `partage-<langue>`. Les visites en local (`localhost`) ne sont pas comptées, et un bloqueur qui empêche le script ne gêne pas le jeu. Le lien partagé porte `?ref=partage` (#24) : GoatCounter compte ainsi les visites venues d'un score partagé, même quand la messagerie ne transmet pas la provenance.
 - **R-53 [S]** Une petite ligne au bas de l'accueil, « Fait par Marc · Code source », avec le logo GitHub, mène au dépôt public (https://github.com/mgagp/whack-a-mute) dans un nouvel onglet (#33). Elle reste discrète : petite taille, couleur du texte secondaire, rien sur l'écran de jeu ni de bandeau en coin d'écran.
+- **R-54 [S]** Seul le premier essai du jour compte pour le partage (#49). Le premier stand-up du jour **terminé**, par date, par café et par langue, est mémorisé sur l'appareil. Les parties suivantes de ce jour-là sont des **parties libres** sur une réunion au hasard : l'écran de fin affiche « Partie libre » et rappelle le score du stand-up du jour, et « Partager » partage toujours le stand-up du jour. On ne peut donc plus améliorer son score partagé en mémorisant la réunion. Le tutoriel ne compte pas ; une partie abandonnée avant la fin non plus.
 
 ### Langues
 - **R-60 [M]** Le jeu existe en **français et en anglais** (anglais neutre et international ; les prénoms des personnages ne changent pas).
@@ -444,3 +445,4 @@ Cette idée généralise le duo « annonce du boss → réplique signature ». I
 | 0.21 | 2026-11-15 | Courbe de difficulté : arrivées et piège « déjà sur mute » selon le café (sections 6.1 et 6.2, R-08, R-13, #46) |
 | 0.22 | 2026-11-15 | Temps de lecture selon la longueur de la phrase (section 6.2, R-04, R-14, #47) |
 | 0.23 | 2026-11-15 | Compte à rebours sur le contour du nuage, à la place du petit anneau (sections 3.2, 6.3, 6.4 et 8, R-04, R-17, #48) |
+| 0.24 | 2026-11-15 | Seul le premier essai du jour compte pour le partage ; les suivants sont des parties libres (R-54, #49) |
