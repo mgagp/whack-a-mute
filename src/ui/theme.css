@@ -19,7 +19,7 @@
   --bubble: #ffffff;
   --bubble-hushed: #ede7f6;
   --bubble-hushed-text: #6a5c88;
-  --timer-track: #e5def2;
+  --cloud-timer: 9px; /* épaisseur du compte à rebours autour du nuage (#48) */
   --mic-idle: #e8e1f5;
 
   /* Couleurs signature des participants */

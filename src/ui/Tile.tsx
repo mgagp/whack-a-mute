@@ -9,7 +9,6 @@ import { Boom, MicIcon, ThoughtCloud } from "./Icons";
 import { useStrings } from "./i18n";
 
 const COLOR: Record<ParticipantId, string> = { ginette: "coral", kevin: "turq", josee: "sun", boss: "lime" };
-const TIMER_LEN = 2 * Math.PI * 8;
 const SPARKS = [
   { dx: -58, dy: -30, c: "var(--mute)" },
   { dx: 56, dy: -38, c: "var(--turq)" },
@@ -42,12 +41,12 @@ const GUIDE_ARROWS = (() => {
   }));
 })();
 
-/** Palier du compte à rebours : l'anneau et le guide changent de couleur ensemble. */
+/** Palier du compte à rebours : le contour du nuage et le guide changent de couleur ensemble. */
 export type TimerLevel = "calm" | "warn" | "urgent";
 export function timerLevel(progress: number): TimerLevel {
   return progress < CONFIG.ui.timerWarnAt ? "calm" : progress < CONFIG.ui.timerUrgentAt ? "warn" : "urgent";
 }
-const RING_COLOR: Record<TimerLevel, string> = { calm: "var(--turq)", warn: "var(--warn)", urgent: "var(--mute)" };
+const TIMER_COLOR: Record<TimerLevel, string> = { calm: "var(--violet)", warn: "var(--warn)", urgent: "var(--mute)" };
 
 export type TileState = "idle" | "announcing" | Outcome;
 
@@ -111,24 +110,8 @@ export const Tile = memo(function Tile({ p, t, reacting, justJoined, debug, onTa
     >
       {state === "announcing" && p.turn && (
         <div className="bubble think" key={p.turn.line.id} style={{ ["--p" as string]: progress }}>
-          <ThoughtCloud className="cloud" />
-          <div className="tag">
-            <svg className="timer" viewBox="0 0 20 20" aria-hidden="true">
-              <circle cx="10" cy="10" r="8" className="timer-track" />
-              <circle
-                cx="10"
-                cy="10"
-                r="8"
-                className="prog"
-                style={{
-                  strokeDasharray: TIMER_LEN,
-                  strokeDashoffset: TIMER_LEN * progress,
-                  stroke: RING_COLOR[level],
-                }}
-              />
-            </svg>
-            {STRINGS.game.willSay}
-          </div>
+          <ThoughtCloud className="cloud" progress={progress} color={TIMER_COLOR[level]} />
+          <div className="tag">{STRINGS.game.willSay}</div>
           <q>{p.turn.line.text}</q>
         </div>
       )}
