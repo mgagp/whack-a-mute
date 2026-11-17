@@ -1,6 +1,7 @@
 /**
  * Tutoriel du premier meeting (R-17, #42) : trois étapes à l'arrêt, avec un geste pour avancer.
  * 1. Lire : le nuage et son contour (bouton « Compris »), puis une phrase correcte qu'on laisse passer.
+ *    Le temps s'arrête sur « C'était correct » jusqu'au bouton « La suite » (#58).
  * 2. Couper : une phrase déplacée, figée, encerclée par le guide ; toucher la tuile fait avancer.
  * 3. À toi : une mini-réunion en direct, sans flèches. Une erreur arrête le temps et s'explique ; on réessaie.
  * Le moteur joue les scénarios de `engine/tutorial.ts` ; l'interface ne fait qu'arrêter le temps et choisir la carte.
@@ -19,6 +20,7 @@ type Phase =
   | "think"
   | "watch"
   | "normal"
+  | "next"
   | "mute"
   | "muted"
   | "intercepted"
@@ -28,12 +30,13 @@ type Phase =
   | "done";
 
 /** Phases où le temps est arrêté. */
-const PAUSED: ReadonlySet<Phase> = new Set(["think", "mute", "intercepted", "live", "fail", "done"]);
+const PAUSED: ReadonlySet<Phase> = new Set(["think", "normal", "mute", "intercepted", "live", "fail", "done"]);
 const STEP: Record<Phase, 1 | 2 | 3> = {
   wait: 1,
   think: 1,
   watch: 1,
   normal: 1,
+  next: 2,
   mute: 2,
   muted: 2,
   intercepted: 2,
@@ -70,7 +73,7 @@ export function Tutorial(props: { lines: readonly Line[]; lang: Lang; speed: num
       const p = phaseRef.current;
       if (e.type === "announced") {
         if (p === "wait") setPhase("think");
-        else if (p === "normal") setPhase("mute");
+        else if (p === "next") setPhase("mute");
       } else if (e.type === "micToggled") {
         if (p === "mute" && e.mic === "muted") setPhase("muted");
       } else if (e.type === "resolved") {
@@ -95,7 +98,9 @@ export function Tutorial(props: { lines: readonly Line[]; lang: Lang; speed: num
     setPhase("live");
   };
 
-  const speedFactor = phase === "watch" || phase === "normal" ? CONFIG.tutorial.watchSpeed : phase === "muted" ? CONFIG.tutorial.fastForward : 1;
+  // On regarde la phrase se dérouler un peu plus vite ; après un bon geste ou « La suite », on accélère.
+  const speedFactor =
+    phase === "watch" ? CONFIG.tutorial.watchSpeed : phase === "muted" || phase === "next" ? CONFIG.tutorial.fastForward : 1;
 
   let title: string;
   let body: string;
@@ -113,6 +118,10 @@ export function Tutorial(props: { lines: readonly Line[]; lang: Lang; speed: num
       break;
     case "normal":
       ({ title, body } = T.normal);
+      action = { label: T.normal.ok, onClick: () => setPhase("next") };
+      break;
+    case "next":
+      ({ title, body } = T.next);
       break;
     case "mute":
       ({ title, body } = T.mute);
