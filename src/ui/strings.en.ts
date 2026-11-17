@@ -84,7 +84,11 @@ export const STRINGS_EN: Strings = {
     label: "New hire onboarding",
     step: (n: number) => `Step ${n}/3`,
     skip: "Skip tutorial ⏭",
-    wait: { title: "Welcome to the team! 👋", body: "I'm Josée, the scrum master. Before the stand-up, let me show you how it works. Watch Ginette…" },
+    wait: {
+      title: "Welcome to the team! 👋",
+      body: "I'm Josée, the scrum master. Before the stand-up, let me show you how it works. Watch Ginette…",
+      ok: "Let's go →",
+    },
     think: {
       title: "Take a deep breath 😌",
       body: "People think before they talk. This cloud is what Ginette is about to say. Its outline runs down: that's the time you have left.",
@@ -92,7 +96,6 @@ export const STRINGS_EN: Strings = {
     },
     watch: { title: "Watch closely 👀", body: "The outline runs down… then she says it." },
     normal: { title: "That was fine ✅", body: "Nothing out of line: let her talk.", ok: "Next →" },
-    next: { title: "And now… 👀", body: "See what Ginette is thinking this time." },
     mute: { title: "That can't come out 😬", body: "Ginette is about to say something out of line. Tap her tile to mute her." },
     muted: { title: "Nice! 🔇", body: "Her mic is off. Let's see what happens…" },
     intercepted: { title: "Intercepted! 🎉", body: "Nobody heard a thing: team harmony is safe.", ok: "My turn! →" },

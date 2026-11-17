@@ -167,6 +167,20 @@ Ces vérifications sont mécaniques : elles se testent au lieu de se découvrir 
 >
 > **Et côté humain :** décrire le ressenti du joueur (« je suis perdu », « je ne comprends pas pourquoi j'ai perdu ») plutôt que la solution, et inviter explicitement la critique.
 
+### Leçon 10. Un enchaînement se vérifie de bout en bout, chronomètre en main
+
+*Ajoutée le 2026-11-17, après #58 et #60.*
+
+**Ce qui s'est passé.**
+- **#58.** Marc a vu qu'à la fin de l'étape 1 du tutoriel, « C'était correct » disparaissait en 1,7 seconde. L'agent a ajouté un arrêt et un bouton, puis a chronométré la transition… seulement jusqu'au début de l'étape 2.
+- **#60.** Marc a aussitôt trouvé un autre passage trop rapide, juste après. L'agent l'avait lui-même créé en corrigeant #58 : une carte de passage affichée 0,85 seconde. En chronométrant enfin tout le tutoriel, deux autres cartes trop brèves sont apparues : l'accueil (1,2 s pour trois phrases) et « Bien joué ! » (1,35 s, en accéléré).
+
+**La leçon.**
+- Une correction dans un enchaînement déplace souvent le problème un peu plus loin. Vérifier seulement l'endroit corrigé ne suffit pas.
+- Une carte qui s'affiche pendant que le temps avance n'a pas de durée garantie : elle dure ce que dure l'attente du jeu, accélérée ou non. Une carte qui doit être lue attend un geste ; sinon, on mesure sa durée.
+
+> **Signal.** « Après tout changement dans un enchaînement (tutoriel, transitions, écrans successifs), rejoue-le en entier à vitesse normale et note combien de temps chaque texte reste à l'écran. Tout texte affiché sans attendre de geste doit tenir au moins 2 secondes, et un test automatique le vérifie. N'ajoute jamais une carte ou un message de passage sans mesurer sa durée. »
+
 ---
 
 ## Partie 3. Brief de départ pour un prochain jeu
@@ -187,6 +201,8 @@ Joueur visé : il arrive par un lien partagé, sur téléphone, sans rien savoir
 3. Retours : chaque issue (réussite, échec, abstention) a son retour, qui
    nomme la cause, au moment où ça se passe, avec le temps de le lire. Jamais
    de difficulté injuste, comme un texte qu'on n'a pas le temps de lire.
+   Un enchaînement se rejoue en entier, chronomètre en main : tout texte qui
+   n'attend pas de geste tient au moins 2 secondes (vérifié par un test).
 4. Saillance : dans un visuel éclatant, les indices sont exagérés (taille,
    mouvement, couleur réservée). Vérifié sur une capture à taille téléphone.
 5. Difficulté : décris la charge seconde par seconde, à chaque niveau. Elle

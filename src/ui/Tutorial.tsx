@@ -2,6 +2,9 @@
  * Tutoriel du premier meeting (R-17, #42) : trois étapes à l'arrêt, avec un geste pour avancer.
  * 1. Lire : le nuage et son contour (bouton « Compris »), puis une phrase correcte qu'on laisse passer.
  *    Le temps s'arrête sur « C'était correct » jusqu'au bouton « La suite » (#58).
+ * Chaque carte de Josée attend un geste, sauf celles où l'on regarde une phrase se dérouler (#60).
+ * Quand le jeu doit attendre la phrase suivante, il saute cette attente (`skip*`) en affichant
+ * déjà la carte qui vient : jamais de carte de passage trop brève pour être lue.
  * 2. Couper : une phrase déplacée, figée, encerclée par le guide ; toucher la tuile fait avancer.
  * 3. À toi : une mini-réunion en direct, sans flèches. Une erreur arrête le temps et s'explique ; on réessaie.
  * Le moteur joue les scénarios de `engine/tutorial.ts` ; l'interface ne fait qu'arrêter le temps et choisir la carte.
@@ -17,10 +20,11 @@ import { useStrings } from "./i18n";
 
 type Phase =
   | "wait"
+  | "skipToThink"
   | "think"
   | "watch"
   | "normal"
-  | "next"
+  | "skipToMute"
   | "mute"
   | "muted"
   | "intercepted"
@@ -30,13 +34,19 @@ type Phase =
   | "done";
 
 /** Phases où le temps est arrêté. */
-const PAUSED: ReadonlySet<Phase> = new Set(["think", "normal", "mute", "intercepted", "live", "fail", "done"]);
+const PAUSED: ReadonlySet<Phase> = new Set(["wait", "think", "normal", "mute", "intercepted", "live", "fail", "done"]);
+/** Attentes sautées en accéléré : elles affichent déjà la carte de la phase qui vient. */
+type SkipPhase = "skipToThink" | "skipToMute";
+type CardPhase = Exclude<Phase, SkipPhase>;
+const SKIP: Record<SkipPhase, CardPhase> = { skipToThink: "think", skipToMute: "mute" };
+const isSkip = (p: Phase): p is SkipPhase => p in SKIP;
 const STEP: Record<Phase, 1 | 2 | 3> = {
   wait: 1,
+  skipToThink: 1,
   think: 1,
   watch: 1,
   normal: 1,
-  next: 2,
+  skipToMute: 2,
   mute: 2,
   muted: 2,
   intercepted: 2,
@@ -72,8 +82,8 @@ export function Tutorial(props: { lines: readonly Line[]; lang: Lang; speed: num
     for (const e of events) {
       const p = phaseRef.current;
       if (e.type === "announced") {
-        if (p === "wait") setPhase("think");
-        else if (p === "next") setPhase("mute");
+        if (p === "skipToThink") setPhase("think");
+        else if (p === "skipToMute") setPhase("mute");
       } else if (e.type === "micToggled") {
         if (p === "mute" && e.mic === "muted") setPhase("muted");
       } else if (e.type === "resolved") {
@@ -98,16 +108,20 @@ export function Tutorial(props: { lines: readonly Line[]; lang: Lang; speed: num
     setPhase("live");
   };
 
-  // On regarde la phrase se dérouler un peu plus vite ; après un bon geste ou « La suite », on accélère.
+  // On regarde une phrase se dérouler un peu plus vite (avant comme après le geste) ; on saute les attentes.
   const speedFactor =
-    phase === "watch" ? CONFIG.tutorial.watchSpeed : phase === "muted" || phase === "next" ? CONFIG.tutorial.fastForward : 1;
+    phase === "watch" || phase === "muted" ? CONFIG.tutorial.watchSpeed : isSkip(phase) ? CONFIG.tutorial.skipSpeed : 1;
+
+  // Pendant une attente sautée, la carte affichée est déjà celle qui vient, son bouton encore inactif.
+  const shown: CardPhase = isSkip(phase) ? SKIP[phase] : phase;
 
   let title: string;
   let body: string;
   let action: { label: string; onClick: () => void } | null = null;
-  switch (phase) {
+  switch (shown) {
     case "wait":
       ({ title, body } = T.wait);
+      action = { label: T.wait.ok, onClick: () => setPhase("skipToThink") };
       break;
     case "think":
       ({ title, body } = T.think);
@@ -118,10 +132,7 @@ export function Tutorial(props: { lines: readonly Line[]; lang: Lang; speed: num
       break;
     case "normal":
       ({ title, body } = T.normal);
-      action = { label: T.normal.ok, onClick: () => setPhase("next") };
-      break;
-    case "next":
-      ({ title, body } = T.next);
+      action = { label: T.normal.ok, onClick: () => setPhase("skipToMute") };
       break;
     case "mute":
       ({ title, body } = T.mute);
@@ -159,21 +170,28 @@ export function Tutorial(props: { lines: readonly Line[]; lang: Lang; speed: num
   }
 
   const coach = (
-    <section key={phase} className={`coach step-${STEP[phase]}`} data-testid="coach" data-phase={phase} aria-live="polite">
+    <section key={shown} className={`coach step-${STEP[shown]}`} data-testid="coach" data-phase={phase} aria-live="polite">
       <div className="coach-head">
         <Avatar who="josee" mood="happy" className="coach-avatar" />
         <span className="coach-who">
           {STRINGS.participants.josee.name} <em>{STRINGS.participants.josee.role}</em>
         </span>
         <span className="coach-step" data-testid="coach-step">
-          {T.step(STEP[phase])}
+          {T.step(STEP[shown])}
         </span>
       </div>
       <h3>{title}</h3>
       <p>{body}</p>
       <div className="coach-actions">
         {action && (
-          <button type="button" className="btn coach-ok" data-testid="coach-ok" onClick={action.onClick} autoFocus>
+          <button
+            type="button"
+            className="btn coach-ok"
+            data-testid="coach-ok"
+            disabled={shown !== phase}
+            onClick={action.onClick}
+            autoFocus
+          >
             {action.label}
           </button>
         )}
