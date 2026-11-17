@@ -5,7 +5,7 @@ Jeu web social et humoristique : le joueur met sur mute les collègues qui s'app
 ## Sources de vérité
 - **[SPEC.md](SPEC.md)** : le PRD. Lis-le avant toute tâche. Les exigences ont des identifiants (`R-xx`) et les questions ouvertes sont notées `Q-x`.
 - **VERBATIM.md** : le texte d'origine de Marc. Il est local seulement (dans `.gitignore`) et peut être absent. S'il existe, c'est lui qui fait foi sur l'intention et le ton. Ne jamais le commiter ni le retirer du `.gitignore` sans que Marc le demande.
-- **[docs/lecons-apprises.md](docs/lecons-apprises.md)** : la rétrospective (#56). Neuf leçons tirées des retours de Marc et des bêta-testeurs, chacune avec le signal qui l'aurait fait anticiper. Avant de proposer une évolution ou une nouvelle mécanique, vérifie qu'elle respecte ces signaux : codes humains connus, joueur qui arrive à froid, erreurs expliquées, indices bien visibles, difficulté régulière, cohérence des répliques. Ajoute-y une leçon quand un retour révèle un angle mort.
+- **[docs/lecons-apprises.md](docs/lecons-apprises.md)** : la rétrospective (#56). Dix leçons tirées des retours de Marc et des bêta-testeurs, chacune avec le signal qui l'aurait fait anticiper. Avant de proposer une évolution ou une nouvelle mécanique, vérifie qu'elle respecte ces signaux : codes humains connus, joueur qui arrive à froid, erreurs expliquées, indices bien visibles, difficulté régulière, cohérence des répliques, enchaînements chronométrés de bout en bout. Ajoute-y une leçon quand un retour révèle un angle mort.
 - En cas de conflit ou d'ambiguïté avec la spec, demande à Marc plutôt que d'inventer. Si une décision tranche une question `Q-x`, mets à jour SPEC.md (sections 13 et 14).
 
 ## Stack

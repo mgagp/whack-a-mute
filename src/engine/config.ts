@@ -113,9 +113,12 @@ export const CONFIG = {
   /**
    * Tutoriel du premier meeting (R-17, #42). Les étapes se jouent au café 1, avec une réunion
    * assez longue pour ne jamais finir pendant le tutoriel. Les vitesses multiplient `?vitesse=` :
-   * `watchSpeed` quand on regarde une phrase se dérouler, `fastForward` après le bon geste.
+   * - `watchSpeed` quand on regarde une phrase se dérouler, y compris après le bon geste (#60) ;
+   * - `skipSpeed` pour sauter l'attente avant la phrase suivante, qui n'a rien à montrer (#60).
+   * `minCardMs` : une carte de Josée affichée pendant que le temps avance reste au moins
+   * ce temps à l'écran, à vitesse normale ; un test le vérifie sur tout le tutoriel (#60).
    */
-  tutorial: { cafe: 1 as CafeLevel, durationMs: 600_000, watchSpeed: 1.5, fastForward: 3 },
+  tutorial: { cafe: 1 as CafeLevel, durationMs: 600_000, watchSpeed: 1.5, skipSpeed: 20, minCardMs: 2_000 },
 
   /** Durées d'affichage côté interface, en ms de jeu (elles suivent donc `?vitesse=`). */
   ui: {

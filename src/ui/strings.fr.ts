@@ -94,7 +94,11 @@ export const STRINGS = {
     label: "Accueil du nouvel employé",
     step: (n: number) => `Étape ${n}/3`,
     skip: "Passer le tutoriel ⏭",
-    wait: { title: "Bienvenue dans l'équipe ! 👋", body: "Je suis Josée, la scrum master. Avant le stand-up, je te montre comment ça marche. Regarde Ginette…" },
+    wait: {
+      title: "Bienvenue dans l'équipe ! 👋",
+      body: "Je suis Josée, la scrum master. Avant le stand-up, je te montre comment ça marche. Regarde Ginette…",
+      ok: "C'est parti →",
+    },
     think: {
       title: "Respire par le nez 😌",
       body: "Avant de parler, on pense. Ce nuage, c'est ce que Ginette s'apprête à dire. Son contour qui se vide, c'est le temps qu'il te reste.",
@@ -102,7 +106,6 @@ export const STRINGS = {
     },
     watch: { title: "Regarde bien 👀", body: "Le contour se vide… puis elle le dit." },
     normal: { title: "C'était correct ✅", body: "Rien de déplacé : on la laisse parler.", ok: "La suite →" },
-    next: { title: "Et maintenant… 👀", body: "Regarde ce que Ginette pense cette fois." },
     mute: { title: "Ça, faut pas que ça sorte 😬", body: "Ginette s'apprête à dire une phrase déplacée. Touche sa tuile pour la mettre sur mute." },
     muted: { title: "Bien joué ! 🔇", body: "Son micro est coupé. Voyons ce qui arrive…" },
     intercepted: { title: "Intercepté ! 🎉", body: "Personne n'a rien entendu : l'harmonie de l'équipe est sauve.", ok: "À moi ! →" },

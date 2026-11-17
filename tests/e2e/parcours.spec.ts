@@ -81,6 +81,12 @@ test("R-17 : le tutoriel montre le nuage, fait couper Ginette, puis fait réussi
   const coach = page.getByTestId("coach");
   const step = page.getByTestId("coach-step");
 
+  // Accueil de Josée (#60) : le temps est arrêté et la carte attend « C'est parti ».
+  await expect(coach).toHaveAttribute("data-phase", "wait", { timeout: 20_000 });
+  await expect(page.getByTestId("tutorial")).toHaveClass(/frozen/);
+  await expect(page.getByTestId("coach-ok")).toHaveText("C'est parti →");
+  await page.getByTestId("coach-ok").click();
+
   // Étape 1 : temps arrêté sur le nuage de Ginette ; toucher sa tuile ne fait rien.
   await expect(coach).toHaveAttribute("data-phase", "think", { timeout: 20_000 });
   await expect(step).toHaveText("Étape 1/3");
@@ -155,9 +161,74 @@ test("R-17 : on peut passer le tutoriel ; il ne revient pas, sauf si on réactiv
   await expect(page.getByTestId("tutorial")).toBeVisible();
 });
 
+test("R-17 : à vitesse normale, chaque carte de Josée reste assez longtemps pour être lue", async ({ page }) => {
+  // #60 : on joue tout le tutoriel sans accélérer, en notant combien de temps chaque carte reste à l'écran.
+  // Les cartes qui attendent un geste sont lues sans hâte (on attend avant de cliquer) ; celles qui
+  // s'affichent pendant que le temps avance doivent tenir d'elles-mêmes au moins `minCardMs`.
+  test.setTimeout(120_000);
+  const MIN_CARD_MS = 2_000; // CONFIG.tutorial.minCardMs
+  await page.goto("./?lang=fr&tuto=1&guide=1");
+  await start(page);
+  await expect(page.getByTestId("coach")).toBeVisible({ timeout: 20_000 });
+  await page.evaluate(() => {
+    const w = window as unknown as { __cards: [string, number][] };
+    w.__cards = [];
+    let last = "";
+    const tick = () => {
+      const title = document.querySelector("[data-testid=coach] h3")?.textContent ?? "";
+      if (title !== last) {
+        w.__cards.push([title, performance.now()]);
+        last = title;
+      }
+      requestAnimationFrame(tick);
+    };
+    tick();
+  });
+  const coach = page.getByTestId("coach");
+  const phase = (p: string) => expect(coach).toHaveAttribute("data-phase", p, { timeout: 30_000 });
+  const read = async () => {
+    await page.waitForTimeout(MIN_CARD_MS);
+    await page.getByTestId("coach-ok").click();
+  };
+  await phase("wait");
+  await read();
+  await phase("think");
+  await read();
+  await phase("normal");
+  await read();
+  await phase("mute");
+  await page.waitForTimeout(MIN_CARD_MS);
+  await page.getByTestId("tile-ginette").dispatchEvent("pointerdown");
+  await phase("intercepted");
+  await read();
+  await phase("live");
+  await read();
+  const kevin = page.locator('[data-testid="tile-kevin"][data-state="announcing"]');
+  await expect(kevin).toBeVisible({ timeout: 30_000 });
+  await kevin.dispatchEvent("pointerdown");
+  await phase("done");
+  const cards = await page.evaluate(() => (window as unknown as { __cards: [string, number][] }).__cards);
+  const shown = cards.slice(0, -1).map(([title, at], i) => ({ title, ms: Math.round(cards[i + 1]![1] - at) }));
+  // Toutes les cartes du parcours ont été vues, une seule fois chacune, dans l'ordre.
+  expect(shown.map((c) => c.title)).toEqual([
+    "Bienvenue dans l'équipe ! 👋",
+    "Respire par le nez 😌",
+    "Regarde bien 👀",
+    "C'était correct ✅",
+    "Ça, faut pas que ça sorte 😬",
+    "Bien joué ! 🔇",
+    "Intercepté ! 🎉",
+    "À toi de jouer 🎯",
+    "À toi 🎯",
+  ]);
+  for (const c of shown) expect(c.ms, c.title).toBeGreaterThanOrEqual(MIN_CARD_MS);
+});
+
 test("R-17, R-60 : le tutoriel existe en anglais", async ({ page }) => {
   await page.goto("./?lang=en&tuto=1&guide=1&vitesse=3");
   await start(page);
+  await expect(page.getByTestId("coach-ok")).toHaveText("Let's go →", { timeout: 20_000 });
+  await page.getByTestId("coach-ok").click();
   await expect(page.getByTestId("coach")).toHaveAttribute("data-phase", "think", { timeout: 20_000 });
   await expect(page.getByTestId("coach-step")).toHaveText("Step 1/3");
   await expect(page.getByTestId("coach")).toContainText("Take a deep breath");

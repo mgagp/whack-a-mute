@@ -1,6 +1,6 @@
 # Whack-a-Mute — Spécification (PRD)
 
-> **Version** 0.26 · **Date** 2026-11-17 · **Auteur** Marc
+> **Version** 0.27 · **Date** 2026-11-17 · **Auteur** Marc
 > Source d'origine : [VERBATIM.md](VERBATIM.md). En cas de doute sur l'intention, c'est le verbatim qui fait foi.
 > Les sections marquées **⚠️ Hypothèse** sont des propositions à valider. Elles sont reprises dans la section 13, « Questions ouvertes ».
 
@@ -157,7 +157,8 @@ Un joueur qui arrive par un lien ne sait pas encore où regarder : il lit les bu
 Même avec le guide, la charge mentale arrive trop vite pour quelqu'un qui découvre le jeu à froid : on ne sait pas encore lire une bulle, et quand une erreur s'affiche, le jeu a déjà continué. Avant la première réunion guidée, un tutoriel fait comprendre les codes du jeu **à l'arrêt, avec un geste pour avancer**. L'esprit : « Respire par le nez. »
 
 - **Le décor.** Une parodie d'accueil du nouvel employé (« Accueil du nouvel employé »). Josée, la scrum master, anime : elle parle dans une carte cartoon qui affiche « Étape 1/3 », etc. On voit les mêmes tuiles, bulles, flèches et retours que dans le jeu. Le temps arrêté se voit : le décor s'efface et la tuile qui parle est en pleine lumière.
-- **Étape 1, lire.** Ginette, seule, pense une phrase correcte ; le temps est arrêté et le contour du nuage bat. La carte explique le nuage et son contour ; un bouton « Compris 👍 » fait repartir le temps. Ginette dit sa phrase : on la laisse parler. Le temps s'arrête de nouveau sur « C'était correct », avec la phrase dite encore visible, jusqu'au bouton « La suite → » (#58).
+- **Le rythme.** Chaque carte de Josée attend un geste (bouton ou toucher), sauf quand on regarde une phrase se dérouler : ces cartes-là restent au moins 2 secondes à vitesse normale. Quand le jeu doit attendre la phrase suivante, il saute cette attente et affiche déjà la carte qui vient : jamais de carte de passage (#60).
+- **Étape 1, lire.** Josée accueille le joueur, temps arrêté, jusqu'au bouton « C'est parti → ». Ginette, seule, pense une phrase correcte ; le temps est arrêté et le contour du nuage bat. La carte explique le nuage et son contour ; un bouton « Compris 👍 » fait repartir le temps. Ginette dit sa phrase : on la laisse parler. Le temps s'arrête de nouveau sur « C'était correct », avec la phrase dite encore visible, jusqu'au bouton « La suite → » (#58).
 - **Étape 2, couper.** Ginette pense une phrase déplacée, encerclée par le guide (section 6.3), toujours à l'arrêt. Toucher sa tuile la met sur mute et fait avancer : le geste sert de confirmation. On voit le vrai retour « Intercepté ! ».
 - **Étape 3, à toi.** Kevin rejoint Ginette pour une mini-réunion en direct au rythme du café 1, sans flèches : elle dit une phrase correcte, puis lui pense une phrase déplacée. Une erreur arrête le temps sur le résultat, et la carte explique ce qui s'est passé (malaise ou coupé à tort). On réessaie jusqu'à réussir. Une fois l'étape réussie, la réunion commence, avec le guide des premières secondes.
 - **Toujours possible de passer.** Un lien « Passer le tutoriel » reste visible jusqu'à la dernière carte.
@@ -450,3 +451,4 @@ Cette idée généralise le duo « annonce du boss → réplique signature ». I
 | 0.24 | 2026-11-15 | Seul le premier essai du jour compte pour le partage ; les suivants sont des parties libres (R-54, #49) |
 | 0.25 | 2026-11-15 | Cohérence des répliques : personne ne parle de soi, et pas d'accord au genre de la personne qui parle (section 7, R-26, #54) |
 | 0.26 | 2026-11-17 | Tutoriel : la fin de l'étape 1 s'arrête sur « C'était correct » jusqu'au bouton « La suite » (section 6.4, R-17, #58) |
+| 0.27 | 2026-11-17 | Tutoriel : chaque carte attend un geste ou reste au moins 2 s ; plus de carte de passage, accueil arrêté (section 6.4, R-17, #60) |
