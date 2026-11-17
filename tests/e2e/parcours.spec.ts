@@ -90,6 +90,17 @@ test("R-17 : le tutoriel montre le nuage, fait couper Ginette, puis fait réussi
   await page.getByTestId("coach-ok").click();
   await expect(coach).toHaveAttribute("data-phase", "normal", { timeout: 20_000 });
 
+  // Fin de l'étape 1 (#58) : le temps s'arrête sur « C'était correct », la phrase dite reste visible,
+  // et rien n'avance tant qu'on n'a pas cliqué « La suite ».
+  await expect(step).toHaveText("Étape 1/3");
+  await expect(page.getByTestId("tutorial")).toHaveClass(/frozen/);
+  await expect(page.locator('[data-testid="tile-ginette"] .bubble.said')).toBeVisible();
+  await page.waitForTimeout(2_000);
+  await expect(coach).toHaveAttribute("data-phase", "normal");
+  await expect(page.locator('[data-testid="tile-ginette"] .bubble.said')).toBeVisible();
+  await expect(page.getByTestId("coach-ok")).toHaveText("La suite →");
+  await page.getByTestId("coach-ok").click();
+
   // Étape 2 : la phrase déplacée attend le geste, encerclée par le guide.
   await expect(coach).toHaveAttribute("data-phase", "mute", { timeout: 20_000 });
   await expect(step).toHaveText("Étape 2/3");
