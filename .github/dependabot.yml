@@ -1,0 +1,31 @@
+# Mises à jour automatiques des dépendances (#62).
+# Une PR groupée par semaine pour les correctifs et mineures, les majeures à part.
+# GitHub attend déjà 3 jours avant de proposer une nouvelle version (sauf correctif de sécurité).
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: America/Montreal
+    labels: ["dépendances"]
+    groups:
+      developpement:
+        dependency-type: development
+        update-types: [minor, patch]
+      jeu:
+        dependency-type: production
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+      time: "06:00"
+      timezone: America/Montreal
+    labels: ["dépendances"]
+    groups:
+      actions:
+        patterns: ["*"]
