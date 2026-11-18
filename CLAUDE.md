@@ -51,3 +51,11 @@ TypeScript, Vite, React, CSS et Motion, Howler.js, Zod, Vitest, Playwright, pnpm
 - Pour un changement visuel, joindre des captures téléphone et ordinateur.
 - **Marc décide de la fusion.** Ne jamais fusionner une PR sans son accord explicite pour cette PR-là. Après la fusion, vérifier que la mise en ligne a réussi.
 - `main` est protégée : on n'y pousse jamais directement, et une PR ne peut être fusionnée que si la vérification passe.
+
+### Maintenance des dépendances (#62)
+- **Dependabot** propose chaque lundi une PR groupée pour les correctifs et mineures (une pour les dépendances de développement, une pour celles du jeu), et chaque mois une PR pour les actions GitHub. Les versions majeures arrivent en PR séparées. Étiquette `dépendances`.
+- Ces PR suivent la règle habituelle : la vérification doit passer, et **Marc décide de la fusion**. Pas de fusion automatique (choix discuté dans #62).
+- Une majeure se regarde à part : notes de version, changements cassants, captures si l'interface peut changer.
+- Les alertes et mises à jour de sécurité de Dependabot sont activées. Limite connue : Dependabot ne lit pas encore le lockfile de pnpm 12 pour les alertes, seulement pour les mises à jour de versions.
+- **Node** : la version vit dans `.node-version`, lue par les workflows. À passer à la nouvelle LTS une fois par an, en octobre (à la main).
+- **Playwright** : la CI installe Chromium avec `playwright install --with-deps`, la méthode standard. Le navigateur suit donc la version du paquet. L'image Docker utilisée avant a été abandonnée (raisons dans #62). Si la CI échoue parce que les serveurs d'Ubuntu sont injoignables, relancer le job.

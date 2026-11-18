@@ -16,6 +16,8 @@ pnpm e2e        # parcours complet (Playwright)
 pnpm typecheck
 ```
 
+Les dépendances sont tenues à jour par Dependabot (une PR groupée par semaine), et chaque PR passe par la vérification complète dans GitHub Actions.
+
 La spécification du jeu est dans [SPEC.md](SPEC.md). Les répliques se trouvent dans `src/content/lines.fr.json`, et les réglages de jouabilité dans `src/engine/config.ts`.
 
 ## Licence

@@ -13,24 +13,21 @@ jobs:
     name: Typecheck, tests et parcours complet
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    # Image officielle de Playwright : Chromium et ses dépendances système sont déjà installés,
-    # sans dépendre des serveurs de paquets d'Ubuntu. Sa version doit rester celle de
-    # @playwright/test dans package.json (épinglée sans ^ pour cette raison).
-    container:
-      image: mcr.microsoft.com/playwright:v1.65.0-noble
-      options: --user 1001
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version-file: .node-version
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm build
       - run: pnpm size
+      # Méthode standard de la documentation de Playwright : le navigateur suit la version du paquet (#62).
+      - name: Installer Chromium pour Playwright
+        run: pnpm exec playwright install --with-deps chromium
       - name: Parcours complet (téléphone et ordinateur)
         run: pnpm e2e
       - name: Garder le rapport Playwright en cas d'échec
