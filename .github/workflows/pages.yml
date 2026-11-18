@@ -12,9 +12,10 @@ permissions:
   pages: write
   id-token: write
 
+# Comme le workflow officiel de GitHub pour Pages : un déploiement commencé va au bout (#63).
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   verifier:

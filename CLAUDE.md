@@ -11,7 +11,7 @@ Jeu web social et humoristique : le joueur met sur mute les collègues qui s'app
 ## Stack
 TypeScript, Vite, React, CSS et Motion, Howler.js, Zod, Vitest, Playwright, pnpm. Hébergement statique sur GitHub Pages. Pas de serveur.
 
-État actuel : le projet n'est pas encore initialisé (aucun `package.json`). La structure visée est décrite dans SPEC.md, section 10.
+La structure du code est décrite dans SPEC.md, section 10.
 
 ## Règles d'architecture
 - `src/engine/` est **pur** : aucun import de React, du DOM ou du navigateur. Le temps et le hasard (graine) sont injectés.
