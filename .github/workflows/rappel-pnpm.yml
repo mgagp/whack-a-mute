@@ -1,0 +1,46 @@
+# Rappel mensuel : Dependabot ne met pas à jour le champ packageManager (pnpm).
+# Ouvre une issue seulement si pnpm est en retard, et jamais deux à la fois.
+name: Rappel pnpm
+
+on:
+  schedule:
+    - cron: "0 11 1 * *" # le 1er de chaque mois, vers 6 h à Montréal
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  rappel:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Comparer la version de pnpm avec la dernière publiée
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          actuelle=$(node -p "require('./package.json').packageManager.split('@')[1]")
+          derniere=$(npm view pnpm version)
+          echo "pnpm dans package.json : $actuelle, dernière version : $derniere"
+          if [ "$actuelle" = "$derniere" ]; then
+            echo "pnpm est à jour."
+            exit 0
+          fi
+          titre="Mettre pnpm à jour"
+          deja=$(gh issue list --state open --search "\"$titre\" in:title" --json number --jq 'length')
+          if [ "$deja" != "0" ]; then
+            echo "Une issue de rappel est déjà ouverte."
+            exit 0
+          fi
+          gh issue create \
+            --title "$titre ($actuelle → $derniere)" \
+            --label "dépendances" \
+            --body "Rappel automatique (\`rappel-pnpm.yml\`) : Dependabot ne met pas à jour le champ \`packageManager\` de \`package.json\`.
+
+          - [ ] Sur une branche à partir de \`origin/main\` : \`pnpm self-update\` (met à jour \`packageManager\` et le lockfile)
+          - [ ] Vérifier que seules les entrées de pnpm changent dans le lockfile
+          - [ ] \`pnpm typecheck\`, \`pnpm lint\`, \`pnpm test\`
+          - [ ] PR qui commence par \`Closes #<ce numéro>\`
+
+          Une nouvelle version **majeure** de pnpm mérite un coup d'œil aux notes de version avant de passer."
