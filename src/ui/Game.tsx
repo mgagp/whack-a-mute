@@ -1,6 +1,6 @@
 /** Écran de la réunion : barre du haut, jauge d'harmonie, grille de 1 à 4 tuiles, notifications. */
 import { m as motion } from "motion/react";
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { type ReactNode, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { soundForEvent, play, isMuted, setMuted } from "../audio";
 import { CONFIG, type CafeLevel, type ParticipantId } from "../engine/config";
 import type { GameEvent, GameState, Line } from "../engine/state";
@@ -11,7 +11,7 @@ import { useStrings } from "./i18n";
 import { Tile } from "./Tile";
 import { useGame } from "./useGame";
 
-export const MOOD_FACE = { champion: "😄", modele: "🙂", unUn: "😐", rh: "😬", ecourtee: "😵" } as const;
+const MOOD_FACE = { champion: "😄", modele: "🙂", unUn: "😐", rh: "😬", ecourtee: "😵" } as const;
 
 function clock(minutes: number) {
   const h = Math.floor(minutes / 60);
@@ -53,11 +53,9 @@ export function Game(props: {
   const overSent = useRef(false);
 
   const tutoEventsRef = useRef(props.tutorial?.onEvents);
-  tutoEventsRef.current = props.tutorial?.onEvents;
   // #43 : la première erreur pendant le guide arrête le jeu un instant, le temps de lire l'explication.
   const [explaining, setExplaining] = useState(false);
   const speedRef = useRef(props.speed);
-  speedRef.current = props.speed;
   const onEvents = useCallback((events: GameEvent[]) => {
     for (const e of events) {
       const sound = soundForEvent(e);
@@ -74,7 +72,12 @@ export function Game(props: {
   const paused = tuto ? tuto.paused : explaining;
   const { view, tap: rawTap } = useGame({ ...props, create: tuto?.create, paused, onEvents });
   const allowTapRef = useRef(true);
-  allowTapRef.current = tuto ? tuto.allowTap : true;
+  // Les refs sont mises à jour après le rendu, avant l'affichage (règle react-hooks/refs).
+  useLayoutEffect(() => {
+    tutoEventsRef.current = props.tutorial?.onEvents;
+    speedRef.current = props.speed;
+    allowTapRef.current = tuto ? tuto.allowTap : true;
+  });
   const tap = useCallback((id: ParticipantId) => {
     if (allowTapRef.current) rawTap(id);
   }, [rawTap]);

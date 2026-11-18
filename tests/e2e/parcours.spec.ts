@@ -398,7 +398,7 @@ test("R-30 : chaque résultat a son retour visuel distinct", async ({ page }) =>
     }
     await page.waitForTimeout(30);
   }
-  for (const s of ["intercepted", "blunder", "normal", "wrongMute"]) seen.has(s) || seen.add(`manque:${s}`);
+  for (const s of ["intercepted", "blunder", "normal", "wrongMute"]) if (!seen.has(s)) seen.add(`manque:${s}`);
   expect([...seen].filter((s) => s.startsWith("manque"))).toEqual([]);
 });
 
