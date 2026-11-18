@@ -1,5 +1,9 @@
 # Whack-a-Mute
 
+[![Jouer](https://img.shields.io/badge/jouer-en%20ligne-7B4DFF)](https://mgagp.github.io/whack-a-mute/)
+[![Mise en ligne](https://github.com/mgagp/whack-a-mute/actions/workflows/pages.yml/badge.svg)](https://github.com/mgagp/whack-a-mute/actions/workflows/pages.yml)
+[![Licence MIT](https://img.shields.io/badge/licence-MIT-blue)](LICENSE)
+
 Sauve la réunion d'équipe… un mute à la fois. 🔇
 
 Un petit jeu web : en pleine réunion visio, tes collègues s'apprêtent à dire des commentaires déplacés. Lis ce qu'ils vont dire et coupe-leur le micro juste à temps. Une partie dure 90 secondes, sur téléphone ou ordinateur.
