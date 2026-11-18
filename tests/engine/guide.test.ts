@@ -45,8 +45,10 @@ describe("Mode « Premier meeting » (#32)", () => {
         const { events } = play(newGame({ seed, cafe: 2, guided }), perfect, 16);
         for (const e of announced(events)) {
           if (e.mic !== "muted") continue;
-          if (e.t < CONFIG.guide.durationMs) guided ? mutedInGuide++ : mutedWithoutGuide++;
-          else if (guided) mutedAfterGuide++;
+          if (e.t < CONFIG.guide.durationMs) {
+            if (guided) mutedInGuide++;
+            else mutedWithoutGuide++;
+          } else if (guided) mutedAfterGuide++;
         }
       }
     }

@@ -43,7 +43,7 @@ const GUIDE_ARROWS = (() => {
 
 /** Palier du compte à rebours : le contour du nuage et le guide changent de couleur ensemble. */
 export type TimerLevel = "calm" | "warn" | "urgent";
-export function timerLevel(progress: number): TimerLevel {
+function timerLevel(progress: number): TimerLevel {
   return progress < CONFIG.ui.timerWarnAt ? "calm" : progress < CONFIG.ui.timerUrgentAt ? "warn" : "urgent";
 }
 const TIMER_COLOR: Record<TimerLevel, string> = { calm: "var(--violet)", warn: "var(--warn)", urgent: "var(--mute)" };

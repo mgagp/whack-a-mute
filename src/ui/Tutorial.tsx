@@ -66,10 +66,10 @@ export function Tutorial(props: { lines: readonly Line[]; lang: Lang; speed: num
   const T = STRINGS.tuto;
   const [phase, setPhaseState] = useState<Phase>("wait");
   const phaseRef = useRef<Phase>("wait");
-  const setPhase = (p: Phase) => {
+  const setPhase = useCallback((p: Phase) => {
     phaseRef.current = p;
     setPhaseState(p);
-  };
+  }, []);
   const [attempt, setAttempt] = useState(0);
   const [fail, setFail] = useState<Fail | null>(null);
   const okCount = useRef(0);
@@ -99,14 +99,24 @@ export function Tutorial(props: { lines: readonly Line[]; lang: Lang; speed: num
         }
       }
     }
-  }, []);
+  }, [setPhase]);
 
-  const startLive = () => {
+  const startLive = useCallback(() => {
     okCount.current = 0;
     setFail(null);
     setAttempt((a) => a + 1);
     setPhase("live");
-  };
+  }, [setPhase]);
+
+  const { onDone } = props;
+  const runAction = useCallback(
+    (next: Phase | "retry" | "end") => {
+      if (next === "retry") startLive();
+      else if (next === "end") onDone();
+      else setPhase(next);
+    },
+    [startLive, onDone, setPhase],
+  );
 
   // On regarde une phrase se dérouler un peu plus vite (avant comme après le geste) ; on saute les attentes.
   const speedFactor =
@@ -117,22 +127,23 @@ export function Tutorial(props: { lines: readonly Line[]; lang: Lang; speed: num
 
   let title: string;
   let body: string;
-  let action: { label: string; onClick: () => void } | null = null;
+  // Ce que fait le bouton de la carte : passer à une phase, relancer l'essai ou terminer.
+  let action: { label: string; next: Phase | "retry" | "end" } | null = null;
   switch (shown) {
     case "wait":
       ({ title, body } = T.wait);
-      action = { label: T.wait.ok, onClick: () => setPhase("skipToThink") };
+      action = { label: T.wait.ok, next: "skipToThink" };
       break;
     case "think":
       ({ title, body } = T.think);
-      action = { label: T.think.ok, onClick: () => setPhase("watch") };
+      action = { label: T.think.ok, next: "watch" };
       break;
     case "watch":
       ({ title, body } = T.watch);
       break;
     case "normal":
       ({ title, body } = T.normal);
-      action = { label: T.normal.ok, onClick: () => setPhase("skipToMute") };
+      action = { label: T.normal.ok, next: "skipToMute" };
       break;
     case "mute":
       ({ title, body } = T.mute);
@@ -142,11 +153,11 @@ export function Tutorial(props: { lines: readonly Line[]; lang: Lang; speed: num
       break;
     case "intercepted":
       ({ title, body } = T.intercepted);
-      action = { label: T.intercepted.ok, onClick: startLive };
+      action = { label: T.intercepted.ok, next: "retry" };
       break;
     case "live":
       ({ title, body } = T.live);
-      action = { label: T.live.ok, onClick: () => setPhase("play") };
+      action = { label: T.live.ok, next: "play" };
       break;
     case "play":
       ({ title, body } = T.play);
@@ -160,15 +171,16 @@ export function Tutorial(props: { lines: readonly Line[]; lang: Lang; speed: num
         title = T.blunder.title;
         body = T.blunder.body(who.name, who.feminine);
       }
-      action = { label: T.retry, onClick: startLive };
+      action = { label: T.retry, next: "retry" };
       break;
     }
     case "done":
       ({ title, body } = T.done);
-      action = { label: T.done.ok, onClick: props.onDone };
+      action = { label: T.done.ok, next: "end" };
       break;
   }
 
+  const card = action;
   const coach = (
     <section key={shown} className={`coach step-${STEP[shown]}`} data-testid="coach" data-phase={phase} aria-live="polite">
       <div className="coach-head">
@@ -183,16 +195,16 @@ export function Tutorial(props: { lines: readonly Line[]; lang: Lang; speed: num
       <h3>{title}</h3>
       <p>{body}</p>
       <div className="coach-actions">
-        {action && (
+        {card && (
           <button
             type="button"
             className="btn coach-ok"
             data-testid="coach-ok"
             disabled={shown !== phase}
-            onClick={action.onClick}
+            onClick={() => runAction(card.next)}
             autoFocus
           >
-            {action.label}
+            {card.label}
           </button>
         )}
         {phase !== "done" && (

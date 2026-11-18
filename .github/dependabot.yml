@@ -18,6 +18,11 @@ updates:
       jeu:
         dependency-type: production
         update-types: [minor, patch]
+    # On reste sur TypeScript 6 tant que typescript-eslint ne prend pas en charge TypeScript 7.
+    # À retirer lors de la mise à niveau (#65).
+    ignore:
+      - dependency-name: typescript
+        versions: [">=7"]
 
   - package-ecosystem: github-actions
     directory: /

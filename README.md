@@ -14,6 +14,7 @@ pnpm dev        # serveur local
 pnpm test       # tests du moteur (Vitest)
 pnpm e2e        # parcours complet (Playwright)
 pnpm typecheck
+pnpm lint       # ESLint
 pnpm build      # version de production dans dist/
 pnpm size       # poids de la page (limite de 300 Ko compressés)
 ```

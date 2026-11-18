@@ -366,7 +366,7 @@ function clampInt(v: number, min: number, max: number) {
   return clamp(Math.round(v), min, max);
 }
 
-type DistributiveOmit<T, K extends keyof any> = T extends unknown ? Omit<T, K> : never;
+type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
 type Emit = (e: DistributiveOmit<GameEvent, "id" | "t">) => void;
 
 // ---------------------------------------------------------------------------

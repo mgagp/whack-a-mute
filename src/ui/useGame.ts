@@ -2,7 +2,7 @@
  * Boucle d'animation : fait avancer le moteur à chaque image et relaie ses événements.
  * L'interface ne recalcule aucune règle : elle lit l'état et réagit aux événements.
  */
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { CONFIG, type CafeLevel, type ParticipantId } from "../engine/config";
 import type { GameEvent, GameState, Line } from "../engine/state";
 import { createGame, step } from "../engine/step";
@@ -42,10 +42,13 @@ export function useGame(opts: {
     recent: [],
   }));
   const pausedRef = useRef(!!opts.paused);
-  pausedRef.current = !!opts.paused;
   const viewRef = useRef(view);
   const onEventsRef = useRef(opts.onEvents);
-  onEventsRef.current = opts.onEvents;
+  // Les refs sont mises à jour après le rendu, avant l'affichage (règle react-hooks/refs).
+  useLayoutEffect(() => {
+    pausedRef.current = !!opts.paused;
+    onEventsRef.current = opts.onEvents;
+  });
 
   const commit = useCallback((game: GameState, events: GameEvent[]) => {
     const recent = [...viewRef.current.recent, ...events].filter((e) => game.t - e.t <= RECENT_WINDOW_MS);

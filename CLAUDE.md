@@ -9,7 +9,7 @@ Jeu web social et humoristique : le joueur met sur mute les collègues qui s'app
 - En cas de conflit ou d'ambiguïté avec la spec, demande à Marc plutôt que d'inventer. Si une décision tranche une question `Q-x`, mets à jour SPEC.md (sections 13 et 14).
 
 ## Stack
-TypeScript, Vite, React, CSS et Motion, Howler.js, Zod, Vitest, Playwright, pnpm. Hébergement statique sur GitHub Pages. Pas de serveur.
+TypeScript 6, Vite, React, CSS et Motion, Howler.js, Zod, ESLint, Vitest, Playwright, pnpm. Hébergement statique sur GitHub Pages. Pas de serveur.
 
 La structure du code est décrite dans SPEC.md, section 10.
 
@@ -23,8 +23,8 @@ La structure du code est décrite dans SPEC.md, section 10.
 - Chaque test porte l'identifiant de l'exigence vérifiée : `it("R-10 : …")`.
 - Toute exigence `[M]` implémentée doit avoir au moins un test.
 - Les tests de bout en bout utilisent `?seed=` et `?vitesse=` pour être déterministes.
-- Avant de dire qu'une tâche est terminée, lance les tests et le typecheck.
-- GitHub Actions relance tout (typecheck, Vitest, poids, Playwright) sur chaque PR, et la mise en ligne n'a lieu que si tout passe (`.github/workflows/verification.yml`).
+- Avant de dire qu'une tâche est terminée, lance les tests, le typecheck et `pnpm lint`.
+- GitHub Actions relance tout (typecheck, ESLint, Vitest, poids, Playwright) sur chaque PR, et la mise en ligne n'a lieu que si tout passe (`.github/workflows/verification.yml`).
 
 ## Visuel : priorité de premier plan
 - Le jeu doit être **éclatant** : beau, coloré, expressif, hors de l'ordinaire (SPEC.md, section 8). Une interface fonctionnelle mais terne ne compte pas comme terminée.
@@ -57,5 +57,6 @@ La structure du code est décrite dans SPEC.md, section 10.
 - Ces PR suivent la règle habituelle : la vérification doit passer, et **Marc décide de la fusion**. Pas de fusion automatique (choix discuté dans #62).
 - Une majeure se regarde à part : notes de version, changements cassants, captures si l'interface peut changer.
 - Les alertes et mises à jour de sécurité de Dependabot sont activées. Limite connue : Dependabot ne lit pas encore le lockfile de pnpm 12 pour les alertes, seulement pour les mises à jour de versions.
+- **TypeScript 6** : on y reste tant que `typescript-eslint` ne prend pas en charge TypeScript 7 (#65, étiquette `bloqué en amont`). Dependabot ignore donc `typescript` 7. Ne pas réévaluer avant que le déclencheur noté dans #65 ait eu lieu.
 - **Node** : la version vit dans `.node-version`, lue par les workflows. À passer à la nouvelle LTS une fois par an, en octobre (à la main).
 - **Playwright** : la CI installe Chromium avec `playwright install --with-deps`, la méthode standard. Le navigateur suit donc la version du paquet. L'image Docker utilisée avant a été abandonnée (raisons dans #62). Si la CI échoue parce que les serveurs d'Ubuntu sont injoignables, relancer le job.
