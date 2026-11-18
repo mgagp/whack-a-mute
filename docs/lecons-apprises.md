@@ -181,6 +181,27 @@ Ces vérifications sont mécaniques : elles se testent au lieu de se découvrir 
 
 > **Signal.** « Après tout changement dans un enchaînement (tutoriel, transitions, écrans successifs), rejoue-le en entier à vitesse normale et note combien de temps chaque texte reste à l'écran. Tout texte affiché sans attendre de geste doit tenir au moins 2 secondes, et un test automatique le vérifie. N'ajoute jamais une carte ou un message de passage sans mesurer sa durée. »
 
+### Leçon 11. L'outillage suit d'abord la norme du type de projet
+
+*Ajoutée le 2026-11-18, après #62, #63, #65 et les PR #64 à #71.*
+
+**Ce qui s'est passé.**
+- **#62.** Marc a demandé de garder le projet à jour en misant sur les automatismes de GitHub. Le premier plan de l'agent prévoyait la fusion automatique des PR de Dependabot, avec un jeton personnel. Marc a alors demandé ce qui était la norme pour un projet de ce genre. Réponse : à cette échelle, on fusionne d'un clic une PR groupée par semaine. Le plan a perdu la fusion automatique, le jeton et une vérification programmée, et il est devenu plus simple.
+- **#62, image Playwright.** Marc a demandé si l'image Docker de la CI était un choix voulu. L'historique a montré qu'elle avait été adoptée en réaction à **une seule** panne réseau passagère, sans relancer l'essai. Elle bloquait aussi Dependabot. On est revenu à `playwright install --with-deps`, l'exemple principal de la documentation de Playwright.
+- **#63.** En comparant le projet aux pratiques courantes, il manquait ESLint, que le modèle React de Vite inclut par défaut. ESLint a buté sur TypeScript 7, adopté avant que son écosystème suive : `typescript-eslint` ne le prend pas encore en charge. Marc a tranché pour TypeScript 6. Le retour à TS 7 est noté dans #65, avec son déclencheur et l'étiquette `bloqué en amont`.
+- **#70 et #71.** Dependabot ne met pas à jour la version de pnpm (champ `packageManager`). Plutôt que de changer d'outil, on a regardé ce que font les autres projets (`pnpm self-update` à la main) et ajouté un rappel mensuel qui ouvre une issue seulement en cas de retard.
+
+**La leçon.**
+- Pour l'outillage, le bon point de départ est **ce que fait la communauté pour ce type de projet**, pas la solution la plus automatisée possible. Chaque écart à la norme doit avoir une raison écrite.
+- Une décision prise à chaud, sur un seul incident, doit être notée comme telle, pour pouvoir la revoir.
+- Une version majeure d'un outil de base (TypeScript, Node) s'adopte quand son écosystème suit, pas le jour de sa sortie.
+- Un report a un **déclencheur écrit** et une étiquette (`bloqué en amont`). Sinon, on le réévalue sans cesse sans raison nouvelle.
+- Un rappel qui vient nous chercher (issue automatique) vaut mieux qu'une note qu'il faut penser à relire.
+
+> **Signal.** « Pour tout choix d'outillage, de CI ou de maintenance, cherche d'abord ce qui est le plus courant pour ce type de projet, pars de là et justifie chaque écart. Après un échec passager, relance avant de changer de méthode. Avant d'adopter une version majeure d'un outil de base, vérifie que les outils qui en dépendent la prennent en charge. Tout report a son déclencheur écrit et l'étiquette `bloqué en amont`. »
+>
+> **Et côté humain :** demander « qu'est-ce qui est la norme pour un projet comme celui-ci ? » et « ce choix était-il voulu ? » avant de valider un plan d'outillage.
+
 ---
 
 ## Partie 3. Brief de départ pour un prochain jeu
@@ -217,6 +238,10 @@ Joueur visé : il arrive par un lien partagé, sur téléphone, sans rien savoir
 8. Libellés : le mot attendu est toujours visible ; l'humour vient en plus.
 9. Collaboration : avant d'implémenter, propose les conventions du genre,
    critique la demande et sépare ce qui mérite un ticket à part.
+10. Outillage : pars de la norme du type de projet (modèle Vite avec ESLint,
+   Dependabot groupé, CI qui bloque la fusion, méthode standard de chaque
+   outil) et justifie chaque écart. Pas de version majeure d'un outil de
+   base avant que son écosystème suive. Tout report a un déclencheur écrit.
 
 Fondations à reprendre : texte d'origine conservé, spec avec identifiants,
 moteur pur avec graine, valeurs de jouabilité dans un seul fichier, maquette
